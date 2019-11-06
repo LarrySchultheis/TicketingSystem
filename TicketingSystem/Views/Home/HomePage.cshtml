@@ -1,0 +1,58 @@
+﻿@model IEnumerable<MVCApp.Models.TicketData>
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+
+<div class="text-center">
+    <h2 class="display-4">Here's the latest data</h2>
+    <br />
+    <br />
+
+</div>
+
+<div>
+    <table id="dummyTable" class="table table-hover table-bordered table-dark">
+        <thead class="thead-light">
+            <tr>
+                <th>Job Type</th>
+                <th>Trip Number</th>
+                <th>Stage Number</th>
+                <th>Employee Name</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.JobType.JobType1</td>
+                <td>@item.TripNumber</td>
+                <td>@item.StageNumber</td>
+                <td>@item.EmployeeName</td>
+                <td>@item.StartTime</td>
+                <td>@(item.IsClosed ? "Closed" : "Open")</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/datatables.min.css" />
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/datatables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#dummyTable').DataTable();
+    });
+</script>
+
