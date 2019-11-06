@@ -1,6 +1,0 @@
-C:\Users\lks5334\Dev\SeniorDesign\TicketingSystem\Tests\bin\Debug\netstandard2.0\Tests.deps.json
-C:\Users\lks5334\Dev\SeniorDesign\TicketingSystem\Tests\bin\Debug\netstandard2.0\Tests.dll
-C:\Users\lks5334\Dev\SeniorDesign\TicketingSystem\Tests\obj\Debug\netstandard2.0\Tests.csprojAssemblyReference.cache
-C:\Users\lks5334\Dev\SeniorDesign\TicketingSystem\Tests\obj\Debug\netstandard2.0\Tests.csproj.CoreCompileInputs.cache
-C:\Users\lks5334\Dev\SeniorDesign\TicketingSystem\Tests\obj\Debug\netstandard2.0\Tests.AssemblyInfoInputs.cache
-C:\Users\lks5334\Dev\SeniorDesign\TicketingSystem\Tests\obj\Debug\netstandard2.0\Tests.AssemblyInfo.cs
