@@ -12532,23 +12532,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\lks5334\\.nuget\\packages\\": {},
+    "C:\\Users\\dbf5118\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
+      "projectUniqueName": "C:\\Users\\dbf5118\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
       "projectName": "TicketingSystem",
-      "projectPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
-      "packagesPath": "C:\\Users\\lks5334\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\TicketingSystem\\TicketingSystem\\obj\\",
+      "projectPath": "C:\\Users\\dbf5118\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
+      "packagesPath": "C:\\Users\\dbf5118\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\dbf5118\\TicketingSystem\\TicketingSystem\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\lks5334\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\dbf5118\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
