@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace MVCApp.Models
+namespace TicketingSystem.Models
 {
     public partial class TicketingSystemDBContext : DbContext
     {

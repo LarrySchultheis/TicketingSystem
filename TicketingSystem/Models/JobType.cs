@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MVCApp.Models
+namespace TicketingSystem.Models
 {
     public partial class JobType
     {

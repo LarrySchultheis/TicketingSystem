@@ -14,17 +14,12 @@ namespace AspNetCore
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
 #line 1 "C:\Users\lks5334\Dev\SeniorDesign\TicketingSystem\TicketingSystem\Views\_ViewImports.cshtml"
-using MVCApp;
-
-#line default
-#line hidden
-#line 2 "C:\Users\lks5334\Dev\SeniorDesign\TicketingSystem\TicketingSystem\Views\_ViewImports.cshtml"
-using MVCApp.Models;
+using TicketingSystem;
 
 #line default
 #line hidden
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"b93df4061ff384cf01ca37cf92dff41c251f235f", @"/Views/Home/Contact.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"4b47802e00e304f8aef4fc82147a7e0a84fae27f", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"f3c4937889215bde3acb30a9b6e7e577e67827b2", @"/Views/_ViewImports.cshtml")]
     public class Views_Home_Contact : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         #pragma warning disable 1998

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MVCApp.Controllers
+namespace TicketingSystem.Controllers
 {
     public class ReportController : Controller
     {
