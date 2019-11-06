@@ -37,9 +37,10 @@ namespace TicketingSystem.Controllers
 
         public IActionResult HomePage()
         {
-            RecordRetriever rr = new RecordRetriever();
-            var records = rr.RetrieveRecords();
-            return View("HomePage", records);
+            //RecordRetriever rr = new RecordRetriever();
+            //var records = rr.RetrieveRecords();
+            //return View("HomePage", records);
+            return View("HomePage");
         }
 
         [HttpPost]
