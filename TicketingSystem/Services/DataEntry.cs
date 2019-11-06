@@ -50,4 +50,18 @@ namespace TicketingSystem.Services
             return true;
         }
     }
+
+    public class TicketClose
+    {
+        public bool CloseTicket(TicketData td)
+        {
+            using (var context = new TicketingSystemDBContext())
+            {
+                td.IsClosed = true;
+                context.SaveChanges();
+            }
+
+            return true;
+        }
+    }
 }
