@@ -13221,11 +13221,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\TicketingSystem\\Tests\\Tests.csproj",
+      "projectUniqueName": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\GitKraken\\TicketingSystem\\Tests\\Tests.csproj",
       "projectName": "Tests",
-      "projectPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\TicketingSystem\\Tests\\Tests.csproj",
+      "projectPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\GitKraken\\TicketingSystem\\Tests\\Tests.csproj",
       "packagesPath": "C:\\Users\\lks5334\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\TicketingSystem\\Tests\\obj\\",
+      "outputPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\GitKraken\\TicketingSystem\\Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -13244,8 +13244,8 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "C:\\Users\\lks5334\\Dev\\SeniorDesign\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj": {
-              "projectPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj"
+            "C:\\Users\\lks5334\\Dev\\SeniorDesign\\GitKraken\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj": {
+              "projectPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\GitKraken\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj"
             }
           }
         }

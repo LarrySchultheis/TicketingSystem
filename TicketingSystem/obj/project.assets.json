@@ -12538,11 +12538,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
+      "projectUniqueName": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\GitKraken\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
       "projectName": "TicketingSystem",
-      "projectPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
+      "projectPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\GitKraken\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
       "packagesPath": "C:\\Users\\lks5334\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\TicketingSystem\\TicketingSystem\\obj\\",
+      "outputPath": "C:\\Users\\lks5334\\Dev\\SeniorDesign\\GitKraken\\TicketingSystem\\TicketingSystem\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
