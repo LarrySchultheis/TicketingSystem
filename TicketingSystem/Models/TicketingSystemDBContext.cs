@@ -15,9 +15,11 @@ namespace TicketingSystem.Models
         {
         }
 
+        public virtual DbSet<EmployeeType> EmployeeType { get; set; }
         public virtual DbSet<JobType> JobType { get; set; }
         public virtual DbSet<TicketData> TicketData { get; set; }
         public virtual DbSet<TicketDataLog> TicketDataLog { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -30,66 +32,88 @@ namespace TicketingSystem.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<EmployeeType>(entity =>
+            {
+                entity.Property(e => e.EmployeeTypeId).HasColumnName("EmployeeTypeID");
+
+                entity.Property(e => e.EmployeeType1)
+                    .IsRequired()
+                    .HasColumnName("EmployeeType")
+                    .HasMaxLength(256)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<JobType>(entity =>
             {
                 entity.Property(e => e.JobTypeId).HasColumnName("JobTypeID");
 
-                entity.Property(e => e.JobType1)
+                entity.Property(e => e.JobName)
                     .IsRequired()
-                    .HasColumnName("JobType")
-                    .HasMaxLength(50)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<TicketData>(entity =>
             {
-                entity.HasKey(e => e.EntryId)
-                    .HasName("PK__TicketDa__F57BD2D7CD8BE48B");
+                entity.HasKey(e => e.EntryId);
 
                 entity.Property(e => e.EntryId).HasColumnName("EntryID");
 
                 entity.Property(e => e.Carrier)
-                    .HasMaxLength(50)
+                    .HasMaxLength(256)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Comments).IsUnicode(false);
-
-                entity.Property(e => e.EmployeeName)
+                entity.Property(e => e.Comments)
                     .HasMaxLength(256)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EndTime).HasColumnType("datetime");
 
+                entity.Property(e => e.EntryAuthorId).HasColumnName("EntryAuthorID");
+
                 entity.Property(e => e.EntryDate).HasColumnType("date");
 
                 entity.Property(e => e.JobTypeId).HasColumnName("JobTypeID");
 
-                entity.Property(e => e.PalletNumber)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.PalletType)
-                    .HasMaxLength(50)
+                    .HasMaxLength(256)
                     .IsUnicode(false);
 
-                entity.Property(e => e.StageNumber)
-                    .IsRequired()
+                entity.Property(e => e.StageNum)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.StartTime).HasColumnType("datetime");
 
+                entity.Property(e => e.TicketWorkerId).HasColumnName("TicketWorkerID");
+
+                entity.Property(e => e.WorkerName)
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.EntryAuthor)
+                    .WithMany(p => p.TicketDataEntryAuthor)
+                    .HasForeignKey(d => d.EntryAuthorId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__TicketDat__Entry__02FC7413");
+
                 entity.HasOne(d => d.JobType)
                     .WithMany(p => p.TicketData)
                     .HasForeignKey(d => d.JobTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TicketDat__JobTy__398D8EEE");
+                    .HasConstraintName("FK__TicketDat__JobTy__02084FDA");
+
+                entity.HasOne(d => d.TicketWorker)
+                    .WithMany(p => p.TicketDataTicketWorker)
+                    .HasForeignKey(d => d.TicketWorkerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__TicketDat__Ticke__04E4BC85");
             });
 
             modelBuilder.Entity<TicketDataLog>(entity =>
             {
-                entity.HasKey(e => e.LogId)
-                    .HasName("PK__TicketDa__5E5499A8F0E756A3");
+                entity.HasKey(e => e.LogId);
 
                 entity.Property(e => e.LogId).HasColumnName("LogID");
 
@@ -100,22 +124,32 @@ namespace TicketingSystem.Models
                     .HasMaxLength(256)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Details)
-                    .IsRequired()
-                    .IsUnicode(false);
+                entity.Property(e => e.Details).IsUnicode(false);
 
                 entity.Property(e => e.EntryId).HasColumnName("EntryID");
-
-                entity.HasOne(d => d.Entry)
-                    .WithMany(p => p.TicketDataLog)
-                    .HasForeignKey(d => d.EntryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TicketDat__Entry__3C69FB99");
             });
 
-            OnModelCreatingPartial(modelBuilder);
-        }
+            modelBuilder.Entity<Users>(entity =>
+            {
+                entity.HasKey(e => e.UserId);
 
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasMaxLength(256);
+
+                entity.Property(e => e.FullName)
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ShiftType)
+                    .HasMaxLength(256)
+                    .IsUnicode(false);
+            });
+        }
     }
 }

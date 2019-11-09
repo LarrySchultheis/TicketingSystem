@@ -12,6 +12,7 @@ namespace TicketingSystem.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private IEnumerable<TicketData> latestData;
 
         [HttpGet]
         public IActionResult Login()
@@ -39,12 +40,12 @@ namespace TicketingSystem.Controllers
         {
             RecordRetriever rr = new RecordRetriever();
             var records = rr.RetrieveRecords();
+            latestData = records;
             return View("HomePage", records);
-            return View("HomePage");
         }
 
         [HttpPost]
-        public IActionResult VerifyLogin(User user)
+        public IActionResult VerifyLogin(Users user)
         {
 
             return View("HomePage", user);
@@ -59,15 +60,16 @@ namespace TicketingSystem.Controllers
             return View("DataEntry");
         }
 
-        public void CloseTicket()
+        public IActionResult CloseTicket()
         {
             using (var context = new TicketingSystemDBContext())
             {
-                var td = context.TicketData.Where(t => t.EmployeeName == "PostEntryTest").FirstOrDefault();
+                var td = context.TicketData.Where(t => t.EntryAuthor.Email == "admin123@gmail.com").FirstOrDefault();
                 DataEntry de = new DataEntry();
                 bool success = de.CloseTicket(td);
             }
-            int x = 0;
+            RecordRetriever rr = new RecordRetriever();
+            return View("HomePage", rr.RetrieveRecords());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -17,21 +17,31 @@ namespace TicketingSystem.Services
                 {
                     IEnumerable<JobType> jobs = context.JobType;
                     int jtypeID = 1;
-                    foreach (JobType j in jobs)
-                    {
-                        if (td.JobType.JobType1 == j.JobType1)
-                        {
-                            jtypeID = j.JobTypeId;
-                            break;
-                        }
-                    }
+                    //foreach (JobType j in jobs)
+                    //{
+                    //    if (td.JobType.JobName == j.JobName)
+                    //    {
+                    //        jtypeID = j.JobTypeId;
+                    //        break;
+                    //    }
+                    //}
+                    //int workerID = context.Users.Where(w => w.)
+                    jtypeID = context.JobType.Where(j => j.JobName == td.JobType.JobName).FirstOrDefault().JobTypeId;
+                    int authorID = context.Users.Where(a => a.FullName == "System Admin").FirstOrDefault().UserId;
+                    int workerID = context.Users.Where(w => w.FullName == td.TicketWorker.FullName).FirstOrDefault().UserId;
 
                     td.JobTypeId = jtypeID;
                     td.EntryDate = DateTime.Now;
-                    td.IsClosed = false;
+                    td.TicketClosed = false;
+                    td.EntryAuthorId = authorID;
+                    td.TicketWorkerId = workerID;
+                    td.WorkerName = td.TicketWorker.FullName;
 
                     //very important null assignment
                     td.JobType = null;
+                    td.TicketWorker = null;
+                    td.EntryAuthor = null;
+
                     context.TicketData.Add(td);
                     context.SaveChanges();
 
@@ -56,7 +66,7 @@ namespace TicketingSystem.Services
             {
                 using (var context = new TicketingSystemDBContext())
                 {
-                    context.TicketData.Find(td.EntryId).IsClosed = true;
+                    context.TicketData.Find(td.EntryId).TicketClosed = true;
                     context.SaveChanges();
                 }
             }

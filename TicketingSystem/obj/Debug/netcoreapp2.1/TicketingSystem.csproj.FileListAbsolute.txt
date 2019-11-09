@@ -110,7 +110,6 @@ G:\GitKraken\TicketingSystem\TicketingSystem\bin\Debug\netcoreapp2.1\TicketingSy
 G:\GitKraken\TicketingSystem\TicketingSystem\bin\Debug\netcoreapp2.1\TicketingSystem.pdb
 G:\GitKraken\TicketingSystem\TicketingSystem\bin\Debug\netcoreapp2.1\TicketingSystem.Views.dll
 G:\GitKraken\TicketingSystem\TicketingSystem\bin\Debug\netcoreapp2.1\TicketingSystem.Views.pdb
-G:\GitKraken\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.csprojAssemblyReference.cache
 G:\GitKraken\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.RazorAssemblyInfo.cache
 G:\GitKraken\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.RazorAssemblyInfo.cs
 G:\GitKraken\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.AssemblyInfoInputs.cache

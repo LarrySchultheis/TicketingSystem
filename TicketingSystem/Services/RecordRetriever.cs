@@ -20,6 +20,8 @@ namespace TicketingSystem.Services
                     //td.Employee.EmployeeName = context.Employee.Find(td.EmployeeId).EmployeeName;
 
                     td.JobType = context.JobType.Find(td.JobTypeId);
+                    td.TicketWorker = context.Users.Find(td.TicketWorkerId);
+                    td.EntryAuthor = context.Users.Find(td.EntryAuthorId);
                     // td.JobType.JobType1 = td.JobType.JobType1;
                     var x = 1;
                 }

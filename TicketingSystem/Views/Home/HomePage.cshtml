@@ -25,12 +25,12 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.JobType.JobType1</td>
-                    <td>@item.TripNumber</td>
-                    <td>@item.StageNumber</td>
-                    <td>@item.EmployeeName</td>
+                    <td>@item.JobType.JobName</td>
+                    <td>@item.TripNum</td>
+                    <td>@item.StageNum</td>
+                    <td>@item.TicketWorker.FullName</td>
                     <td>@item.StartTime</td>
-                    <td>@(item.IsClosed ? "Closed" : "Open")</td>
+                    <td>@(item.TicketClosed ? "Closed" : "Open")</td>
                 </tr>
             }
 

@@ -11,8 +11,8 @@ namespace TicketingSystem.Models
         }
 
         public int JobTypeId { get; set; }
-        public string JobType1 { get; set; }
+        public string JobName { get; set; }
 
-        public virtual ICollection<TicketData> TicketData { get; set; }
+        public ICollection<TicketData> TicketData { get; set; }
     }
 }
