@@ -59,6 +59,17 @@ namespace TicketingSystem.Controllers
             return View("DataEntry");
         }
 
+        public void CloseTicket()
+        {
+            using (var context = new TicketingSystemDBContext())
+            {
+                var td = context.TicketData.Where(t => t.EmployeeName == "PostEntryTest").FirstOrDefault();
+                DataEntry de = new DataEntry();
+                bool success = de.CloseTicket(td);
+            }
+            int x = 0;
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
