@@ -135,3 +135,5 @@ G:\GitKraken\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSy
 G:\GitKraken\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.dll
 G:\GitKraken\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.pdb
 G:\GitKraken\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.csproj.CopyComplete
+G:\GitKraken\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.csprojAssemblyReference.cache
+G:\GitKraken\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\Razor\Views\Home\EntryClose.cshtml.g.cs

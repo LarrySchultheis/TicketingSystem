@@ -31,11 +31,13 @@ namespace TicketingSystem.Controllers
             return View("Index");
         }
 
+        [HttpGet]
         public IActionResult DataEntry()
         {
             return View("DataEntry");
         }
 
+        [HttpGet]
         public IActionResult HomePage()
         {
             RecordRetriever rr = new RecordRetriever();
@@ -57,7 +59,16 @@ namespace TicketingSystem.Controllers
             DataEntry de = new DataEntry();
             bool success = de.PostEntry(td);
 
-            return View("DataEntry");
+            return View("DataEntry", td);
+        }
+
+        [HttpPost]
+        public IActionResult OpenEntry(string entryID)
+        {
+            int id = int.Parse(entryID);
+            RecordRetriever rr = new RecordRetriever();
+            TicketData td = rr.GetRecordByID(id);
+            return View("EntryClose", td);
         }
 
         public IActionResult CloseTicket()
