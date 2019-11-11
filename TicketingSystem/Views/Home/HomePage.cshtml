@@ -1,4 +1,6 @@
-﻿@model IEnumerable<TicketingSystem.Models.TicketData>
+﻿@using System.Collections.Generic;
+@using TicketingSystem.Models;
+@model List<TicketingSystem.Models.TicketData>
 @{
     Layout = "_Layout";
 }
@@ -24,7 +26,7 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
+                <tr onclick="rowClicked(@item.EntryId)">
                     <td>@item.JobType.JobName</td>
                     <td>@item.TripNum</td>
                     <td>@item.StageNum</td>
@@ -32,6 +34,7 @@
                     <td>@item.StartTime</td>
                     <td>@(item.TicketClosed ? "Closed" : "Open")</td>
                 </tr>
+
             }
 
             @*@for (int i = 0; i < 10; i++)
@@ -64,3 +67,24 @@
     $(document).ready(function () {
         var table = $('#dummyTable').DataTable()
     });</script>
+
+<script>
+    function rowClicked(entryId) {
+        var id = entryId
+        console.log(id)
+        
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("OpenEntry", "Home")',
+            data: { entryID: id },
+            success: function () {
+                alert('Success')
+            },
+            error: function (e) {
+                alert('Error')
+                console.log(e)
+            }
+        })
+        
+    }
+</script>

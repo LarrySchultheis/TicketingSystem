@@ -30,5 +30,13 @@ namespace TicketingSystem.Services
                 return tdata;
             }
         }
+
+        public TicketData GetRecordByID (int entryID)
+        {
+            using (var context = new TicketingSystemDBContext())
+            {
+                return context.TicketData.Find(entryID);
+            }
+        }
     }
 }
