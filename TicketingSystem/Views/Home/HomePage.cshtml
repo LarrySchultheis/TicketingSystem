@@ -84,6 +84,8 @@
                 alert('Error')
                 console.log(e)
             }
+        }).done(function (data) {
+            window.location.replace(data.newUrl)
         })
         
     }
