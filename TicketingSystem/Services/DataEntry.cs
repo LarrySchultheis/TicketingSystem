@@ -67,6 +67,7 @@ namespace TicketingSystem.Services
                 using (var context = new TicketingSystemDBContext())
                 {
                     context.TicketData.Find(td.EntryId).TicketClosed = true;
+                    context.TicketData.Find(td.EntryId).EndTime = td.EndTime;
                     context.SaveChanges();
                 }
             }
