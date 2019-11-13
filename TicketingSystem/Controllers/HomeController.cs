@@ -33,8 +33,15 @@ namespace TicketingSystem.Controllers
 
         [HttpGet]
         public IActionResult DataEntry()
-        {
+        {            
             return View("DataEntry");
+        }
+
+        public IActionResult EntryClose(TicketData td)
+        {
+            RecordRetriever rr = new RecordRetriever();
+            var tdRes = rr.GetRecordByID(td.EntryId);
+            return View("EntryClose", tdRes);
         }
 
         [HttpGet]
@@ -63,12 +70,19 @@ namespace TicketingSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult OpenEntry(string entryID)
+        public JsonResult OpenEntry(string entryID)
         {
             int id = int.Parse(entryID);
             RecordRetriever rr = new RecordRetriever();
             TicketData td = rr.GetRecordByID(id);
-            return View("EntryClose", td);
+            JsonResult tdJson = new JsonResult(td);
+            //return View("EntryClose", td);
+
+            return Json(new
+            {
+                newUrl = Url.Action("EntryClose", "Home", td)
+            });
+
         }
 
         public IActionResult CloseTicket()
