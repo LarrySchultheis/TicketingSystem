@@ -12,7 +12,7 @@
     <br />
 </div>
 <div>
-    <table id="dummyTable" class="table table-hover table-bordered table-dark">
+    <table id="dummyTable" class="table table-hover table-bordered">
         <thead class="thead-light">
             <tr>
                 <th>Job Type</th>
@@ -51,7 +51,7 @@
         </tbody>
     </table>
 
-    <button onclick="location.href='@Url.Action("CloseTicket", "Home")'">Close Entry Test</button>
+    @*<button onclick="location.href='@Url.Action("CloseTicket", "Home")'">Close Entry Test</button>*@
 
 </div>
 
@@ -60,7 +60,6 @@
         crossorigin="anonymous"></script>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.css" />
-
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.js"></script>
 
 <script>
@@ -72,7 +71,7 @@
     function rowClicked(entryId) {
         var id = entryId
         console.log(id)
-        
+
         $.ajax({
             type: "POST",
             url: '@Url.Action("OpenEntry", "Home")',
@@ -87,6 +86,6 @@
         }).done(function (data) {
             window.location.replace(data.newUrl)
         })
-        
+
     }
 </script>

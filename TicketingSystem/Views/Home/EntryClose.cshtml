@@ -12,7 +12,7 @@
 <br />
 
 <body>
-    <form id="entryForm" class="form-horizontal" asp-action="CloseEntry" asp-controller="Home" onsubmit="return verifyInput()">
+    <form id="entryForm" class="form-horizontal" asp-action="PostEntryClose" asp-controller="Home" onsubmit="return verifyInput()">
         <div class="form-group">
             <label class="control-label col-sm-2" for="jType">Job Type:</label>
             <div class="col-sm-10">
@@ -32,6 +32,12 @@
                     <option value="Swing Load">Swing Load</option>
                     <option value="Miscellaneous">Miscellaneous</option>
                 </select>
+            </div>
+        </div>
+        <div class="form-group" id="entryIdContainer">
+            <label class="control-label col-sm-2" for="entryId">Entry ID:</label>
+            <div class="col-sm-10">
+                <input asp-for="EntryId" type="number" class="form-control" id="entryId" data-attr="default" value="@Model.EntryId" readonly>
             </div>
         </div>
         <div class="form-group" id="tripNoContainer">
@@ -77,7 +83,7 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="stopTime">Stop Time:</label>
             <div class="col-sm-10">
-                <input asp-for="EndTime" type="time" class="form-control" id="stopTime" data-attr="default">
+                <input asp-for="EndTime" type="time" class="form-control" id="endTime" data-attr="default">
             </div>
         </div>
         <div class="form-group">
@@ -99,4 +105,13 @@
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
         crossorigin="anonymous"></script>
 <script src="~/js/dataEntry.js"></script>
-<script src="~/js/closeEntry.js"></script>
+
+<script>
+    $(document).ready(fillFields)
+
+    function fillFields() {
+        //alert('fill fields')
+        document.getElementById('startTime').value = '@Model.StartTime.TimeOfDay'
+    }
+</script>
+

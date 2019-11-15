@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Myself\\Documents\\GitHub\\TicketingSystem\\Tests\\Tests.csproj": {}
+    "G:\\GitKraken\\TicketingSystem\\Tests\\Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Myself\\Documents\\GitHub\\TicketingSystem\\Tests\\Tests.csproj": {
+    "G:\\GitKraken\\TicketingSystem\\Tests\\Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Myself\\Documents\\GitHub\\TicketingSystem\\Tests\\Tests.csproj",
+        "projectUniqueName": "G:\\GitKraken\\TicketingSystem\\Tests\\Tests.csproj",
         "projectName": "Tests",
-        "projectPath": "C:\\Users\\Myself\\Documents\\GitHub\\TicketingSystem\\Tests\\Tests.csproj",
-        "packagesPath": "C:\\Users\\Myself\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Myself\\Documents\\GitHub\\TicketingSystem\\Tests\\obj\\",
+        "projectPath": "G:\\GitKraken\\TicketingSystem\\Tests\\Tests.csproj",
+        "packagesPath": "C:\\Users\\larry\\.nuget\\packages\\",
+        "outputPath": "G:\\GitKraken\\TicketingSystem\\Tests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Myself\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\larry\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -30,8 +30,8 @@
         "frameworks": {
           "netcoreapp2.1": {
             "projectReferences": {
-              "C:\\Users\\Myself\\Documents\\GitHub\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj": {
-                "projectPath": "C:\\Users\\Myself\\Documents\\GitHub\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj"
+              "G:\\GitKraken\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj": {
+                "projectPath": "G:\\GitKraken\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj"
               }
             }
           }
@@ -86,20 +86,20 @@
         }
       }
     },
-    "C:\\Users\\Myself\\Documents\\GitHub\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj": {
+    "G:\\GitKraken\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Myself\\Documents\\GitHub\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
+        "projectUniqueName": "G:\\GitKraken\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
         "projectName": "TicketingSystem",
-        "projectPath": "C:\\Users\\Myself\\Documents\\GitHub\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
-        "packagesPath": "C:\\Users\\Myself\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Myself\\Documents\\GitHub\\TicketingSystem\\TicketingSystem\\obj\\",
+        "projectPath": "G:\\GitKraken\\TicketingSystem\\TicketingSystem\\TicketingSystem.csproj",
+        "packagesPath": "C:\\Users\\larry\\.nuget\\packages\\",
+        "outputPath": "G:\\GitKraken\\TicketingSystem\\TicketingSystem\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Myself\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\larry\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

@@ -4,7 +4,9 @@ using System.Text;
 using NUnit.Framework;
 using TicketingSystem.Controllers;
 using TicketingSystem.Models;
+using TicketingSystem.Services;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Prototype.Tests.ControllerTests
 {
@@ -56,5 +58,6 @@ namespace Prototype.Tests.ControllerTests
             }
 
         }
+
     }
 }

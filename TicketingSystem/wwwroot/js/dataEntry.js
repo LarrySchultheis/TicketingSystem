@@ -4,7 +4,6 @@ function clearForm() {
 }
 
 function updateFields() {
-
     $('*[data-attr="nonDefault"]').remove()
     var jType = document.getElementById('jobType')
 
@@ -33,7 +32,6 @@ function verifyInput() {
     var stageNum = document.getElementById('stageNumber')
     var empName = document.getElementById('employeeName')
     var startTime = document.getElementById('startTime')
-
 
     if (jType.selectedIndex < 1) {
         alert('Please select a Job Type')

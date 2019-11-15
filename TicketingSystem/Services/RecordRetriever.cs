@@ -35,7 +35,16 @@ namespace TicketingSystem.Services
         {
             using (var context = new TicketingSystemDBContext())
             {
-                return context.TicketData.Find(entryID);
+                TicketData td = context.TicketData.Find(entryID);
+                JobType jt = context.JobType.Find(td.JobTypeId);
+                Users author = context.Users.Find(td.EntryAuthorId);
+                Users worker = context.Users.Find(td.TicketWorkerId);
+
+                td.JobType = jt;
+                td.EntryAuthor = author;
+                td.TicketWorker = worker;
+
+                return td;
             }
         }
     }
