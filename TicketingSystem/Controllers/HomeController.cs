@@ -37,12 +37,6 @@ namespace TicketingSystem.Controllers
             return View("DataEntry");
         }
 
-        [HttpGet]
-        public IActionResult ReportsHome()
-        {
-            return View("ReportsHome");
-        }
-
         public IActionResult EntryClose(TicketData td)
         {
             RecordRetriever rr = new RecordRetriever();
@@ -50,20 +44,11 @@ namespace TicketingSystem.Controllers
             return View("EntryClose", tdRes);
         }
 
-        [HttpPost]
-        public IActionResult PostEntryClose(TicketData td)
-        {
-            RecordRetriever rr = new RecordRetriever();
-            DataEntry de = new DataEntry();
-            de.CloseTicket(td);
-            return View("HomePage", rr.GetOpenRecords());
-        }
-
         [HttpGet]
         public IActionResult HomePage()
         {
             RecordRetriever rr = new RecordRetriever();
-            var records = rr.GetOpenRecords();
+            var records = rr.RetrieveRecords();
             latestData = records;
             return View("HomePage", records);
         }
@@ -92,10 +77,12 @@ namespace TicketingSystem.Controllers
             TicketData td = rr.GetRecordByID(id);
             JsonResult tdJson = new JsonResult(td);
             //return View("EntryClose", td);
+
             return Json(new
             {
                 newUrl = Url.Action("EntryClose", "Home", td)
             });
+
         }
 
         public IActionResult CloseTicket()
@@ -107,7 +94,7 @@ namespace TicketingSystem.Controllers
                 bool success = de.CloseTicket(td);
             }
             RecordRetriever rr = new RecordRetriever();
-            return View("HomePage", rr.GetOpenRecords());
+            return View("HomePage", rr.RetrieveRecords());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -17,25 +17,16 @@ namespace TicketingSystem.Services
                 var tdata = context.TicketData.ToList();
                 foreach (TicketData td in tdata)
                 {
-                    td.JobType = context.JobType.Find(td.JobTypeId);
-                    td.TicketWorker = context.Users.Find(td.TicketWorkerId);
-                    td.EntryAuthor = context.Users.Find(td.EntryAuthorId);
-                }
-                return tdata;
-            }
-        }
+                    //td.Employee.EmployeeName = context.Employee.Find(td.EmployeeId).EmployeeName;
 
-        public IEnumerable<TicketData> GetOpenRecords()
-        {
-            using (var context = new TicketingSystemDBContext())
-            {
-                var tdata = context.TicketData.Where(td => td.TicketClosed == false).ToList();
-                foreach(TicketData td in tdata)
-                {
                     td.JobType = context.JobType.Find(td.JobTypeId);
                     td.TicketWorker = context.Users.Find(td.TicketWorkerId);
                     td.EntryAuthor = context.Users.Find(td.EntryAuthorId);
+                    // td.JobType.JobType1 = td.JobType.JobType1;
+                    var x = 1;
                 }
+
+
                 return tdata;
             }
         }
@@ -44,16 +35,7 @@ namespace TicketingSystem.Services
         {
             using (var context = new TicketingSystemDBContext())
             {
-                TicketData td = context.TicketData.Find(entryID);
-                JobType jt = context.JobType.Find(td.JobTypeId);
-                Users author = context.Users.Find(td.EntryAuthorId);
-                Users worker = context.Users.Find(td.TicketWorkerId);
-
-                td.JobType = jt;
-                td.EntryAuthor = author;
-                td.TicketWorker = worker;
-
-                return td;
+                return context.TicketData.Find(entryID);
             }
         }
     }
