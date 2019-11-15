@@ -4,6 +4,7 @@ function clearForm() {
 }
 
 function updateFields() {
+    console.log('updating fields')
     $('*[data-attr="nonDefault"]').remove()
     var jType = document.getElementById('jobType')
 
@@ -27,11 +28,13 @@ function updateFields() {
 }
 
 function verifyInput() {
+    alert('verifying')
     var jType = document.getElementById('jobType')
     var tripNum = document.getElementById('tripNumber')
     var stageNum = document.getElementById('stageNumber')
     var empName = document.getElementById('employeeName')
     var startTime = document.getElementById('startTime')
+    var endTime
 
     if (jType.selectedIndex < 1) {
         alert('Please select a Job Type')
@@ -53,6 +56,13 @@ function verifyInput() {
         alert('Please enter a valid start time')
         return false
     }
+    if ((endTime = document.getElementById('endTime')) != null) {
+        if (endTime.value == "") {
+            alert('Please enter a valid end time')
+            return false
+        }
+    }
+
     alert('success')
     return true
 }

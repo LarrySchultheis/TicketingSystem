@@ -56,14 +56,14 @@ namespace TicketingSystem.Controllers
             RecordRetriever rr = new RecordRetriever();
             DataEntry de = new DataEntry();
             de.CloseTicket(td);
-            return View("HomePage", rr.RetrieveRecords());
+            return View("HomePage", rr.GetOpenRecords());
         }
 
         [HttpGet]
         public IActionResult HomePage()
         {
             RecordRetriever rr = new RecordRetriever();
-            var records = rr.RetrieveRecords();
+            var records = rr.GetOpenRecords();
             latestData = records;
             return View("HomePage", records);
         }
@@ -107,7 +107,7 @@ namespace TicketingSystem.Controllers
                 bool success = de.CloseTicket(td);
             }
             RecordRetriever rr = new RecordRetriever();
-            return View("HomePage", rr.RetrieveRecords());
+            return View("HomePage", rr.GetOpenRecords());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
