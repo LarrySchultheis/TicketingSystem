@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ExceptionReport\Archive\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

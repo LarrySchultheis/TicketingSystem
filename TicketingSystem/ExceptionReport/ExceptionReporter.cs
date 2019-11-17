@@ -16,6 +16,17 @@ namespace TicketingSystem.ExceptionReport
                 outFile.WriteLine(e);
                 outFile.Close();
             }
+            path += "\\Archive";
+            string now = DateTime.Now.ToString();
+            now = now.Replace("/", "-");
+            //now = now.Replace(" ", "_");
+            now = now.Replace(":", "-");
+
+            using (StreamWriter outfile = new StreamWriter(Path.Combine(path, "Exception_" + now + ".txt")))
+            {
+                outfile.WriteLine(e);
+                outfile.Close();
+            }
 
         }
     }
