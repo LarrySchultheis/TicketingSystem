@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TicketingSystem.Models;
 
 namespace TicketingSystem.Services
 {
@@ -11,7 +12,7 @@ namespace TicketingSystem.Services
         {
             try
             {
-                using (var context = new TicketingSystemDBContect())
+                using (var context = new TicketingSystemDBContext())
                 {
                     IEnumerable<JobType> jobs = context.JobType;
                     int jtypeID = 1;
