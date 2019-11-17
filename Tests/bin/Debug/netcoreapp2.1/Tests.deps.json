@@ -12,6 +12,7 @@
           "Microsoft.NETCore.TestHost": "2.0.8",
           "NUnit": "3.12.0",
           "NUnit3TestAdapter": "3.15.1",
+          "System.Console": "4.3.1",
           "TicketingSystem": "1.0.0"
         },
         "runtime": {
@@ -495,6 +496,7 @@
           }
         }
       },
+      "System.Console/4.3.1": {},
       "System.Diagnostics.Process/4.3.0": {
         "dependencies": {
           "Microsoft.Win32.Primitives": "4.3.0",
@@ -513,7 +515,8 @@
       },
       "TicketingSystem/1.0.0": {
         "dependencies": {
-          "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.1.10"
+          "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.1.10",
+          "System.Console": "4.3.1"
         },
         "runtime": {
           "TicketingSystem.dll": {}
@@ -736,6 +739,13 @@
       "sha512": "sha512-0Zae/FtzeFgDBBuILeIbC/T9HMYbW4olAmi8XqqAGosSOWvXfiQLfARZEhiGd0LVXaYgXr0NhxiU1LldRP1fpQ==",
       "path": "system.composition.typedparts/1.0.31",
       "hashPath": "system.composition.typedparts.1.0.31.nupkg.sha512"
+    },
+    "System.Console/4.3.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6iKDG36vugpW230eBGMLL6GQIx+Buf5txz6DFC1c4MOH8qcOo2mFzId6GsJUTptR4AusnDsdUeCYuzDiftD39w==",
+      "path": "system.console/4.3.1",
+      "hashPath": "system.console.4.3.1.nupkg.sha512"
     },
     "System.Diagnostics.Process/4.3.0": {
       "type": "package",

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TicketingSystem.Models;
+using TicketingSystem.ExceptionReport;
 using System.IO;
+using System.Diagnostics;
 
 namespace TicketingSystem.Services
 {
@@ -32,8 +34,6 @@ namespace TicketingSystem.Services
                     td.EntryAuthor = null;
 
                     context.TicketData.Update(td);
-                    //context.TicketData.Find(td.EntryId).TripNum = td.TripNum;
-
                     context.SaveChanges();
 
                     TicketDataLogger tdl = new TicketDataLogger();
@@ -43,11 +43,8 @@ namespace TicketingSystem.Services
 
             catch (Exception e)
             {
-                string path = Environment.CurrentDirectory;
-                using (StreamWriter outFile = new StreamWriter(Path.Combine(path, "Error.txt")))
-                {
-                    outFile.Write(e);
-                }
+                ExceptionReporter er = new ExceptionReporter();
+                er.DumpException(e);
                 return false;
             }
 

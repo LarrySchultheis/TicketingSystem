@@ -1,0 +1,2 @@
+System.DivideByZeroException: Attempted to divide by zero.
+   at TicketingSystem.Services.DataEditor.PostEditor(TicketData td) in G:\GitKraken\TicketingSystem\TicketingSystem\Services\DataEditor.cs:line 38
