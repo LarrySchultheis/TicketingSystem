@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace Prototype.Tests.ServiceTests
+namespace Tests.ServiceTests
 {
     [TestFixture]
     public class TicketDataLoggerTests

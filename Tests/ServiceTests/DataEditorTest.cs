@@ -33,7 +33,7 @@ namespace Tests.ServiceTests
                 };
 
                 DataEditor DaEd = new DataEditor();
-                Assert.IsTrue(de.PostEntry(td));
+                Assert.IsTrue(DaEd.PostEditor(td));
             }
         }
     }

@@ -5,7 +5,7 @@ using TicketingSystem.Models;
 using System;
 using System.Linq;
 
-namespace Prototype.Tests.ServiceTests
+namespace Tests.ServiceTests
 {
     [TestFixture]
     public class DataEntryTests

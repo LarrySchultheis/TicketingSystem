@@ -17,13 +17,9 @@ namespace TicketingSystem.Services
                 var tdata = context.TicketData.ToList();
                 foreach (TicketData td in tdata)
                 {
-                    //td.Employee.EmployeeName = context.Employee.Find(td.EmployeeId).EmployeeName;
-
                     td.JobType = context.JobType.Find(td.JobTypeId);
                     td.TicketWorker = context.Users.Find(td.TicketWorkerId);
                     td.EntryAuthor = context.Users.Find(td.EntryAuthorId);
-                    // td.JobType.JobType1 = td.JobType.JobType1;
-                    var x = 1;
                 }
 
 
@@ -35,7 +31,26 @@ namespace TicketingSystem.Services
         {
             using (var context = new TicketingSystemDBContext())
             {
-                return context.TicketData.Find(entryID);
+                TicketData td = context.TicketData.Find(entryID);
+                td.JobType = context.JobType.Find(td.JobTypeId);
+                td.EntryAuthor = context.Users.Find(td.EntryAuthorId);
+                td.TicketWorker = context.Users.Find(td.TicketWorkerId);
+                return td;
+            }
+        }
+
+        public IEnumerable<TicketData> GetOpenRecords()
+        {
+            using (var context = new TicketingSystemDBContext())
+            {
+                var tdata = context.TicketData.Where(t => t.TicketClosed == false).ToList();
+                foreach (TicketData td in tdata)
+                {
+                    td.JobType = context.JobType.Find(td.JobTypeId);
+                    td.TicketWorker = context.Users.Find(td.TicketWorkerId);
+                    td.EntryAuthor = context.Users.Find(td.EntryAuthorId);
+                }
+                return tdata;
             }
         }
     }

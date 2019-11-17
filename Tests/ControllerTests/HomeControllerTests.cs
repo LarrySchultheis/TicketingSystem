@@ -6,7 +6,7 @@ using TicketingSystem.Controllers;
 using TicketingSystem.Models;
 using System.Linq;
 
-namespace Prototype.Tests.ControllerTests
+namespace Tests.ControllerTests
 {
     [TestFixture]
     class HomeControllerTests
