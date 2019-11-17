@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TicketingSystem.Models;
+using System.IO;
 
 namespace TicketingSystem.Services
 {
@@ -14,7 +15,6 @@ namespace TicketingSystem.Services
             {
                 using (var context = new TicketingSystemDBContext())
                 {
-                    TicketData ticketToEdit = context.TicketData.Find(td.EntryId);
                     IEnumerable<JobType> jobs = context.JobType;
                     int jtypeID;
                     jtypeID = context.JobType.Where(j => j.JobName == td.JobType.JobName).FirstOrDefault().JobTypeId;
@@ -31,7 +31,8 @@ namespace TicketingSystem.Services
                     td.TicketWorker = null;
                     td.EntryAuthor = null;
 
-                    ticketToEdit = td;
+                    context.TicketData.Update(td);
+                    //context.TicketData.Find(td.EntryId).TripNum = td.TripNum;
 
                     context.SaveChanges();
 
@@ -42,7 +43,11 @@ namespace TicketingSystem.Services
 
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                string path = Environment.CurrentDirectory;
+                using (StreamWriter outFile = new StreamWriter(Path.Combine(path, "Error.txt")))
+                {
+                    outFile.Write(e);
+                }
                 return false;
             }
 

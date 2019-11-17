@@ -92,8 +92,6 @@ namespace TicketingSystem.Controllers
             int id = int.Parse(entryID);
             RecordRetriever rr = new RecordRetriever();
             TicketData td = rr.GetRecordByID(id);
-            JsonResult tdJson = new JsonResult(td);
-            //return View("EntryClose", td);
 
             return Json(new
             {
