@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Tests",
+    "\\Tests\\ServiceTests",
+    "\\TicketingSystem",
+    "\\TicketingSystem\\Services"
+  ],
+  "SelectedNode": "\\TicketingSystem\\Services\\DataEditor.cs",
+  "PreviewInSolutionExplorer": false
+}
