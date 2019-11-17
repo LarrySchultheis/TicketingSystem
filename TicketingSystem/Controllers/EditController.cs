@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TicketingSystem.Controllers
 {
-    public class ReportController : Controller
+    public class EditController : Controller
     {
         public IActionResult Index()
         {

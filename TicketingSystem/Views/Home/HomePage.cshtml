@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 
 <div class="text-center">
-    <h2 class="display-4">Here's the latest data</h2>
+    <h2 class="display-4">Ticket Table</h2>
     <br />
     <br />
 </div>
@@ -37,21 +37,13 @@
 
             }
 
-            @*@for (int i = 0; i < 10; i++)
-                {
-                    <tr>
-                        <td>job</td>
-                        <td>@i</td>
-                        <td>s01</td>
-                        <td>bob</td>
-                        <td>12:34</td>
-                        <td>closed</td>
-                    </tr>
-                }*@
         </tbody>
     </table>
 
-    <button onclick="location.href='@Url.Action("CloseTicket", "Home")'">Close Entry Test</button>
+    <button onclick="location.href='@Url.Action("AllTickets", "Home")'">View All Tickets</button>
+    <br />
+    <br />
+    <button onclick="location.href='@Url.Action("HomePage", "Home")'">View Open Tickets</button>
 
 </div>
 
@@ -89,4 +81,5 @@
         })
         
     }
+
 </script>

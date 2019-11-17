@@ -33,7 +33,7 @@ function verifyInput() {
     var stageNum = document.getElementById('stageNumber')
     var empName = document.getElementById('employeeName')
     var startTime = document.getElementById('startTime')
-
+    var endTime
 
     if (jType.selectedIndex < 1) {
         alert('Please select a Job Type')
@@ -55,6 +55,14 @@ function verifyInput() {
         alert('Please enter a valid start time')
         return false
     }
+    if ((endTime = document.getElementById('endTime')) != null) {
+        console.log(endTime)
+        if (endTime.value == "") {
+            alert('Please enter a valid end time')
+            return false
+        }
+    }
+
     alert('success')
     return true
 }

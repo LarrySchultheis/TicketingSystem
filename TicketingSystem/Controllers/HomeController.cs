@@ -44,12 +44,29 @@ namespace TicketingSystem.Controllers
             return View("EntryClose", tdRes);
         }
 
+        public IActionResult PostEntryClose(TicketData td)
+        {
+            DataEntry de = new DataEntry();
+            RecordRetriever rr = new RecordRetriever();
+            de.CloseTicket(td);
+            var tdRes = rr.GetOpenRecords();
+            return View("HomePage", tdRes);
+        }
+
         [HttpGet]
         public IActionResult HomePage()
         {
             RecordRetriever rr = new RecordRetriever();
-            var records = rr.RetrieveRecords();
+            var records = rr.GetOpenRecords();
             latestData = records;
+            return View("HomePage", records);
+        }
+
+        [HttpGet]
+        public IActionResult AllTickets()
+        {
+            RecordRetriever rr = new RecordRetriever();
+            var records = rr.RetrieveRecords();
             return View("HomePage", records);
         }
 

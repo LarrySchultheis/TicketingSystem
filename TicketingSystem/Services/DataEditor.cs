@@ -14,16 +14,14 @@ namespace TicketingSystem.Services
             {
                 using (var context = new TicketingSystemDBContext())
                 {
+                    TicketData ticketToEdit = context.TicketData.Find(td.EntryId);
                     IEnumerable<JobType> jobs = context.JobType;
-                    int jtypeID = 1;
-
+                    int jtypeID;
                     jtypeID = context.JobType.Where(j => j.JobName == td.JobType.JobName).FirstOrDefault().JobTypeId;
                     int authorID = context.Users.Where(a => a.FullName == "System Admin").FirstOrDefault().UserId;
                     int workerID = context.Users.Where(w => w.FullName == td.TicketWorker.FullName).FirstOrDefault().UserId;
 
                     td.JobTypeId = jtypeID;
-                    td.EntryDate = DateTime.Now;
-                    td.TicketClosed = false;
                     td.EntryAuthorId = authorID;
                     td.TicketWorkerId = workerID;
                     td.WorkerName = td.TicketWorker.FullName;
@@ -33,13 +31,12 @@ namespace TicketingSystem.Services
                     td.TicketWorker = null;
                     td.EntryAuthor = null;
 
-                    context.TicketData.Add(td);
+                    ticketToEdit = td;
+
                     context.SaveChanges();
 
-                    int entryID = td.EntryId;
-
                     TicketDataLogger tdl = new TicketDataLogger();
-                    tdl.LogChange("new edits", "edited entry", entryID);
+                    tdl.LogChange("new edits", "edited entry", td.EntryId);
                 }
             }
 

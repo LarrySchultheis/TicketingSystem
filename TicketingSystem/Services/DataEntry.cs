@@ -31,7 +31,7 @@ namespace TicketingSystem.Services
                     int workerID = context.Users.Where(w => w.FullName == td.TicketWorker.FullName).FirstOrDefault().UserId;
 
                     td.JobTypeId = jtypeID;
-                    td.EntryDate = DateTime.Now;
+                    td.EntryDate = DateTime.Today;
                     td.TicketClosed = false;
                     td.EntryAuthorId = authorID;
                     td.TicketWorkerId = workerID;
