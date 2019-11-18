@@ -3,7 +3,6 @@ using TicketingSystem.Services;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TicketingSystem.Models;
@@ -135,17 +134,17 @@ namespace TicketingSystem.Controllers
 
         }
 
-        public IActionResult CloseTicket()
-        {
-            using (var context = new TicketingSystemDBContext())
-            {
-                var td = context.TicketData.Where(t => t.EntryAuthor.Email == "admin123@gmail.com").FirstOrDefault();
-                DataEntry de = new DataEntry();
-                bool success = de.CloseTicket(td);
-            }
-            RecordRetriever rr = new RecordRetriever();
-            return View("HomePage", rr.RetrieveRecords());
-        }
+        //public IActionResult CloseTicket()
+        //{
+        //    using (var context = new TicketingSystemDBContext())
+        //    {
+        //        var td = context.TicketData.Where(t => t.EntryAuthor.Email == "admin123@gmail.com").FirstOrDefault();
+        //        DataEntry de = new DataEntry();
+        //        bool success = de.CloseTicket(td);
+        //    }
+        //    RecordRetriever rr = new RecordRetriever();
+        //    return View("HomePage", rr.RetrieveRecords());
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

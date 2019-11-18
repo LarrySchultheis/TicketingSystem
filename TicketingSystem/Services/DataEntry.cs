@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TicketingSystem.Models;
+using TicketingSystem.ExceptionReport;
 
 namespace TicketingSystem.Services
 {
@@ -17,15 +18,7 @@ namespace TicketingSystem.Services
                 {
                     IEnumerable<JobType> jobs = context.JobType;
                     int jtypeID = 1;
-                    //foreach (JobType j in jobs)
-                    //{
-                    //    if (td.JobType.JobName == j.JobName)
-                    //    {
-                    //        jtypeID = j.JobTypeId;
-                    //        break;
-                    //    }
-                    //}
-                    //int workerID = context.Users.Where(w => w.)
+
                     jtypeID = context.JobType.Where(j => j.JobName == td.JobType.JobName).FirstOrDefault().JobTypeId;
                     int authorID = context.Users.Where(a => a.FullName == "System Admin").FirstOrDefault().UserId;
                     int workerID = context.Users.Where(w => w.FullName == td.TicketWorker.FullName).FirstOrDefault().UserId;
@@ -54,7 +47,8 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                ExceptionReporter er = new ExceptionReporter();
+                er.DumpException(e);
                 return false;
             }
             return true;
@@ -73,7 +67,8 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                ExceptionReporter er = new ExceptionReporter();
+                er.DumpException(e);
                 return false;
             }
             return true;

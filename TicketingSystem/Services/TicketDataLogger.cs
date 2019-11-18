@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TicketingSystem.Models;
+using TicketingSystem.ExceptionReport;
 
 namespace TicketingSystem.Services
 {
@@ -28,6 +26,8 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
+                ExceptionReporter er = new ExceptionReporter();
+                er.DumpException(e);
                 return false;
             }
             return true;
