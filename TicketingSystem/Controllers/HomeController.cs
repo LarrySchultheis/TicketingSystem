@@ -111,8 +111,9 @@ namespace TicketingSystem.Controllers
         {
             DataEntry de = new DataEntry();
             bool success = de.PostEntry(td);
+            RecordRetriever rr = new RecordRetriever();
 
-            return View("DataEntry", td);
+            return View("HomePage", rr.GetOpenRecords());
         }
 
         /// <summary>
