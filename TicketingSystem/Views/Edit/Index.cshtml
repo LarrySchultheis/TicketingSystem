@@ -13,6 +13,8 @@
     </div>
 </div>
 <br />
+<br />
+
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
         <button onclick="postId()" class="btn-dark" id="subBtn">Submit</button>
@@ -25,6 +27,12 @@
 
 <script>
     function postId() {
+        console.log($('#entryId'))
+        if ($('#entryId').val() == "") {
+            alert('Please enter an entry ID')
+            return false;
+        }
+
         var id = $('#entryId').val()
         console.log(id)
         $.ajax({
@@ -41,6 +49,7 @@
         }).done(function (data) {
             window.location.replace(data.newUrl)
         })
+        return true;
     }
 
 </script>

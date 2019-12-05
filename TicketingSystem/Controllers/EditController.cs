@@ -11,11 +11,22 @@ namespace TicketingSystem.Controllers
 {
     public class EditController : Controller
     {
+        /// <summary>
+        /// Gets Index page when HomePage/Index is hit
+        /// </summary>
+        /// <returns>
+        /// Index View
+        /// </returns>
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Displays EditForm view with TicketData instance as the model
+        /// </summary>
+        /// <param name="td">TicketData instance</param>
+        /// <returns>EditForm View with specified TicketData entry</returns>
         public IActionResult EditForm(TicketData td)
         {
             RecordRetriever rr = new RecordRetriever();
@@ -23,6 +34,11 @@ namespace TicketingSystem.Controllers
             return View("EditForm", tdRes);
         }
 
+        /// <summary>
+        /// Gets the TicketData entry based on the entryID input in Index page
+        /// </summary>
+        /// <param name="entryId">Entry ID input from index</param>
+        /// <returns>JSON holding redirect URL</returns>
         public JsonResult GetRecord(string entryId)
         {
             RecordRetriever rr = new RecordRetriever();
@@ -34,6 +50,11 @@ namespace TicketingSystem.Controllers
             });
         }
 
+        /// <summary>
+        /// Posts edited ticket data entry to DataEditor service
+        /// </summary>
+        /// <param name="td">TicketData instance from edit form</param>
+        /// <returns>Index View</returns>
         public IActionResult PostEdit(TicketData td)
         {
             DataEditor de = new DataEditor();

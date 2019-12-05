@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TicketingSystem.ExceptionReport
 {
     public class ExceptionReporter
     {
+        /// <summary>
+        /// Dumps exceptions to LatestException.txt and Archive directory
+        /// </summary>
+        /// <param name="e">Exception to dump</param>
         public void DumpException(Exception e)
         {
             string path = Environment.CurrentDirectory + "\\ExceptionReport";
@@ -19,7 +20,6 @@ namespace TicketingSystem.ExceptionReport
             path += "\\Archive";
             string now = DateTime.Now.ToString();
             now = now.Replace("/", "-");
-            //now = now.Replace(" ", "_");
             now = now.Replace(":", "-");
 
             using (StreamWriter outfile = new StreamWriter(Path.Combine(path, "Exception_" + now + ".txt")))
