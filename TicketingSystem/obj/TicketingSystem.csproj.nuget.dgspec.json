@@ -42,10 +42,8 @@
         "netcoreapp2.1": {
           "dependencies": {
             "Microsoft.AspNetCore.App": {
-              "suppressParent": "All",
               "target": "Package",
-              "version": "[2.1.1, )",
-              "autoReferenced": true
+              "version": "[2.1.4, )"
             },
             "Microsoft.AspNetCore.Razor.Design": {
               "suppressParent": "All",
