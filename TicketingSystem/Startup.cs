@@ -57,7 +57,7 @@ namespace TicketingSystem
 
                 // Set the callback path, so Auth0 will call back to http://localhost:3000/callback
                 // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
-                options.CallbackPath = new PathString("/callback");
+                options.CallbackPath = new PathString("/home/homepage");
 
                 // Configure the Claims Issuer to be Auth0
                 options.ClaimsIssuer = "Auth0";
@@ -70,9 +70,9 @@ namespace TicketingSystem
                         context.ProtocolMessage.SetParameter("audience", "https://robertstrucking.auth0.com/api/v2/");
 
                         return Task.FromResult(0);
-                    }
+                    },
 
-                    /*
+
                     // handle the logout redirection
                     OnRedirectToIdentityProviderForSignOut = (context) =>
                     {
@@ -86,13 +86,13 @@ namespace TicketingSystem
                                 var request = context.Request;
                                 postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
                             }
-                            logoutUri += $"&returnTo={ Uri.EscapeDataString(postLogoutUri)}";
+                            logoutUri += $"&returnTo={ System.Uri.EscapeDataString(postLogoutUri)}";
                         }
                         context.Response.Redirect(logoutUri);
                         context.HandleResponse();
                         return Task.CompletedTask;
                     }
-                    */
+
                 };
             });
 

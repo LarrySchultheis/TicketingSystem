@@ -177,3 +177,4 @@ C:\Users\I Am\Documents\GitHub\TicketingSystem\TicketingSystem\obj\Debug\netcore
 C:\Users\I Am\Documents\GitHub\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.dll
 C:\Users\I Am\Documents\GitHub\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.pdb
 C:\Users\I Am\Documents\GitHub\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.csproj.CopyComplete
+G:\GitKraken\TicketingSystem\TicketingSystem\obj\Debug\netcoreapp2.1\TicketingSystem.csprojAssemblyReference.cache
