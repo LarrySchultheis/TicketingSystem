@@ -3,5 +3,34 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Reports Home</h2>
+<h1>Reports Home</h1>
 
+<div>
+
+    <form id="selectReport" class="form-horizontal" asp-action="RunReport" asp-controller="Report">
+        <label for="reportType">Select Report Type:</label>
+
+        <div class="form-group" id="reportType">
+            <div>
+                <select name="ReportType">
+                    <option value="0">Incentive Report</option>
+                    <option value="1">Labor Hours by Job</option>
+                    <option value="2">Labor Hours by Job and Employee</option>
+                </select>
+            </div>
+
+            <br />
+
+            <div>
+                <div>
+                    <button type="submit" class="btn-dark" id="subBtn">Submit</button>
+                    &nbsp;
+                    <button type="reset" class="btn-dark" id="resetBtn">Reset Form</button>
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+
+</div>
