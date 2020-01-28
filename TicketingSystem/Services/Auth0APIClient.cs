@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace TicketingSystem.Services
 {
-    public class UserDataServer
+    public class Auth0APIClient
     {
         public UserData GetUserData(string UserId)
         {
@@ -39,6 +39,28 @@ namespace TicketingSystem.Services
 
             TokenData td = JsonConvert.DeserializeObject<TokenData>(content);
             return td;
+        }
+
+        public void UpdateUsers(string userId)
+        {
+            using (var db = new TicketingSystemDBContext())
+            {
+                var token = GetAPIToken();
+                UserData ud = GetUserData(userId);
+
+                var u = db.Users.Where(uid => uid.Email == ud.email);
+                if (u.Count() == 0)
+                {
+                    Users user = new Users();
+                    user.Email = ud.email;
+                    user.Auth0Uid = ud.user_id;
+
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                }
+                var x = 0;
+
+            }
         }
     }
 }
