@@ -6,6 +6,8 @@
 }
 <!DOCTYPE html>
 
+<partial name="_HeaderNavbar"/>
+
 <div class="text-center">
     <h2 class="display-4">Ticket Table</h2>
     <br />
@@ -64,7 +66,7 @@
     function rowClicked(entryId) {
         var id = entryId
         console.log(id)
-        
+
         $.ajax({
             type: "POST",
             url: '@Url.Action("OpenEntry", "Home")',
@@ -79,7 +81,7 @@
         }).done(function (data) {
             window.location.replace(data.newUrl)
         })
-        
+
     }
 
 </script>

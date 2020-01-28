@@ -4,6 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
+<partial name="_HeaderNavbar" />
+
+
 <h2>Edit Page</h2>
 
 <div class="form-group" id="entryIdContainer">
@@ -21,9 +24,77 @@
     </div>
 </div>
 
+<br />
+<br />
+
+<div>
+    <table id="dummyTable" class="table table-hover table-bordered table-dark">
+        <thead class="thead-light">
+            <tr>
+                <th>Job Type</th>
+                <th>Trip Number</th>
+                <th>Stage Number</th>
+                <th>Employee Name</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr onclick="rowClicked(@item.EntryId)">
+                    <td>@item.JobType.JobName</td>
+                    <td>@item.TripNum</td>
+                    <td>@item.StageNum</td>
+                    <td>@item.TicketWorker.FullName</td>
+                    <td>@item.StartTime</td>
+                    <td>@(item.TicketClosed ? "Closed" : "Open")</td>
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+
+</div>
+
+
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
         crossorigin="anonymous"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.css" />
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var table = $('#dummyTable').DataTable()
+    });</script>
+
+<script>
+    function rowClicked(entryId) {
+        var id = entryId
+        console.log(id)
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetRecord", "Edit")',
+            data: { entryID: id },
+            success: function () {
+                alert('Success')
+            },
+            error: function (e) {
+                alert('Error')
+                console.log(e)
+            }
+        }).done(function (data) {
+            window.location.replace(data.newUrl)
+        })
+    }
+
+</script>
+
 
 <script>
     function postId() {

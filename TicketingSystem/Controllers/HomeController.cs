@@ -14,19 +14,9 @@ namespace TicketingSystem.Controllers
         private IEnumerable<TicketData> latestData;
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Landing()
         {
-            return View();
-        }
-
-        /// <summary>
-        /// Gets Index page
-        /// </summary>
-        /// <returns>Index View</returns>
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
+            return View("Landing");
         }
 
         public IActionResult Privacy()
@@ -77,10 +67,17 @@ namespace TicketingSystem.Controllers
         [HttpGet]
         public IActionResult HomePage()
         {
-            RecordRetriever rr = new RecordRetriever();
-            var records = rr.GetOpenRecords();
-            latestData = records;
-            return View("HomePage", records);
+            if (User.Identity.IsAuthenticated)
+            {
+                RecordRetriever rr = new RecordRetriever();
+                var records = rr.GetOpenRecords();
+                latestData = records;
+                return View("HomePage", records);
+            }
+            else
+            {
+                return View("Landing");
+            }
         }
 
         /// <summary>

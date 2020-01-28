@@ -9,10 +9,12 @@ namespace SampleMvcApp.Controllers
 {
     public class AccountController : Controller
     {
-        public async Task Login(string returnUrl = "/")
+
+
+        public async Task Login()
         {
             var x = 0;
-            await HttpContext.ChallengeAsync("Auth0", new AuthenticationProperties() { RedirectUri = returnUrl });
+            await HttpContext.ChallengeAsync("Auth0", new AuthenticationProperties() { RedirectUri = "/" });
 
         }
 
@@ -24,7 +26,7 @@ namespace SampleMvcApp.Controllers
                 // Indicate here where Auth0 should redirect the user after a logout.
                 // Note that the resulting absolute Uri must be whitelisted in the 
                 // **Allowed Logout URLs** settings for the client.
-                RedirectUri = Url.Action("HomePage", "Home") 
+                RedirectUri = Url.Action("Landing", "Home") 
             });
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
