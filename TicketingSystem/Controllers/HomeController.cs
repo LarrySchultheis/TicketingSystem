@@ -69,6 +69,13 @@ namespace TicketingSystem.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
+                //Code snippet to grab user info
+
+                //var userId = User.Claims.First().Value;
+                //UserDataServer uds = new UserDataServer();
+                //UserData ud = uds.GetUserData(userId);
+
+
                 RecordRetriever rr = new RecordRetriever();
                 var records = rr.GetOpenRecords();
                 latestData = records;
