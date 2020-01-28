@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TicketingSystem.Models;
+using TicketingSystem.ExceptionReport;
 
 namespace TicketingSystem.Services
 {
@@ -10,11 +11,20 @@ namespace TicketingSystem.Services
     {
         public List<TicketData> GenerateIncentveReport()
         {
-            using (var context = new TicketingSystemDBContext())
+            try
             {
-                var data = context.TicketData.Where(u => u.TicketWorker.FullName == "Basic User").ToList();
+                using (var context = new TicketingSystemDBContext())
+                {
+                    var data = context.TicketData.Where(u => u.TicketWorker.FullName == "Basic User").ToList();
 
-                return data;
+                    return data;
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionReporter er = new ExceptionReporter();
+                er.DumpException(e);
+                return false;
             }
         }
 
