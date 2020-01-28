@@ -19,7 +19,9 @@ namespace TicketingSystem.Controllers
         /// </returns>
         public IActionResult Index()
         {
-            return View();
+            RecordRetriever rr = new RecordRetriever();
+            var res = rr.RetrieveRecords();
+            return View("Index", res);
         }
 
         /// <summary>
@@ -50,6 +52,7 @@ namespace TicketingSystem.Controllers
             });
         }
 
+
         /// <summary>
         /// Posts edited ticket data entry to DataEditor service
         /// </summary>
@@ -59,7 +62,9 @@ namespace TicketingSystem.Controllers
         {
             DataEditor de = new DataEditor();
             de.PostEditor(td);
-            return View("Index");
+            RecordRetriever rr = new RecordRetriever();
+            var res = rr.RetrieveRecords();
+            return View("Index", res);
         }
     }
 }

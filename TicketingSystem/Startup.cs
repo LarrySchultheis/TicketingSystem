@@ -67,7 +67,7 @@ namespace TicketingSystem
 
                     OnRedirectToIdentityProvider = context =>
                     {
-                        context.ProtocolMessage.SetParameter("audience", "https://robertstrucking.auth0.com/api/v2/");
+                        context.ProtocolMessage.SetParameter("audience", "https://robertswarehousing.auth0.com/api/v2/");
 
                         return Task.FromResult(0);
                     },

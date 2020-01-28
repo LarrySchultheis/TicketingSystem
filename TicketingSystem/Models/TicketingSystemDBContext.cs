@@ -135,6 +135,11 @@ namespace TicketingSystem.Models
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
+                entity.Property(e => e.Auth0Uid)
+                    .HasColumnName("Auth0UID")
+                    .HasMaxLength(256)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasMaxLength(256);
