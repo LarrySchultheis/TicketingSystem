@@ -8,22 +8,49 @@ namespace TicketingSystem.Services
 {
     public class ReportGenerator
     {
-        public List<TicketData> GenerateIncentveReport()
+        public List<TicketData> GenerateIncentveReport(DateTime startDate, DateTime endDate)
         {
-            using (var context = new TicketingSystemDBContext())
-            {
-                var data = context.TicketData.Where(u => u.TicketWorker.FullName == "Basic User").ToList();
 
-                return data;
+            return null;
+        }
+
+        public void GenerateLaborHoursByJob(DateTime startDate, DateTime endDate)
+        {
+            List<LaborHoursByJob> data = new List<LaborHoursByJob>();
+
+            using (var db = new TicketingSystemDBContext())
+            {
+                var td = db.TicketData.Where(t => t.EntryDate >= startDate && t.EntryDate <= endDate).ToList();
+                foreach (TicketData t in td)
+                {
+                    LaborHoursByJob lh = new LaborHoursByJob();
+                    lh.Cases = t.CasesNum;
+                    lh.Pallets = t.PalletNum;
+                    lh.Job = db.JobType.Where(j => j.JobTypeId == t.JobTypeId).FirstOrDefault();
+                    if (t.EndTime == null)
+                    {
+                        lh.TotalHours = DateTime.Now - t.StartTime;
+                    }
+                    else
+                    {
+                        lh.TotalHours = t.EndTime - t.StartTime;
+                    }
+                    data.Add(lh);
+                }
             }
         }
 
-        public void GenerateLaborHoursByJob()
+        public void GenerateLaborHoursByJobAndEmployee(DateTime startDate, DateTime endDate)
         {
         }
 
-        public void GenerateLaborHoursByJobAndEmployee()
+        public LaborHoursByJob GetLaborHoursByJob(DateTime startDate, DateTime endDate)
         {
+            LaborHoursByJob lh = new LaborHoursByJob();
+
+
+
+            return lh;
         }
     }
 }

@@ -1,0 +1,2 @@
+System.Exception: Error, Report Type is not valid
+   at TicketingSystem.Controllers.ReportController.RunReport(ReportInput reportData) in G:\GitKraken\TicketingSystem\TicketingSystem\Controllers\ReportController.cs:line 40
