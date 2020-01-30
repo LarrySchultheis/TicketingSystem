@@ -10,14 +10,26 @@
 
 
     <form id="selectReport" class="form-horizontal" asp-action="RunReport" asp-controller="Report">
-        <label for="reportType">Select Report Type:</label>
 
         <div class="form-group" id="reportType">
+
+            <label for="startDate">Enter the Start Date:</label>
+            <div>
+                <input id="startDate" name="StartDate" type="date"/>
+            </div>
+
+            <label for="endDate">Enter the End Date:</label>
+            <div>
+                <input id="endDate" name="EndDate" type="date"/>
+            </div>
+
+            <label for="reportType">Select Report Type:</label>
             <div>
                 <select name="ReportType">
                     <option value="0">Incentive Report</option>
                     <option value="1">Labor Hours by Job</option>
                     <option value="2">Labor Hours by Job and Employee</option>
+                    <option value="3">test</option>
                 </select>
             </div>
 

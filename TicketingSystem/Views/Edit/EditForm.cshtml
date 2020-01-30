@@ -54,6 +54,14 @@
                 <input asp-for="StageNum" type="text" class="form-control" id="stageNumber" data-attr="default">
             </div>
         </div>
+
+        <div class="form-group" id="palletNumContainer">
+            <label class="control-label col-sm-2" for="palletNum">Number of Pallets:</label>
+            <div class="col-sm-10">
+                <input asp-for="PalletNum" type="number" class="form-control" id="palletNum" data-attr="default">
+            </div>
+        </div>
+
         <div class="form-group" id="palletWrapsContainer">
             <div class="col-sm-10" id="palletWrapsInnerContainer">
             </div>
@@ -85,7 +93,7 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="isClosed">Ticket Closed</label>
             <div class="col-sm-10">
-                <input asp-for="TicketClosed" type="checkbox" id="isClosed" data-attr="default" disabled>
+                <input asp-for="TicketClosed" type="checkbox" id="isClosed" data-attr="default">
             </div>
         </div>
         <div class="form-group">
