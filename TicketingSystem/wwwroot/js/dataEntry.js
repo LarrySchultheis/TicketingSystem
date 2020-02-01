@@ -10,6 +10,9 @@ function updateFields() {
 
     if (jType.selectedIndex == 2) { //case picker
         //add cases number and pallet wrap number
+        $('<input name="CasesNum" type="number" class="form-control" id="casesNum" data-attr="nonDefault">').appendTo($('#casesNumberInnerContainer'))
+        $('<label class="control-label col-sm-2" for="casesNum" id="casesNumLbl" data-attr="nonDefault">Cases Number:</label>').insertBefore($('#casesNumberInnerContainer'))
+        
         $('<input name="PalletWrapsNumber" type="number" class="form-control" id="palletWrapsNumber" data-attr="nonDefault">').appendTo($('#palletWrapsInnerContainer'))
         $('<label class="control-label col-sm-2" for="palletwrapsNumber" id="palletWrapsNumberLbl" data-attr="nonDefault">Pallet Wraps Number:</label>').insertBefore($('#palletWrapsInnerContainer'))
     }
