@@ -18,19 +18,24 @@
       <Query>
         <DataSourceName>TicketingSystemData</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@StartDate">
-            <Value>=Parameters!StartDate.Value</Value>
-          </QueryParameter>
           <QueryParameter Name="@EndDate">
             <Value>=Parameters!EndDate.Value</Value>
             <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
+          <QueryParameter Name="@StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT jt.JobName, WorkerName, PalletNum, CasesNum, FORMAT(CAST((EndTime - StartTime) AS datetime2), N'HH:mm') AS 'Total Time'
+        <CommandText>SELECT jt.JobName, WorkerName, Sum(PalletNum) as TotalPallets, Sum(CasesNum) as TotalCases
+,Convert(varchar, Sum(DateDiff(Minute, StartTime, EndTime))/60) + ':' + RIGHT('0' + CONVERT(varchar, Sum(DATEDIFF(minute, StartTime, EndTime)%60)), 2) as TotalTime
 FROM TicketData td INNER JOIN JobType jt 
 ON td.JobTypeID = jt.JobTypeID
-WHERE EntryDate &gt;= @StartDate
-and EntryDate &lt;= @EndDate</CommandText>
+WHERE EntryDate &gt;= '1/29/2020'
+and EntryDate &lt;= '2/4/2020'
+
+group by jt.JobName, jt.JobTypeID, WorkerName</CommandText>
+        <Timeout>2</Timeout>
       </Query>
       <Fields>
         <Field Name="JobName">
@@ -41,16 +46,16 @@ and EntryDate &lt;= @EndDate</CommandText>
           <DataField>WorkerName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="PalletNum">
-          <DataField>PalletNum</DataField>
+        <Field Name="TotalPallets">
+          <DataField>TotalPallets</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="CasesNum">
-          <DataField>CasesNum</DataField>
+        <Field Name="TotalCases">
+          <DataField>TotalCases</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="Total_Time">
-          <DataField>Total Time</DataField>
+        <Field Name="TotalTime">
+          <DataField>TotalTime</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -60,11 +65,11 @@ and EntryDate &lt;= @EndDate</CommandText>
     <ReportSection>
       <Body>
         <ReportItems>
-          <Tablix Name="Tablix2">
+          <Tablix Name="Tablix1">
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>0.03125in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -73,7 +78,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox57">
+                        <Textbox Name="Textbox8">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -81,15 +86,13 @@ and EntryDate &lt;= @EndDate</CommandText>
                               <TextRuns>
                                 <TextRun>
                                   <Value />
-                                  <Style>
-                                    <FontFamily>Arial</FontFamily>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox57</rd:DefaultName>
+                          <rd:DefaultName>Textbox8</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -110,7 +113,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox70">
+                        <Textbox Name="Textbox9">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -118,15 +121,13 @@ and EntryDate &lt;= @EndDate</CommandText>
                               <TextRuns>
                                 <TextRun>
                                   <Value />
-                                  <Style>
-                                    <FontFamily>Arial</FontFamily>
-                                  </Style>
+                                  <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox70</rd:DefaultName>
+                          <rd:DefaultName>Textbox9</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -155,7 +156,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                   <TablixHeader>
                     <Size>1in</Size>
                     <CellContents>
-                      <Textbox Name="Textbox36">
+                      <Textbox Name="Textbox10">
                         <CanGrow>true</CanGrow>
                         <KeepTogether>true</KeepTogether>
                         <Paragraphs>
@@ -171,7 +172,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                             <Style />
                           </Paragraph>
                         </Paragraphs>
-                        <rd:DefaultName>Textbox36</rd:DefaultName>
+                        <rd:DefaultName>Textbox10</rd:DefaultName>
                         <Style>
                           <Border>
                             <Color>LightGrey</Color>
@@ -190,7 +191,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                       <TablixHeader>
                         <Size>1in</Size>
                         <CellContents>
-                          <Textbox Name="Textbox46">
+                          <Textbox Name="Textbox12">
                             <CanGrow>true</CanGrow>
                             <KeepTogether>true</KeepTogether>
                             <Paragraphs>
@@ -206,7 +207,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                                 <Style />
                               </Paragraph>
                             </Paragraphs>
-                            <rd:DefaultName>Textbox46</rd:DefaultName>
+                            <rd:DefaultName>Textbox12</rd:DefaultName>
                             <Style>
                               <Border>
                                 <Color>LightGrey</Color>
@@ -225,14 +226,14 @@ and EntryDate &lt;= @EndDate</CommandText>
                           <TablixHeader>
                             <Size>1in</Size>
                             <CellContents>
-                              <Textbox Name="Textbox38">
+                              <Textbox Name="Textbox14">
                                 <CanGrow>true</CanGrow>
                                 <KeepTogether>true</KeepTogether>
                                 <Paragraphs>
                                   <Paragraph>
                                     <TextRuns>
                                       <TextRun>
-                                        <Value>Pallet Num</Value>
+                                        <Value>Total Pallets</Value>
                                         <Style>
                                           <FontFamily>Arial</FontFamily>
                                         </Style>
@@ -241,7 +242,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                                     <Style />
                                   </Paragraph>
                                 </Paragraphs>
-                                <rd:DefaultName>Textbox38</rd:DefaultName>
+                                <rd:DefaultName>Textbox14</rd:DefaultName>
                                 <Style>
                                   <Border>
                                     <Color>LightGrey</Color>
@@ -260,14 +261,14 @@ and EntryDate &lt;= @EndDate</CommandText>
                               <TablixHeader>
                                 <Size>1in</Size>
                                 <CellContents>
-                                  <Textbox Name="Textbox42">
+                                  <Textbox Name="Textbox16">
                                     <CanGrow>true</CanGrow>
                                     <KeepTogether>true</KeepTogether>
                                     <Paragraphs>
                                       <Paragraph>
                                         <TextRuns>
                                           <TextRun>
-                                            <Value>Cases Num</Value>
+                                            <Value>Total Cases</Value>
                                             <Style>
                                               <FontFamily>Arial</FontFamily>
                                             </Style>
@@ -276,7 +277,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                                         <Style />
                                       </Paragraph>
                                     </Paragraphs>
-                                    <rd:DefaultName>Textbox42</rd:DefaultName>
+                                    <rd:DefaultName>Textbox16</rd:DefaultName>
                                     <Style>
                                       <Border>
                                         <Color>LightGrey</Color>
@@ -293,9 +294,9 @@ and EntryDate &lt;= @EndDate</CommandText>
                               <TablixMembers>
                                 <TablixMember>
                                   <TablixHeader>
-                                    <Size>1in</Size>
+                                    <Size>0.98542in</Size>
                                     <CellContents>
-                                      <Textbox Name="Textbox71">
+                                      <Textbox Name="Textbox18">
                                         <CanGrow>true</CanGrow>
                                         <KeepTogether>true</KeepTogether>
                                         <Paragraphs>
@@ -311,7 +312,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                                             <Style />
                                           </Paragraph>
                                         </Paragraphs>
-                                        <rd:DefaultName>Textbox71</rd:DefaultName>
+                                        <rd:DefaultName>Textbox18</rd:DefaultName>
                                         <Style>
                                           <Border>
                                             <Color>LightGrey</Color>
@@ -336,7 +337,6 @@ and EntryDate &lt;= @EndDate</CommandText>
                       </TablixMembers>
                     </TablixMember>
                   </TablixMembers>
-                  <KeepWithGroup>After</KeepWithGroup>
                 </TablixMember>
                 <TablixMember>
                   <Group Name="JobName">
@@ -429,27 +429,27 @@ and EntryDate &lt;= @EndDate</CommandText>
                       </TablixHeader>
                       <TablixMembers>
                         <TablixMember>
-                          <Group Name="PalletNum">
+                          <Group Name="TotalPallets">
                             <GroupExpressions>
-                              <GroupExpression>=Fields!PalletNum.Value</GroupExpression>
+                              <GroupExpression>=Fields!TotalPallets.Value</GroupExpression>
                             </GroupExpressions>
                           </Group>
                           <SortExpressions>
                             <SortExpression>
-                              <Value>=Fields!PalletNum.Value</Value>
+                              <Value>=Fields!TotalPallets.Value</Value>
                             </SortExpression>
                           </SortExpressions>
                           <TablixHeader>
                             <Size>1in</Size>
                             <CellContents>
-                              <Textbox Name="PalletNum1">
+                              <Textbox Name="TotalPallets">
                                 <CanGrow>true</CanGrow>
                                 <KeepTogether>true</KeepTogether>
                                 <Paragraphs>
                                   <Paragraph>
                                     <TextRuns>
                                       <TextRun>
-                                        <Value>=Fields!PalletNum.Value</Value>
+                                        <Value>=Fields!TotalPallets.Value</Value>
                                         <Style>
                                           <FontFamily>Arial</FontFamily>
                                         </Style>
@@ -458,7 +458,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                                     <Style />
                                   </Paragraph>
                                 </Paragraphs>
-                                <rd:DefaultName>PalletNum1</rd:DefaultName>
+                                <rd:DefaultName>TotalPallets</rd:DefaultName>
                                 <Style>
                                   <Border>
                                     <Color>LightGrey</Color>
@@ -474,27 +474,27 @@ and EntryDate &lt;= @EndDate</CommandText>
                           </TablixHeader>
                           <TablixMembers>
                             <TablixMember>
-                              <Group Name="CasesNum">
+                              <Group Name="TotalCases">
                                 <GroupExpressions>
-                                  <GroupExpression>=Fields!CasesNum.Value</GroupExpression>
+                                  <GroupExpression>=Fields!TotalCases.Value</GroupExpression>
                                 </GroupExpressions>
                               </Group>
                               <SortExpressions>
                                 <SortExpression>
-                                  <Value>=Fields!CasesNum.Value</Value>
+                                  <Value>=Fields!TotalCases.Value</Value>
                                 </SortExpression>
                               </SortExpressions>
                               <TablixHeader>
                                 <Size>1in</Size>
                                 <CellContents>
-                                  <Textbox Name="CasesNum1">
+                                  <Textbox Name="TotalCases">
                                     <CanGrow>true</CanGrow>
                                     <KeepTogether>true</KeepTogether>
                                     <Paragraphs>
                                       <Paragraph>
                                         <TextRuns>
                                           <TextRun>
-                                            <Value>=Fields!CasesNum.Value</Value>
+                                            <Value>=Fields!TotalCases.Value</Value>
                                             <Style>
                                               <FontFamily>Arial</FontFamily>
                                             </Style>
@@ -503,7 +503,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                                         <Style />
                                       </Paragraph>
                                     </Paragraphs>
-                                    <rd:DefaultName>CasesNum1</rd:DefaultName>
+                                    <rd:DefaultName>TotalCases</rd:DefaultName>
                                     <Style>
                                       <Border>
                                         <Color>LightGrey</Color>
@@ -519,27 +519,27 @@ and EntryDate &lt;= @EndDate</CommandText>
                               </TablixHeader>
                               <TablixMembers>
                                 <TablixMember>
-                                  <Group Name="Total_Time">
+                                  <Group Name="TotalTime">
                                     <GroupExpressions>
-                                      <GroupExpression>=Fields!Total_Time.Value</GroupExpression>
+                                      <GroupExpression>=Fields!TotalTime.Value</GroupExpression>
                                     </GroupExpressions>
                                   </Group>
                                   <SortExpressions>
                                     <SortExpression>
-                                      <Value>=Fields!Total_Time.Value</Value>
+                                      <Value>=Fields!TotalTime.Value</Value>
                                     </SortExpression>
                                   </SortExpressions>
                                   <TablixHeader>
-                                    <Size>1in</Size>
+                                    <Size>0.98542in</Size>
                                     <CellContents>
-                                      <Textbox Name="Total_Time">
+                                      <Textbox Name="TotalTime">
                                         <CanGrow>true</CanGrow>
                                         <KeepTogether>true</KeepTogether>
                                         <Paragraphs>
                                           <Paragraph>
                                             <TextRuns>
                                               <TextRun>
-                                                <Value>=Fields!Total_Time.Value</Value>
+                                                <Value>=Fields!TotalTime.Value</Value>
                                                 <Style>
                                                   <FontFamily>Arial</FontFamily>
                                                 </Style>
@@ -548,7 +548,7 @@ and EntryDate &lt;= @EndDate</CommandText>
                                             <Style />
                                           </Paragraph>
                                         </Paragraphs>
-                                        <rd:DefaultName>Total_Time</rd:DefaultName>
+                                        <rd:DefaultName>TotalTime</rd:DefaultName>
                                         <Style>
                                           <Border>
                                             <Color>LightGrey</Color>
@@ -563,7 +563,9 @@ and EntryDate &lt;= @EndDate</CommandText>
                                     </CellContents>
                                   </TablixHeader>
                                   <TablixMembers>
-                                    <TablixMember />
+                                    <TablixMember>
+                                      <Group Name="Details" />
+                                    </TablixMember>
                                   </TablixMembers>
                                 </TablixMember>
                               </TablixMembers>
@@ -577,10 +579,10 @@ and EntryDate &lt;= @EndDate</CommandText>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>LaborHoursByJob</DataSetName>
-            <Top>0.94667in</Top>
-            <Left>2.01333in</Left>
+            <Top>0.63833in</Top>
+            <Left>1.64667in</Left>
             <Height>0.5in</Height>
-            <Width>6in</Width>
+            <Width>5.01667in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -591,7 +593,7 @@ and EntryDate &lt;= @EndDate</CommandText>
         <Height>2in</Height>
         <Style />
       </Body>
-      <Width>8.01333in</Width>
+      <Width>8.64667in</Width>
       <Page>
         <LeftMargin>1in</LeftMargin>
         <RightMargin>1in</RightMargin>
