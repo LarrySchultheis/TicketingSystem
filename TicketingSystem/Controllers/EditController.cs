@@ -46,7 +46,7 @@ namespace TicketingSystem.Controllers
         {
             try
             {
-                using (var context = TicketingSystemDBContext())
+                using (var context = new TicketingSystemDBContext())
                 {
                     RecordRetriever rr = new RecordRetriever();
                     var result = rr.GetRecordByID(int.Parse(entryId));
@@ -61,7 +61,12 @@ namespace TicketingSystem.Controllers
             {
                 ExceptionReporter er = new ExceptionReporter();
                 er.DumpException(e);
-                return false;
+                TicketData td = new TicketData();
+
+                return Json(new
+                {
+                    newUrl = Url.Action("EntryClose", "Home", td)
+                });
             }
         }
 

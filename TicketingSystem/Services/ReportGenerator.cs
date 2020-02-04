@@ -24,7 +24,8 @@ namespace TicketingSystem.Services
             {
                 ExceptionReporter er = new ExceptionReporter();
                 er.DumpException(e);
-                return false;
+                List<TicketData> data = new List<TicketData>();
+                return data;
             }
         }
 

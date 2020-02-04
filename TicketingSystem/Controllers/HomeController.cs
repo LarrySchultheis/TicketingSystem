@@ -132,6 +132,7 @@ namespace TicketingSystem.Controllers
             {
                 ExceptionReporter er = new ExceptionReporter();
                 er.DumpException(e);
+                RecordRetriever rr = new RecordRetriever();
                 return View("HomePage", rr.GetOpenRecords());
             }
         }
@@ -160,9 +161,13 @@ namespace TicketingSystem.Controllers
             }
             catch(Exception e)
             {
-                ExceptionReporter er = ExceptionReporter();
+                ExceptionReporter er = new ExceptionReporter();
                 er.DumpException(e);
-                return false;
+                TicketData td = new TicketData();
+                return Json(new
+                {
+                    newUrl = Url.Action("EntryClose", "Home", td)
+                });
             }
         }
 
