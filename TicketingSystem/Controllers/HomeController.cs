@@ -79,7 +79,7 @@ namespace TicketingSystem.Controllers
 
 
                 RecordRetriever rr = new RecordRetriever();
-                var records = rr.GetOpenRecords();
+                var records = rr.RetrieveRecords();
                 latestData = records;
                 return View("HomePage", records);
             }
@@ -98,6 +98,14 @@ namespace TicketingSystem.Controllers
         {
             RecordRetriever rr = new RecordRetriever();
             var records = rr.RetrieveRecords();
+            return View("HomePage", records);
+        }
+
+        [HttpGet]
+        public IActionResult OpenTickets()
+        {
+            RecordRetriever rr = new RecordRetriever();
+            var records = rr.GetOpenRecords();
             return View("HomePage", records);
         }
 
