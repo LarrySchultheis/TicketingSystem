@@ -5,20 +5,36 @@ using NUnit.Framework;
 using TicketingSystem.Controllers;
 using TicketingSystem.Models;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading;
+using System.Security.Principal;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace Tests.ControllerTests
 {
     [TestFixture]
-    class HomeControllerTests
+    class HomeControllerTests : Controller
     {
         HomeController hc;
         public HomeControllerTests()
         {
             hc = new HomeController();
+            hc.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "testUser")
+                    }, "testAuthType"))
+                }
+            };
         }
         [Test]
         public void HomePageTest()
         {
+            
             var result = hc.HomePage();
             Assert.IsNotNull(result);
         }
@@ -60,6 +76,20 @@ namespace Tests.ControllerTests
                 Assert.IsNotNull(result);
             }
 
+        }
+    }
+
+    public class TestPrincipal : ClaimsPrincipal
+    {
+        public TestPrincipal(params Claim[] claims) : base(new TestIdentity(claims))
+        {
+        }
+    }
+
+    public class TestIdentity : ClaimsIdentity
+    {
+        public TestIdentity(params Claim[] claims) : base(claims)
+        {
         }
     }
 }
