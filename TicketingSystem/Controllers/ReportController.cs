@@ -26,7 +26,7 @@ namespace TicketingSystem.Controllers
                     rg.GenerateIncentveReport(reportData.StartDate, reportData.EndDate);
 
                 else if (reportData.ReportType == 1)
-                    rg.GenerateLaborHoursByJob(reportData.StartDate, reportData.EndDate);
+                    rg.GenerateLaborHoursByJob();//reportData.StartDate, reportData.EndDate);
 
                 else if (reportData.ReportType == 2)
                     rg.GenerateLaborHoursByJobAndEmployee(reportData.StartDate, reportData.EndDate);
