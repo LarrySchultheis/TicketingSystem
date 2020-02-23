@@ -89,6 +89,8 @@ namespace TicketingSystem.Controllers
             }
         }
 
+
+
         /// <summary>
         /// Gets both open and closed tickets 
         /// </summary>
