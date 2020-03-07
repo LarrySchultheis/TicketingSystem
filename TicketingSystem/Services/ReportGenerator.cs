@@ -6,18 +6,41 @@ using TicketingSystem.ExceptionReport;
 using ReportServerAPI;
 using System.ServiceModel;
 using System.Threading.Tasks;
+using System.Net.Http;
+using Microsoft.ReportingServices.Interfaces;
 
 namespace TicketingSystem.Services
 {
     public class ReportGenerator
     {
+        protected static readonly string ssrsBaseURL = "http://localhost/reportserver";
+
+
         public List<TicketData> GenerateIncentveReport(DateTime startDate, DateTime endDate)
         {
 
             return null;
         }
 
-        public void GenerateLaborHoursByJob()//DateTime startDate, DateTime endDate)
+        public void GenerateReport (ReportInput reportData)
+        {
+            if (reportData.ReportType == 0)
+                GenerateIncentveReport(reportData.StartDate, reportData.EndDate);
+
+            else if (reportData.ReportType == 1)
+                GenerateLaborHoursByJob();//reportData.StartDate, reportData.EndDate);
+
+            else if (reportData.ReportType == 2)
+                GenerateLaborHoursByJobAndEmployee(reportData.StartDate, reportData.EndDate);
+
+            else
+            {
+                Exception e = new Exception("Error, Report Type is not valid");
+                throw e;
+            }
+        }
+
+        public async void GenerateLaborHoursByJob()//DateTime startDate, DateTime endDate)
         {
             //List<LaborHoursByJob> data = new List<LaborHoursByJob>();
 
@@ -56,14 +79,7 @@ namespace TicketingSystem.Services
             //EndpointAddress rsEndpointAddress = new EndpointAddress("http://localhost:80/reportserver/ReportService2010.asmx");
             //ReportingService2010SoapClient rsClient = new ReportingService2010SoapClient(rsBinding, rsEndpointAddress);
 
-            //ListChildrenResponse res;
-            //TrustedUserHeader tuh = new TrustedUserHeader();
 
-            //var endpoint = rsClient.Endpoint;
-
-            //var output = rsListChildren("/TicketingSystemReporting", rsClient);
-
-            //output.Wait();
 
 
 
@@ -75,15 +91,24 @@ namespace TicketingSystem.Services
             //    }
             //}
 
-        //    BasicHttpBinding rsBinding = new BasicHttpBinding();
-        //    rsBinding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
-        //    rsBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Ntlm;
+            //BasicHttpBinding rsBinding = new BasicHttpBinding();
+            //rsBinding.Security.Mode = BasicHttpSecurityMode.TransportCredentialOnly;
+            //rsBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.Ntlm;
 
+
+            //EndpointAddress rsEndpointAddress = new EndpointAddress("http://localhost:80/reportserver/ReportService2005.asmx");
+            //ReportExecutionServiceSoapClient rsc = new ReportExecutionServiceSoapClient(rsBinding, rsEndpointAddress);
+
+            //ServerInfoHeader serverInfoHeader;
+            //ExecutionInfo executionInfo;
+
+            HttpClient httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(ssrsBaseURL);
             
-        //    EndpointAddress rsEndpointAddress = new EndpointAddress("http://localhost:80/reportserver/ReportService2005.asmx");
-        //    ReportExecutionServiceSoapClient rsc = new ReportExecutionServiceSoapClient(rsEndpointAddress);
+            var resp = await httpClient.GetAsync(ssrsBaseURL + "/report");
 
-        //    var y = 0;
+
+            var y = 0;
 
 
 

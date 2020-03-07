@@ -56,7 +56,7 @@ namespace TicketingSystem.Controllers
             DataEntry de = new DataEntry();
             RecordRetriever rr = new RecordRetriever();
             de.CloseTicket(td);
-            var tdRes = rr.GetOpenRecords();
+            var tdRes = rr.RetrieveRecords();
             return View("HomePage", tdRes);
         }
 
@@ -129,7 +129,7 @@ namespace TicketingSystem.Controllers
             bool success = de.PostEntry(td);
             RecordRetriever rr = new RecordRetriever();
 
-            return View("HomePage", rr.GetOpenRecords());
+            return View("HomePage", rr.RetrieveRecords());
         }
 
         /// <summary>

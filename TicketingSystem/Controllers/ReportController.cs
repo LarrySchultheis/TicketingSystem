@@ -21,21 +21,8 @@ namespace TicketingSystem.Controllers
             try
             {
                 ReportGenerator rg = new ReportGenerator();
+                rg.GenerateReport(reportData);
 
-                if (reportData.ReportType == 0)
-                    rg.GenerateIncentveReport(reportData.StartDate, reportData.EndDate);
-
-                else if (reportData.ReportType == 1)
-                    rg.GenerateLaborHoursByJob();//reportData.StartDate, reportData.EndDate);
-
-                else if (reportData.ReportType == 2)
-                    rg.GenerateLaborHoursByJobAndEmployee(reportData.StartDate, reportData.EndDate);
-
-                else
-                {
-                    Exception e = new Exception("Error, Report Type is not valid");
-                    throw e;
-                }
             }
             catch (Exception e)
             {
