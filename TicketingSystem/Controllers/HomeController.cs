@@ -133,17 +133,14 @@ namespace TicketingSystem.Controllers
                 {
                     DataEntry de = new DataEntry();
                     bool success = de.PostEntry(td);
-                    RecordRetriever rr = new RecordRetriever();
-
                 }
             }
             catch(Exception e)
             {
                 ExceptionReporter er = new ExceptionReporter();
                 er.DumpException(e);
-                RecordRetriever rr = new RecordRetriever();
-                return View("HomePage", rr.GetOpenRecords());
             }
+            RecordRetriever rr = new RecordRetriever();
             return View("HomePage", rr.RetrieveRecords());
         }
 
@@ -173,10 +170,12 @@ namespace TicketingSystem.Controllers
             {
                 ExceptionReporter er = new ExceptionReporter();
                 er.DumpException(e);
-                TicketData td = new TicketData();
+                RecordRetriever rr = new RecordRetriever();
+
+                //If exception occurred return the home page
                 return Json(new
                 {
-                    newUrl = Url.Action("EntryClose", "Home", td)
+                    newUrl = Url.Action("HomePage", "Home", rr.RetrieveRecords())
                 });
             }
         }
