@@ -6,6 +6,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TicketingSystem.Models;
+using TicketingSystem.ExceptionReport;
+
 namespace TicketingSystem.Controllers
 {
     public class HomeController : Controller
@@ -56,7 +58,7 @@ namespace TicketingSystem.Controllers
             DataEntry de = new DataEntry();
             RecordRetriever rr = new RecordRetriever();
             de.CloseTicket(td);
-            var tdRes = rr.GetOpenRecords();
+            var tdRes = rr.RetrieveRecords();
             return View("HomePage", tdRes);
         }
 
@@ -79,7 +81,7 @@ namespace TicketingSystem.Controllers
 
 
                 RecordRetriever rr = new RecordRetriever();
-                var records = rr.GetOpenRecords();
+                var records = rr.RetrieveRecords();
                 latestData = records;
                 return View("HomePage", records);
             }
@@ -88,6 +90,8 @@ namespace TicketingSystem.Controllers
                 return View("Landing");
             }
         }
+
+
 
         /// <summary>
         /// Gets both open and closed tickets 
@@ -98,6 +102,14 @@ namespace TicketingSystem.Controllers
         {
             RecordRetriever rr = new RecordRetriever();
             var records = rr.RetrieveRecords();
+            return View("HomePage", records);
+        }
+
+        [HttpGet]
+        public IActionResult OpenTickets()
+        {
+            RecordRetriever rr = new RecordRetriever();
+            var records = rr.GetOpenRecords();
             return View("HomePage", records);
         }
 
@@ -115,11 +127,21 @@ namespace TicketingSystem.Controllers
         [HttpPost]
         public IActionResult PostEntry(TicketData td)
         {
-            DataEntry de = new DataEntry();
-            bool success = de.PostEntry(td);
+            try
+            {
+                using (var context = new TicketingSystemDBContext())
+                {
+                    DataEntry de = new DataEntry();
+                    bool success = de.PostEntry(td);
+                }
+            }
+            catch(Exception e)
+            {
+                ExceptionReporter er = new ExceptionReporter();
+                er.DumpException(e);
+            }
             RecordRetriever rr = new RecordRetriever();
-
-            return View("HomePage", rr.GetOpenRecords());
+            return View("HomePage", rr.RetrieveRecords());
         }
 
         /// <summary>
@@ -130,15 +152,32 @@ namespace TicketingSystem.Controllers
         [HttpPost]
         public JsonResult OpenEntry(string entryID)
         {
-            int id = int.Parse(entryID);
-            RecordRetriever rr = new RecordRetriever();
-            TicketData td = rr.GetRecordByID(id);
-
-            return Json(new
+            try
             {
-                newUrl = Url.Action("EntryClose", "Home", td)
-            });
+                using (var context = new TicketingSystemDBContext())
+                {
+                    int id = int.Parse(entryID);
+                    RecordRetriever rr = new RecordRetriever();
+                    TicketData td = rr.GetRecordByID(id);
 
+                    return Json(new
+                    {
+                        newUrl = Url.Action("EntryClose", "Home", td)
+                    });
+                }
+            }
+            catch(Exception e)
+            {
+                ExceptionReporter er = new ExceptionReporter();
+                er.DumpException(e);
+                RecordRetriever rr = new RecordRetriever();
+
+                //If exception occurred return the home page
+                return Json(new
+                {
+                    newUrl = Url.Action("HomePage", "Home", rr.RetrieveRecords())
+                });
+            }
         }
 
         //public IActionResult CloseTicket()

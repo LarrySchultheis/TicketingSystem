@@ -10,11 +10,11 @@ namespace TicketingSystem.Models
         public DateTime StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public string Comments { get; set; }
-        public int? PalletNum { get; set; }
+        public int PalletNum { get; set; }
         public string PalletType { get; set; }
         public int? PalletWrapNum { get; set; }
         public string Carrier { get; set; }
-        public int? CasesNum { get; set; }
+        public int CasesNum { get; set; }
         public int? TrailerNum { get; set; }
         public bool TicketClosed { get; set; }
         public string StageNum { get; set; }

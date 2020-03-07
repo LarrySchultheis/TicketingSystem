@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using TicketingSystem.Models;
 using TicketingSystem.Services;
 using System.Diagnostics;
+using TicketingSystem.ExceptionReport;
 
 namespace TicketingSystem.Controllers
 {
@@ -43,13 +44,30 @@ namespace TicketingSystem.Controllers
         /// <returns>JSON holding redirect URL</returns>
         public JsonResult GetRecord(string entryId)
         {
-            RecordRetriever rr = new RecordRetriever();
-            var result = rr.GetRecordByID(int.Parse(entryId));
-
-            return Json(new
+            try
             {
-                newUrl = Url.Action("EditForm", "Edit", result)
-            });
+                using (var context = new TicketingSystemDBContext())
+                {
+                    RecordRetriever rr = new RecordRetriever();
+                    var result = rr.GetRecordByID(int.Parse(entryId));
+
+                    return Json(new
+                    {
+                        newUrl = Url.Action("EditForm", "Edit", result)
+                    });
+                }
+            }
+            catch(Exception e)
+            {
+                ExceptionReporter er = new ExceptionReporter();
+                er.DumpException(e);
+                TicketData td = new TicketData();
+
+                return Json(new
+                {
+                    newUrl = Url.Action("EntryClose", "Home", td)
+                });
+            }
         }
 
 

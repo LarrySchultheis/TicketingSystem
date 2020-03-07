@@ -1,0 +1,6 @@
+System.IO.FileNotFoundException: Could not load file or assembly 'System.Web.Services, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. The system cannot find the file specified.
+File name: 'System.Web.Services, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'
+   at TicketingSystem.Services.ReportGenerator.GenerateLaborHoursByJob(DateTime startDate, DateTime endDate)
+   at TicketingSystem.Controllers.ReportController.RunReport(ReportInput reportData) in G:\GitKraken\TicketingSystem\TicketingSystem\Controllers\ReportController.cs:line 29
+
+

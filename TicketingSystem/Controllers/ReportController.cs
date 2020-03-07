@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TicketingSystem.Services;
+using TicketingSystem.Models;
+using TicketingSystem.ExceptionReport;
 
 namespace TicketingSystem.Controllers
 {
@@ -14,20 +16,20 @@ namespace TicketingSystem.Controllers
             return View();
         }
 
-        public IActionResult RunReport(string reportType)
+        public IActionResult RunReport(ReportInput reportData)
         {
-            ReportGenerator rg = new ReportGenerator();
+            try
+            {
+                ReportGenerator rg = new ReportGenerator();
+                rg.GenerateReport(reportData);
 
+            }
+            catch (Exception e)
+            {
+                ExceptionReporter er = new ExceptionReporter();
+                er.DumpException(e);
+            }
 
-            if (reportType == "0")
-                rg.GenerateIncentveReport();
-
-            else if (reportType == "1")
-                rg.GenerateLaborHoursByJob();
-
-            else
-                rg.GenerateLaborHoursByJobAndEmployee();
-                
             return View("Index");
         }
     }

@@ -1,0 +1,2 @@
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at TicketingSystem.Services.DataEntry.PostEntry(TicketData td) in G:\GitKraken\TicketingSystem\TicketingSystem\Services\DataEntry.cs:line 24

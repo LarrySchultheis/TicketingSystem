@@ -28,33 +28,7 @@
 <br />
 
 <div>
-    <table id="dummyTable" class="table table-hover table-bordered table-dark">
-        <thead class="thead-light">
-            <tr>
-                <th>Job Type</th>
-                <th>Trip Number</th>
-                <th>Stage Number</th>
-                <th>Employee Name</th>
-                <th>Time</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr onclick="rowClicked(@item.EntryId)">
-                    <td>@item.JobType.JobName</td>
-                    <td>@item.TripNum</td>
-                    <td>@item.StageNum</td>
-                    <td>@item.TicketWorker.FullName</td>
-                    <td>@item.StartTime</td>
-                    <td>@(item.TicketClosed ? "Closed" : "Open")</td>
-                </tr>
-
-            }
-
-        </tbody>
-    </table>
+    <partial name="_TicketTablePartial" />
 
 </div>
 
@@ -69,7 +43,7 @@
 
 <script>
     $(document).ready(function () {
-        var table = $('#dummyTable').DataTable()
+        var table = $('#ticketTable').DataTable()
     });</script>
 
 <script>
@@ -82,7 +56,7 @@
             url: '@Url.Action("GetRecord", "Edit")',
             data: { entryID: id },
             success: function () {
-                alert('Success')
+                //alert('Success')
             },
             error: function (e) {
                 alert('Error')
