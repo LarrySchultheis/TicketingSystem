@@ -10,5 +10,7 @@ namespace TicketingSystem.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int ReportType { get; set; }
+        public ReportName ReportName { get; set; }
+        public ReportFormat ReportFormat { get; set; }
     }
 }
