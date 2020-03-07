@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="ExceptionReport\Archive\" />
+    <Folder Include="Services\logs\" />
   </ItemGroup>
 
   <ItemGroup>
