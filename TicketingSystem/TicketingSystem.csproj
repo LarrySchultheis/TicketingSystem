@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-    <StartupObject></StartupObject>
+    <StartupObject>TicketingSystem.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="ExceptionReport\Archive\" />
+    <Folder Include="Services\logs\" />
   </ItemGroup>
 
   <ItemGroup>
