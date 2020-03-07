@@ -18,53 +18,56 @@ namespace TicketingSystem.Services
 {
     public class ReportGenerator
     {
-        protected static readonly string ssrsBaseURL = "http://localhost/reportserver";
+        protected static readonly string ssrsBaseURL = "http://localhost/reportserver?/TicketingSystemReporting/";
         protected static readonly string ssrsRestURL = "http://localhost/reports/api/v2.0";
+        protected readonly string userName = "larry";
+        protected readonly string password = "ls150682";
 
-
-
-        public List<TicketData> GenerateIncentveReport(DateTime startDate, DateTime endDate)
-        {
-
-            return null;
-        }
 
         public void GenerateReport (ReportInput reportData)
         {
             HttpResponseMessage resp;
-            if (reportData.ReportType == 0)
-                GenerateIncentveReport(reportData.StartDate, reportData.EndDate);
+            string format, reportName;
 
-            else if (reportData.ReportType == 1)
-                GenerateLaborHoursByJob(reportData.StartDate, reportData.EndDate);//reportData.StartDate, reportData.EndDate);
+            format = GetFormat(reportData);
+            reportName = GetReportName(reportData);
 
-            else if (reportData.ReportType == 2)
-                GenerateLaborHoursByJobAndEmployee(reportData.StartDate, reportData.EndDate);
-
-            else
+            if (!reportName.Equals("Invalid"))
             {
-                Exception e = new Exception("Error, Report Type is not valid");
-                throw e;
+                if (reportData.ReportType == 0)
+                    GenerateIncentveReport(reportData, format, reportName);
+
+                else if (reportData.ReportType == 1)
+                    GenerateLaborHoursByJob(reportData, format, reportName);//reportData.StartDate, reportData.EndDate);
+
+                else if (reportData.ReportType == 2)
+                    GenerateLaborHoursByJobAndEmployee(reportData, format, reportName);
+
+                else
+                {
+                    Exception e = new Exception("Error, Report Type is not valid");
+                    throw e;
+                }
             }
         }
 
-        public async void GenerateLaborHoursByJob(DateTime startDate, DateTime endDate)//DateTime startDate, DateTime endDate)
+        public async void GenerateLaborHoursByJob(ReportInput reportInput, string format, string reportName)//DateTime startDate, DateTime endDate)
         {
-            string start, end;
-            start = startDate.ToString("MM/dd/yyyy");
-            end = endDate.ToString("MM/dd/yyyy");
-
+            string startDate = reportInput.StartDate.ToString("MM/dd/yyyy");
+            string endDate = reportInput.EndDate.ToString("MM/dd/yyyy");
+            
             HttpClientHandler handler = new HttpClientHandler
             {
                 PreAuthenticate = true,
-                Credentials = new NetworkCredential("larry", "ls150682")
+                Credentials = new NetworkCredential(userName, password)
             };
-            var client = new HttpClient();
+            var client = new HttpClient(handler);
 
-            var resp = await client.GetAsync(ssrsBaseURL + "?/TicketingSystemReporting/LaborHoursByJob&rs:Format=csv&StartDate=" + start + "&EndDate=" + end);
+            //var resp = await client.GetAsync(ssrsBaseURL + "LaborHoursByJob&rs:Format=csv&StartDate=" + start + "&EndDate=" + end);
+            var resp = await client.GetAsync(BuildUrl(ssrsBaseURL, reportName, format, startDate, endDate));
 
             var data = await resp.Content.ReadAsByteArrayAsync();
-            using (Stream file = File.OpenWrite("test.csv"))
+            using (Stream file = File.OpenWrite("test." + format))
             {
                 file.Write(data, 0, data.Length);
             }
@@ -72,17 +75,12 @@ namespace TicketingSystem.Services
             var y = 0;
         }
 
-        public void GenerateLaborHoursByJobAndEmployee(DateTime startDate, DateTime endDate)
+        public void GenerateIncentveReport(ReportInput reportInput, string format, string reportName)
         {
         }
 
-        public LaborHoursByJob GetLaborHoursByJob(DateTime startDate, DateTime endDate)
+        public void GenerateLaborHoursByJobAndEmployee(ReportInput reportInput, string format, string reportName)
         {
-            LaborHoursByJob lh = new LaborHoursByJob();
-
-
-
-            return lh;
         }
 
         private byte[] ReadStream(Stream stream)
@@ -92,6 +90,41 @@ namespace TicketingSystem.Services
                 stream.CopyTo(ms);
                 return ms.ToArray();
             }
+        }
+
+        private string BuildUrl (string baseUrl, string reportName, string format, string startDate, string endDate)
+        {
+            return baseUrl + reportName + "&rs:Format=" + format + "&StartDate=" + startDate + "&EndDate=" + endDate;
+        }
+
+        private string GetFormat(ReportInput reportInput)
+        {
+            switch (reportInput.ReportFormat)
+            {
+                case ReportFormat.PDF:
+                    return "pdf";
+                case ReportFormat.CSV:
+                    return "csv";
+                //case ReportFormat.DOCX:
+                //    return "docx";
+                default:
+                    return "csv";
+            }
+
+        }
+
+        private string GetReportName(ReportInput reportInput)
+        {
+            switch (reportInput.ReportName)
+            {
+                case ReportName.LaborHoursByJob:
+                    return "LaborHoursByJob";
+                case ReportName.LaborHoursByJobAndEmployee:
+                    return "LaborHoursByJobAndEmployee";
+                case ReportName.IncentiveReport:
+                    return "IncentiveReport";
+            }
+            return "Invalid";
         }
     }
 }
