@@ -66,6 +66,6 @@ function verifyInput() {
         }
     }
 
-    alert('success')
+    //alert('success')
     return true
 }

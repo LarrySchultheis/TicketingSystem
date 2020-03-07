@@ -1,0 +1,7 @@
+﻿JobName1,WorkerName,TotalPallets,TotalCases,TotalTime
+Case Picker,Basic User,324,2342,10:00
+Outbound,Basic User,125,0,1:00
+Pallet Picker,Basic User,368,0,2:00
+Rework,Basic User,123,0,2:42
+UPS,Basic User,2479,0,8:39
+
