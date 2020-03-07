@@ -23,7 +23,6 @@ namespace Tests.AutomatedTests
         {
             reportUrl = "https://localhost:44326/Report/Index";
             driver.Navigate().GoToUrl(reportUrl);
-            WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(10));
             
         }
 
