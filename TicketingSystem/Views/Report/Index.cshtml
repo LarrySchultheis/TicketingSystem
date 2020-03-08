@@ -4,55 +4,136 @@
 }
 
 <h1>Reports Home</h1>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+@*<script src="~/js/report.js"></script>*@
+
 
 <div>
     <partial name="_HeaderNavbar" />
 
 
-    <form id="selectReport" class="form-horizontal" asp-action="RunReport" asp-controller="Report">
+    @*<form id="selectReport" class="form-horizontal" asp-action="RunReport" asp-controller="Report">*@
+    <div class="form-group" id="reportType">
 
-        <div class="form-group" id="reportType">
-
-            <label for="startDate">Enter the Start Date:</label>
-            <div>
-                <input id="startDate" name="StartDate" type="date" />
-            </div>
-
-            <label for="endDate">Enter the End Date:</label>
-            <div>
-                <input id="endDate" name="EndDate" type="date" />
-            </div>
-
-            <label for="reportType">Select Report Type:</label>
-            <div>
-                <select name="ReportType">
-                    <option value="0">Labor Hours by Job</option>
-                    <option value="1">Incentive Report</option>
-                    <option value="2">Labor Hours by Job and Employee</option>
-                </select>
-            </div>
-
-            <label for="reportFormat">Select Report Format:</label>
-            <div>
-                <select name="ReportFormat">
-                    <option value="0">PDF</option>
-                    <option value="1">CSV</option>
-                    @*<option value="2">DOCX</option>*@
-                </select>
-            </div>
-
-            <br />
-
-            <div>
-                <div>
-                    <button type="submit" class="btn-dark" id="subBtn">Submit</button>
-                    &nbsp;
-                    <button type="reset" class="btn-dark" id="resetBtn">Reset Form</button>
-                </div>
-            </div>
+        <label for="startDate">Enter the Start Date:</label>
+        <div>
+            <input id="startDate" name="StartDate" type="date" />
         </div>
 
+        <label for="endDate">Enter the End Date:</label>
+        <div>
+            <input id="endDate" name="EndDate" type="date" />
+        </div>
 
-    </form>
+        <label for="reportName">Select Report Type:</label>
+        <div>
+            <select name="ReportName" id="reportName">
+                <option value="0">Labor Hours by Job</option>
+                <option value="1">Incentive Report</option>
+                <option value="2">Labor Hours by Job and Employee</option>
+            </select>
+        </div>
 
+        <label for="reportFormat">Select Report Format:</label>
+        <div>
+            <select name="ReportFormat" id="reportFormat">
+                <option value="0">PDF</option>
+                <option value="1">CSV</option>
+                @*<option value="2">DOCX</option>*@
+            </select>
+        </div>
+
+        <br />
+
+        <div>
+            <div>
+                <button type="submit" class="btn-dark" id="subBtn" onclick="getReport()">Submit</button>
+                &nbsp;
+                <button type="reset" class="btn-dark" id="resetBtn">Reset Form</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    function getReport() {
+        alert('in get report')
+
+        var url = window.location.host + "/report/RunReport"
+        //var xhr = new XMLHttpRequest();
+        //var params = JSON.stringify({
+        //    StartDate: $('#startDate').val(),
+        //    EndDate: $('#endDate').val(),
+        //    ReportName: $('#reportName').val(),
+        //    ReportFormat: $('#reportFormat').val()
+        //})
+        //xhr.open("POST", url, false)
+
+        //xhr.setRequestHeader("Content-type", "application/json")
+        //xhr.setRequestHeader("Content-length", params.length)
+        //xhr.setRequestHeader("Connection", "close")
+
+        //xhr.onreadystatechange = function () {
+        //    if (xhr.readyState == 4 && xhr.status == 200) {
+        //        alert(xhr.responseText);
+        //        console.log(xhr.response)
+        //    }
+        //}
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("RunReport", "Report")',
+            //contentType: "application/json",
+            data: {
+                StartDate: $('#startDate').val(),
+                EndDate: $('#endDate').val(),
+                ReportName: $('#reportName').val(),
+                ReportFormat: $('#reportFormat').val()
+            },
+            async: false,
+            success: function () {
+                alert('Success')
+            },
+            error: function (e) {
+                alert('Error')
+                console.log(e)
+            }
+        }).done(function (data) {
+            alert('done')
+            console.log(data.data)
+
+            var byteArray = base64ToArrayBuffer(data.data)
+            saveByteArray("test.pdf", byteArray)
+
+            //var blob = new Blob([data.data], { type: "application/pdf" })
+            //var objectUrl = URL.createObjectURL(blob);
+            //window.open(objectUrl)
+            //window.location.replace(data.newUrl)
+        })
+    
+
+
+    }
+
+    function base64ToArrayBuffer(base64) {
+        var binString = window.atob(base64)
+        var binLen = binString.length
+        var bytes = new Uint8Array(binLen)
+        for (var i = 0; i < binLen; i++) {
+            var ascii = binString.charCodeAt(i)
+            bytes[i] = ascii
+        }
+        return bytes
+    }
+
+    function saveByteArray(fileName, bytes) {
+        var blob = new Blob([bytes], { type: "application/pdf" })
+        var link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = fileName
+        link.click()
+    }
+</script>
+

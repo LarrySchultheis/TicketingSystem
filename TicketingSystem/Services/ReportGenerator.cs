@@ -24,9 +24,9 @@ namespace TicketingSystem.Services
         protected readonly string password = "ls150682";
 
 
-        public void GenerateReport (ReportInput reportData)
+        public async Task<HttpResponseMessage> GenerateReport (ReportInput reportData)
         {
-            HttpResponseMessage resp;
+            HttpResponseMessage resp = null;
             string format, reportName;
 
             format = GetFormat(reportData);
@@ -34,13 +34,13 @@ namespace TicketingSystem.Services
 
             if (!reportName.Equals("Invalid"))
             {
-                if (reportData.ReportType == 0)
+                if (reportData.ReportName == ReportName.IncentiveReport)
                     GenerateIncentveReport(reportData, format, reportName);
 
-                else if (reportData.ReportType == 1)
-                    GenerateLaborHoursByJob(reportData, format, reportName);//reportData.StartDate, reportData.EndDate);
+                else if (reportData.ReportName == ReportName.LaborHoursByJob)
+                    resp = await GenerateLaborHoursByJob(reportData, format, reportName);//reportData.StartDate, reportData.EndDate);
 
-                else if (reportData.ReportType == 2)
+                else if (reportData.ReportName == ReportName.LaborHoursByJobAndEmployee)
                     GenerateLaborHoursByJobAndEmployee(reportData, format, reportName);
 
                 else
@@ -49,9 +49,10 @@ namespace TicketingSystem.Services
                     throw e;
                 }
             }
+            return resp;
         }
 
-        public async void GenerateLaborHoursByJob(ReportInput reportInput, string format, string reportName)//DateTime startDate, DateTime endDate)
+        public async Task<HttpResponseMessage> GenerateLaborHoursByJob(ReportInput reportInput, string format, string reportName)//DateTime startDate, DateTime endDate)
         {
             string startDate = reportInput.StartDate.ToString("MM/dd/yyyy");
             string endDate = reportInput.EndDate.ToString("MM/dd/yyyy");
@@ -66,13 +67,12 @@ namespace TicketingSystem.Services
             //var resp = await client.GetAsync(ssrsBaseURL + "LaborHoursByJob&rs:Format=csv&StartDate=" + start + "&EndDate=" + end);
             var resp = await client.GetAsync(BuildUrl(ssrsBaseURL, reportName, format, startDate, endDate));
 
-            var data = await resp.Content.ReadAsByteArrayAsync();
-            using (Stream file = File.OpenWrite("test." + format))
-            {
-                file.Write(data, 0, data.Length);
-            }
-
-            var y = 0;
+            //var data = await resp.Content.ReadAsByteArrayAsync();
+            //using (Stream file = File.OpenWrite("test." + format))
+            //{
+            //    file.Write(data, 0, data.Length);
+            //}
+            return resp;
         }
 
         public void GenerateIncentveReport(ReportInput reportInput, string format, string reportName)

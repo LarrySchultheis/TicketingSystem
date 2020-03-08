@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using TicketingSystem.Services;
 using TicketingSystem.Models;
 using TicketingSystem.ExceptionReport;
+using System.Net.Http;
 
 namespace TicketingSystem.Controllers
 {
@@ -16,12 +17,13 @@ namespace TicketingSystem.Controllers
             return View();
         }
 
-        public IActionResult RunReport(ReportInput reportData)
+        public async Task<JsonResult> RunReport(ReportInput reportData)
         {
+            HttpResponseMessage resp = null;
             try
             {
                 ReportGenerator rg = new ReportGenerator();
-                rg.GenerateReport(reportData);
+                resp = await rg.GenerateReport(reportData);
 
             }
             catch (Exception e)
@@ -30,7 +32,11 @@ namespace TicketingSystem.Controllers
                 er.DumpException(e);
             }
 
-            return View("Index");
+            return Json(new
+            {
+                data = await resp.Content.ReadAsByteArrayAsync()
+            });
+
         }
     }
 }
