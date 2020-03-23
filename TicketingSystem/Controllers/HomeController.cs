@@ -76,6 +76,7 @@ namespace TicketingSystem.Controllers
                 var userId = User.Claims.First().Value;
                 Auth0APIClient a0client = new Auth0APIClient();
                 a0client.UpdateUsers(userId);
+                var users = a0client.GetAllUsers();
                 //UserDataServer uds = new UserDataServer();
                 //UserData ud = uds.GetUserData(userId);
 
