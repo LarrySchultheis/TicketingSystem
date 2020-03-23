@@ -605,11 +605,11 @@ group by jt.JobName, jt.JobTypeID, WorkerName</CommandText>
   </ReportSections>
   <ReportParameters>
     <ReportParameter Name="StartDate">
-      <DataType>DateTime</DataType>
+      <DataType>String</DataType>
       <Prompt>StartDate</Prompt>
     </ReportParameter>
     <ReportParameter Name="EndDate">
-      <DataType>DateTime</DataType>
+      <DataType>String</DataType>
       <Prompt>EndDate</Prompt>
     </ReportParameter>
   </ReportParameters>
