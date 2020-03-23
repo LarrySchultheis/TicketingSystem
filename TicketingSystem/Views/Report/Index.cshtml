@@ -59,8 +59,6 @@
 
 <script>
     function getReport() {
-        alert('in get report')
-
         var url = window.location.host + "/report/RunReport"
         //var xhr = new XMLHttpRequest();
         //var params = JSON.stringify({
@@ -94,18 +92,35 @@
             },
             async: false,
             success: function () {
-                alert('Success')
             },
             error: function (e) {
                 alert('Error')
                 console.log(e)
             }
         }).done(function (data) {
-            alert('done')
-            console.log(data.data)
+            var headers = data.content.headers
+            var contentType
+            for (var i = 0; i < headers.length; i++) {
+                if (headers[i].key == 'Content-Type')
+                    contentType = headers[i].value[0]
+            }
 
-            var byteArray = base64ToArrayBuffer(data.data)
-            saveByteArray("test.pdf", byteArray)
+            var fileType
+            if (contentType == 'application/pdf')
+                fileType = 'pdf'
+            else if (contentType == 'text/csv; charset=utf-8')
+                fileType = 'csv'
+            else
+                fileType = null
+
+            //console.log(content[0][1])
+            if (fileType != null) {
+                var byteArray = base64ToArrayBuffer(data.data)
+                saveByteArray("test." + fileType, byteArray)
+            }
+            else
+                alert('File type not supported')
+
         })
     
 

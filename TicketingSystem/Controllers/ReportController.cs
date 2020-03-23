@@ -32,9 +32,14 @@ namespace TicketingSystem.Controllers
                 er.DumpException(e);
             }
 
+            var content = resp.Content;
+            var data = await resp.Content.ReadAsByteArrayAsync();
+
+
             return Json(new
             {
-                data = await resp.Content.ReadAsByteArrayAsync()
+                content = content,
+                data = data
             });
 
         }
