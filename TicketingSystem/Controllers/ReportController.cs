@@ -7,6 +7,7 @@ using TicketingSystem.Services;
 using TicketingSystem.Models;
 using TicketingSystem.ExceptionReport;
 using System.Net.Http;
+using Microsoft.Reporting.WebForms;
 
 namespace TicketingSystem.Controllers
 {
@@ -32,9 +33,14 @@ namespace TicketingSystem.Controllers
                 er.DumpException(e);
             }
 
+            var content = resp.Content;
+            var bytes = await resp.Content.ReadAsByteArrayAsync();
+
+
             return Json(new
             {
-                data = await resp.Content.ReadAsByteArrayAsync()
+                content = content,
+                data = bytes
             });
 
         }

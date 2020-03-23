@@ -7,6 +7,10 @@ using TicketingSystem.Models;
 using TicketingSystem.Services;
 using System.Diagnostics;
 using TicketingSystem.ExceptionReport;
+using System.Net.Http;
+using System.Web;
+using System.Web.Http;
+using System.Net;
 
 namespace TicketingSystem.Controllers
 {
@@ -20,6 +24,17 @@ namespace TicketingSystem.Controllers
         /// </returns>
         public IActionResult Index()
         {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                ErrorViewModel errorView = new ErrorViewModel();
+                errorView.RequestId = "401";
+                return View("Error", errorView);
+            }
+        
             RecordRetriever rr = new RecordRetriever();
             var res = rr.RetrieveRecords();
             return View("Index", res);
@@ -83,6 +98,28 @@ namespace TicketingSystem.Controllers
             RecordRetriever rr = new RecordRetriever();
             var res = rr.RetrieveRecords();
             return View("Index", res);
+        }
+
+        public bool Authorize()
+        {
+            var userId = User.Claims.First().Value;
+            Auth0APIClient a0client = new Auth0APIClient();
+            UserData ud = a0client.GetUserData(userId);
+            List<UserPermission> permissions = a0client.GetPermissions(ud.user_id);
+            bool authorized = false;
+
+            foreach (UserPermission perm in permissions)
+            {
+                if (perm.permission_name == "access:lvl1")
+                    authorized = true;
+                if (perm.permission_name == "access:lvl2")
+                    authorized = true;
+            }
+            
+            if (authorized == false)
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+
+            return authorized;
         }
     }
 }

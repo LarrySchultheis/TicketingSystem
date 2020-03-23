@@ -50,8 +50,6 @@
         <div>
             <div>
                 <button type="submit" class="btn-dark" id="subBtn" onclick="getReport()">Submit</button>
-                &nbsp;
-                <button type="reset" class="btn-dark" id="resetBtn">Reset Form</button>
             </div>
         </div>
     </div>
@@ -59,62 +57,58 @@
 
 <script>
     function getReport() {
-        alert('in get report')
-
-        var url = window.location.host + "/report/RunReport"
-        //var xhr = new XMLHttpRequest();
-        //var params = JSON.stringify({
-        //    StartDate: $('#startDate').val(),
-        //    EndDate: $('#endDate').val(),
-        //    ReportName: $('#reportName').val(),
-        //    ReportFormat: $('#reportFormat').val()
-        //})
-        //xhr.open("POST", url, false)
-
-        //xhr.setRequestHeader("Content-type", "application/json")
-        //xhr.setRequestHeader("Content-length", params.length)
-        //xhr.setRequestHeader("Connection", "close")
-
-        //xhr.onreadystatechange = function () {
-        //    if (xhr.readyState == 4 && xhr.status == 200) {
-        //        alert(xhr.responseText);
-        //        console.log(xhr.response)
-        //    }
-        //}
-
+        var startDate = $('#startDate').val()
+        var endDate = $('#endDate').val()
+        var reportName = $('#reportName').val()
+        var reportFormat = $('#reportFormat').val()
         $.ajax({
             type: "POST",
             url: '@Url.Action("RunReport", "Report")',
-            //contentType: "application/json",
             data: {
-                StartDate: $('#startDate').val(),
-                EndDate: $('#endDate').val(),
-                ReportName: $('#reportName').val(),
-                ReportFormat: $('#reportFormat').val()
+                StartDate: startDate,
+                EndDate: endDate,
+                ReportName: reportName,
+                ReportFormat: reportFormat
             },
-            async: false,
+            async: true,
             success: function () {
-                alert('Success')
             },
             error: function (e) {
                 alert('Error')
                 console.log(e)
             }
         }).done(function (data) {
-            alert('done')
-            console.log(data.data)
+            var headers = data.content.headers
+
+            var contentType
+            var contentDisposition
+            var fileName
+            var today = new Date()
+            for (var i = 0; i < headers.length; i++) {
+                if (headers[i].key == 'Content-Type')
+                    contentType = headers[i].value[0]
+                if (headers[i].key == 'Content-Disposition') {
+                    contentDisposition = headers[i].value[0]
+
+                }
+            }
+
+            var pos = contentDisposition.search("=")
+            fileName = contentDisposition.substring(pos + 2, (contentDisposition.length - 5))
+            console.log(fileName)
+           
+            fileName += "_" + today.getMonth() + "-" + today.getDate() + "-" + today.getFullYear()
+
+            if (contentType == 'application/pdf')
+                fileName += ".pdf"
+            else if (contentType == 'text/csv; charset=utf-8')
+                fileName += ".csv"
+            else
+                fileType = null
 
             var byteArray = base64ToArrayBuffer(data.data)
-            saveByteArray("test.pdf", byteArray)
-
-            //var blob = new Blob([data.data], { type: "application/pdf" })
-            //var objectUrl = URL.createObjectURL(blob);
-            //window.open(objectUrl)
-            //window.location.replace(data.newUrl)
+            saveByteArray(fileName, contentType, byteArray)
         })
-    
-
-
     }
 
     function base64ToArrayBuffer(base64) {
@@ -128,12 +122,13 @@
         return bytes
     }
 
-    function saveByteArray(fileName, bytes) {
-        var blob = new Blob([bytes], { type: "application/pdf" })
+    function saveByteArray(fileName, contentType, bytes) {
+        var blob = new Blob([bytes], { type: contentType })
         var link = document.createElement('a')
         link.href = window.URL.createObjectURL(blob)
         link.download = fileName
         link.click()
     }
+
 </script>
 
