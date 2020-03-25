@@ -4,55 +4,130 @@
 }
 
 <h1>Reports Home</h1>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+@*<script src="~/js/report.js"></script>*@
+
 
 <div>
     <partial name="_HeaderNavbar" />
 
 
-    <form id="selectReport" class="form-horizontal" asp-action="RunReport" asp-controller="Report">
+    @*<form id="selectReport" class="form-horizontal" asp-action="RunReport" asp-controller="Report">*@
+    <div class="form-group" id="reportType">
 
-        <div class="form-group" id="reportType">
-
-            <label for="startDate">Enter the Start Date:</label>
-            <div>
-                <input id="startDate" name="StartDate" type="date" />
-            </div>
-
-            <label for="endDate">Enter the End Date:</label>
-            <div>
-                <input id="endDate" name="EndDate" type="date" />
-            </div>
-
-            <label for="reportType">Select Report Type:</label>
-            <div>
-                <select name="ReportType">
-                    <option value="0">Labor Hours by Job</option>
-                    <option value="1">Incentive Report</option>
-                    <option value="2">Labor Hours by Job and Employee</option>
-                </select>
-            </div>
-
-            <label for="reportFormat">Select Report Format:</label>
-            <div>
-                <select name="ReportFormat">
-                    <option value="0">PDF</option>
-                    <option value="1">CSV</option>
-                    @*<option value="2">DOCX</option>*@
-                </select>
-            </div>
-
-            <br />
-
-            <div>
-                <div>
-                    <button type="submit" class="btn-dark" id="subBtn">Submit</button>
-                    &nbsp;
-                    <button type="reset" class="btn-dark" id="resetBtn">Reset Form</button>
-                </div>
-            </div>
+        <label for="startDate">Enter the Start Date:</label>
+        <div>
+            <input id="startDate" name="StartDate" type="date" />
         </div>
 
+        <label for="endDate">Enter the End Date:</label>
+        <div>
+            <input id="endDate" name="EndDate" type="date" />
+        </div>
 
-    </form>
+        <label for="reportName">Select Report Type:</label>
+        <div>
+            <select name="ReportName" id="reportName">
+                <option value="0">Labor Hours by Job</option>
+                <option value="1">Incentive Report</option>
+                <option value="2">Labor Hours by Job and Employee</option>
+            </select>
+        </div>
 
+        <label for="reportFormat">Select Report Format:</label>
+        <div>
+            <select name="ReportFormat" id="reportFormat">
+                <option value="0">PDF</option>
+                <option value="1">CSV</option>
+                @*<option value="2">DOCX</option>*@
+            </select>
+        </div>
+
+        <br />
+
+        <div>
+            <div>
+                <button type="submit" class="btn-dark" id="subBtn" onclick="getReport()">Submit</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    function getReport() {
+        var startDate = $('#startDate').val()
+        var endDate = $('#endDate').val()
+        var reportName = $('#reportName').val()
+        var reportFormat = $('#reportFormat').val()
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("RunReport", "Report")',
+            data: {
+                StartDate: startDate,
+                EndDate: endDate,
+                ReportName: reportName,
+                ReportFormat: reportFormat
+            },
+            async: true,
+            success: function () {
+            },
+            error: function (e) {
+                alert('Error')
+                console.log(e)
+            }
+        }).done(function (data) {
+            var headers = data.content.headers
+
+            var contentType
+            var contentDisposition
+            var fileName
+            var today = new Date()
+            for (var i = 0; i < headers.length; i++) {
+                if (headers[i].key == 'Content-Type')
+                    contentType = headers[i].value[0]
+                if (headers[i].key == 'Content-Disposition') {
+                    contentDisposition = headers[i].value[0]
+
+                }
+            }
+
+            var pos = contentDisposition.search("=")
+            fileName = contentDisposition.substring(pos + 2, (contentDisposition.length - 5))
+           
+            fileName += "_" + today.getMonth() + "-" + today.getDate() + "-" + today.getFullYear()
+
+            if (contentType == 'application/pdf')
+                fileName += ".pdf"
+            else if (contentType == 'text/csv; charset=utf-8')
+                fileName += ".csv"
+            else
+                fileType = null
+
+            var byteArray = base64ToArrayBuffer(data.data)
+            saveByteArray(fileName, contentType, byteArray)
+        })
+    }
+
+    function base64ToArrayBuffer(base64) {
+        var binString = window.atob(base64)
+        var binLen = binString.length
+        var bytes = new Uint8Array(binLen)
+        for (var i = 0; i < binLen; i++) {
+            var ascii = binString.charCodeAt(i)
+            bytes[i] = ascii
+        }
+        return bytes
+    }
+
+    function saveByteArray(fileName, contentType, bytes) {
+        var blob = new Blob([bytes], { type: contentType })
+        var link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = fileName
+        link.click()
+    }
+
+</script>
+

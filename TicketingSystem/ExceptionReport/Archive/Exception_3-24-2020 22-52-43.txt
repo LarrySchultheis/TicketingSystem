@@ -1,0 +1,2 @@
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at TicketingSystem.Services.RecordRetriever.GetRecordByID(Int32 entryID) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\RecordRetriever.cs:line 46

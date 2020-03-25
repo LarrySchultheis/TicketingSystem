@@ -5,6 +5,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using NUnit.Framework;
 using OpenQA.Selenium.Support.UI;
+using System.IO;
+using TicketingSystem.Services;
 
 namespace Tests.AutomatedTests
 {
@@ -13,14 +15,14 @@ namespace Tests.AutomatedTests
     {
         private IWebDriver driver;
         public string reportUrl;
-        private readonly string chromeDriverPath = "C:\\Program Files\\SeleniumChromeDriver";
+        private readonly string chromeDriverPath = GetDriverDirectory();
+    
 
         [Test(Description = "Run LaborHoursByJobReport")]
         public void LaborHoursByJobTest()
         {
             reportUrl = "https://localhost:44326/Report/Index";
             driver.Navigate().GoToUrl(reportUrl);
-            WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(10));
             
         }
 
@@ -34,6 +36,11 @@ namespace Tests.AutomatedTests
         public void SetupTest()
         {
             driver = new ChromeDriver(chromeDriverPath);
+        }
+
+        private static string GetDriverDirectory()
+        {
+            return Directory.GetCurrentDirectory().Replace("bin\\Debug\\netcoreapp2.1", "");
         }
     }
 }

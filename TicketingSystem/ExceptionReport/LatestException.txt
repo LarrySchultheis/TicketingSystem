@@ -1,6 +1,2 @@
-System.UriFormatException: Invalid URI: The format of the URI could not be determined.
-   at System.Uri.CreateThis(String uri, Boolean dontEscape, UriKind uriKind)
-   at System.Uri..ctor(String uriString)
-   at TicketingSystem.Services.ReportGenerator.GenerateLaborHoursByJob() in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\ReportGenerator.cs:line 103
-   at TicketingSystem.Services.ReportGenerator.GenerateReport(ReportInput reportData) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\ReportGenerator.cs:line 28
-   at TicketingSystem.Controllers.ReportController.RunReport(ReportInput reportData) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Controllers\ReportController.cs:line 24
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at TicketingSystem.Services.RecordRetriever.GetRecordByID(Int32 entryID) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\RecordRetriever.cs:line 46
