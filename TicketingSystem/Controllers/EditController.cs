@@ -143,9 +143,8 @@ namespace TicketingSystem.Controllers
         public bool Authorize()
         {
             var userId = User.Claims.First().Value;
-            Auth0APIClient a0client = new Auth0APIClient();
-            UserData ud = a0client.GetUserData(userId);
-            List<UserPermission> permissions = a0client.GetPermissions(ud.user_id);
+            UserData ud = Auth0APIClient.GetUserData(userId);
+            List<UserPermission> permissions = Auth0APIClient.GetPermissions(ud.user_id);
             bool authorized = false;
 
             foreach (UserPermission perm in permissions)
