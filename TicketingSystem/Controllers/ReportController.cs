@@ -75,7 +75,9 @@ namespace TicketingSystem.Controllers
 
             foreach (UserPermission perm in permissions)
             {
-                if (perm.permission_name == "access:lvl1" || perm.permission_name == "access:lvl2" || perm.permission_name == "access:lvl3")
+                if (perm.permission_name == ModelUtility.AccessLevel1 ||
+                perm.permission_name == ModelUtility.AccessLevel2 ||
+                perm.permission_name == ModelUtility.AccessLevel3)
                 {
                     authorized = true;
                     break;
@@ -83,7 +85,7 @@ namespace TicketingSystem.Controllers
             }
 
             if (authorized == false)
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                throw new System.Web.Http.HttpResponseException(HttpStatusCode.Unauthorized);
 
             return authorized;
         }

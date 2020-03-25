@@ -17,7 +17,12 @@ namespace TicketingSystem.Models
         LaborHoursByJobAndEmployee,
         IncentiveReport
     }
-    public class ModelUtility
+
+    public static class ModelUtility
     {
+        public static readonly string AccessLevel1 = "access:lvl1";
+        public static readonly string AccessLevel2 = "access:lvl2";
+        public static readonly string AccessLevel3 = "access:lvl3";
+        public static readonly string AccessLevel4 = "access:lvl4";
     }
 }

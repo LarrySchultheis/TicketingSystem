@@ -4,11 +4,103 @@
 }
 
 <h1>Reports Home</h1>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-        crossorigin="anonymous"></script>
-@*<script src="~/js/report.js"></script>*@
+@*<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+<script>
+    //$(document).ready(function () {
+    //    $("#dialog-message").hide()
+    //})
+    function getReport() {
+        var startDate = $('#startDate').val()
+        var endDate = $('#endDate').val()
+        var reportName = $('#reportName').val()
+        var reportFormat = $('#reportFormat').val()
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("RunReport", "Report")',
+            data: {
+                StartDate: startDate,
+                EndDate: endDate,
+                ReportName: reportName,
+                ReportFormat: reportFormat
+            },
+            async: true,
+            beforeSend: function () {
+                document.getElementById('dialog-message').hidden = false
+                $("#dialog-message").dialog({
+                    modal: true,
+                    buttons: {
+                        Ok: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            },
+            success: function () {
+            },
+            error: function (e) {
+                alert('Error')
+                console.log(e)
+            }
+        }).done(function (data) {
+            var headers = data.content.headers
+
+            var contentType
+            var contentDisposition
+            var fileName
+            var today = new Date()
+            for (var i = 0; i < headers.length; i++) {
+                if (headers[i].key == 'Content-Type')
+                    contentType = headers[i].value[0]
+                if (headers[i].key == 'Content-Disposition') {
+                    contentDisposition = headers[i].value[0]
+
+                }
+            }
+
+            var pos = contentDisposition.search("=")
+            fileName = contentDisposition.substring(pos + 2, (contentDisposition.length - 5))
+
+            fileName += "_" + today.getMonth() + "-" + today.getDate() + "-" + today.getFullYear()
+
+            if (contentType == 'application/pdf')
+                fileName += ".pdf"
+            else if (contentType == 'text/csv; charset=utf-8')
+                fileName += ".csv"
+            else
+                fileType = null
+
+            var byteArray = base64ToArrayBuffer(data.data)
+            saveByteArray(fileName, contentType, byteArray)
+        })
+    }
+
+    function base64ToArrayBuffer(base64) {
+        var binString = window.atob(base64)
+        var binLen = binString.length
+        var bytes = new Uint8Array(binLen)
+        for (var i = 0; i < binLen; i++) {
+            var ascii = binString.charCodeAt(i)
+            bytes[i] = ascii
+        }
+        return bytes
+    }
+
+    function saveByteArray(fileName, contentType, bytes) {
+        var blob = new Blob([bytes], { type: contentType })
+        var link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = fileName
+        link.click()
+    }
+
+</script>
 
 <div>
     <partial name="_HeaderNavbar" />
@@ -53,81 +145,15 @@
             </div>
         </div>
     </div>
+
+    <div hidden id="dialog-message" title="Downloading File">
+        <p>
+            <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+            Your report is being downloaded
+        </p>
+
+    </div>
 </div>
 
-<script>
-    function getReport() {
-        var startDate = $('#startDate').val()
-        var endDate = $('#endDate').val()
-        var reportName = $('#reportName').val()
-        var reportFormat = $('#reportFormat').val()
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("RunReport", "Report")',
-            data: {
-                StartDate: startDate,
-                EndDate: endDate,
-                ReportName: reportName,
-                ReportFormat: reportFormat
-            },
-            async: true,
-            success: function () {
-            },
-            error: function (e) {
-                alert('Error')
-                console.log(e)
-            }
-        }).done(function (data) {
-            var headers = data.content.headers
 
-            var contentType
-            var contentDisposition
-            var fileName
-            var today = new Date()
-            for (var i = 0; i < headers.length; i++) {
-                if (headers[i].key == 'Content-Type')
-                    contentType = headers[i].value[0]
-                if (headers[i].key == 'Content-Disposition') {
-                    contentDisposition = headers[i].value[0]
-
-                }
-            }
-
-            var pos = contentDisposition.search("=")
-            fileName = contentDisposition.substring(pos + 2, (contentDisposition.length - 5))
-           
-            fileName += "_" + today.getMonth() + "-" + today.getDate() + "-" + today.getFullYear()
-
-            if (contentType == 'application/pdf')
-                fileName += ".pdf"
-            else if (contentType == 'text/csv; charset=utf-8')
-                fileName += ".csv"
-            else
-                fileType = null
-
-            var byteArray = base64ToArrayBuffer(data.data)
-            saveByteArray(fileName, contentType, byteArray)
-        })
-    }
-
-    function base64ToArrayBuffer(base64) {
-        var binString = window.atob(base64)
-        var binLen = binString.length
-        var bytes = new Uint8Array(binLen)
-        for (var i = 0; i < binLen; i++) {
-            var ascii = binString.charCodeAt(i)
-            bytes[i] = ascii
-        }
-        return bytes
-    }
-
-    function saveByteArray(fileName, contentType, bytes) {
-        var blob = new Blob([bytes], { type: contentType })
-        var link = document.createElement('a')
-        link.href = window.URL.createObjectURL(blob)
-        link.download = fileName
-        link.click()
-    }
-
-</script>
 
