@@ -17,7 +17,7 @@ namespace TicketingSystem.Models
         LaborHoursByJobAndEmployee,
         IncentiveReport
     }
-    public class Utility
+    public class ModelUtility
     {
     }
 }

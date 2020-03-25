@@ -30,9 +30,8 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                ErrorViewModel errorView = new ErrorViewModel();
-                errorView.ErrorCode = "401";
-                return View("Error", errorView);
+
+                return View("Error", Utility.CreateErrorView(e));
             }
         
             RecordRetriever rr = new RecordRetriever();

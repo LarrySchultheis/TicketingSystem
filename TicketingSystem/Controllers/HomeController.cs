@@ -71,15 +71,6 @@ namespace TicketingSystem.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                //Code snippet to grab user info
-
-                var userId = User.Claims.First().Value;
-                Auth0APIClient.UpdateUsers(userId);
-                var users = Auth0APIClient.GetAllUsers();
-                //UserDataServer uds = new UserDataServer();
-                //UserData ud = uds.GetUserData(userId);
-
-
                 RecordRetriever rr = new RecordRetriever();
                 var records = rr.RetrieveRecords();
                 latestData = records;
@@ -90,8 +81,6 @@ namespace TicketingSystem.Controllers
                 return View("Landing");
             }
         }
-
-
 
         /// <summary>
         /// Gets both open and closed tickets 
@@ -179,18 +168,6 @@ namespace TicketingSystem.Controllers
                 });
             }
         }
-
-        //public IActionResult CloseTicket()
-        //{
-        //    using (var context = new TicketingSystemDBContext())
-        //    {
-        //        var td = context.TicketData.Where(t => t.EntryAuthor.Email == "admin123@gmail.com").FirstOrDefault();
-        //        DataEntry de = new DataEntry();
-        //        bool success = de.CloseTicket(td);
-        //    }
-        //    RecordRetriever rr = new RecordRetriever();
-        //    return View("HomePage", rr.RetrieveRecords());
-        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
