@@ -31,7 +31,7 @@ namespace TicketingSystem.Controllers
             catch (HttpResponseException e)
             {
                 ErrorViewModel errorView = new ErrorViewModel();
-                errorView.RequestId = "401";
+                errorView.ErrorCode = "401";
                 return View("Error", errorView);
             }
         
@@ -47,6 +47,16 @@ namespace TicketingSystem.Controllers
         /// <returns>EditForm View with specified TicketData entry</returns>
         public IActionResult EditForm(TicketData td)
         {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                ErrorViewModel errorView = new ErrorViewModel();
+                errorView.ErrorCode = "401";
+                return View("Error", errorView);
+            }
             RecordRetriever rr = new RecordRetriever();
             var tdRes = rr.GetRecordByID(td.EntryId);
             return View("EditForm", tdRes);
@@ -59,6 +69,19 @@ namespace TicketingSystem.Controllers
         /// <returns>JSON holding redirect URL</returns>
         public JsonResult GetRecord(string entryId)
         {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                ErrorViewModel errorView = new ErrorViewModel();
+                errorView.ErrorCode = "401";
+                return Json(new
+                {
+                    newUrl = Url.Action("Error", "Edit")
+                }); 
+            }
             try
             {
                 using (var context = new TicketingSystemDBContext())
@@ -85,6 +108,12 @@ namespace TicketingSystem.Controllers
             }
         }
 
+        public IActionResult Error()
+        {
+            ErrorViewModel error = new ErrorViewModel();
+            error.ErrorCode = "401";
+            return View("Error", error);
+        }
 
         /// <summary>
         /// Posts edited ticket data entry to DataEditor service
@@ -93,6 +122,17 @@ namespace TicketingSystem.Controllers
         /// <returns>Index View</returns>
         public IActionResult PostEdit(TicketData td)
         {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                ErrorViewModel errorView = new ErrorViewModel();
+                errorView.ErrorCode = "401";
+                return View("Error", errorView);
+            }
+
             DataEditor de = new DataEditor();
             de.PostEditor(td);
             RecordRetriever rr = new RecordRetriever();
@@ -103,9 +143,8 @@ namespace TicketingSystem.Controllers
         public bool Authorize()
         {
             var userId = User.Claims.First().Value;
-            Auth0APIClient a0client = new Auth0APIClient();
-            UserData ud = a0client.GetUserData(userId);
-            List<UserPermission> permissions = a0client.GetPermissions(ud.user_id);
+            UserData ud = Auth0APIClient.GetUserData(userId);
+            List<UserPermission> permissions = Auth0APIClient.GetPermissions(ud.user_id);
             bool authorized = false;
 
             foreach (UserPermission perm in permissions)
