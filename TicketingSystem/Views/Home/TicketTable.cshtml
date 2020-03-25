@@ -6,7 +6,7 @@
 }
 <!DOCTYPE html>
 
-<partial name="_HeaderNavbar"/>
+<partial name="_HeaderNavbar" />
 
 <div class="text-center">
     <h2 class="display-4">Ticket Table</h2>
@@ -30,3 +30,32 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.css" />
 
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var table = $('#ticketTable').DataTable()
+    });</script>
+
+<script>
+    function rowClicked(entryId) {
+        var id = entryId
+        console.log(id)
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("OpenEntry", "Home")',
+            data: { entryID: id },
+            success: function () {
+                //alert('Success')
+            },
+            error: function (e) {
+                alert('Error')
+                console.log(e)
+            }
+        }).done(function (data) {
+            window.location.replace(data.newUrl)
+        })
+
+    }
+
+</script>
