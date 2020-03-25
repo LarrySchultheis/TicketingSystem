@@ -95,7 +95,6 @@
 
             var pos = contentDisposition.search("=")
             fileName = contentDisposition.substring(pos + 2, (contentDisposition.length - 5))
-            console.log(fileName)
            
             fileName += "_" + today.getMonth() + "-" + today.getDate() + "-" + today.getFullYear()
 
