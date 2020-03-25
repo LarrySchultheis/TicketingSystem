@@ -139,7 +139,7 @@ namespace TicketingSystem.Controllers
             return View("Index", res);
         }
 
-        public bool Authorize()
+        private bool Authorize()
         {
             var userId = User.Claims.First().Value;
             UserData ud = Auth0APIClient.GetUserData(userId);
@@ -148,12 +148,13 @@ namespace TicketingSystem.Controllers
 
             foreach (UserPermission perm in permissions)
             {
-                if (perm.permission_name == "access:lvl1")
+                if (perm.permission_name == ModelUtility.AccessLevel1 || perm.permission_name == ModelUtility.AccessLevel2)
+                {
                     authorized = true;
-                if (perm.permission_name == "access:lvl2")
-                    authorized = true;
+                    break;
+                }
             }
-            
+
             if (authorized == false)
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
 

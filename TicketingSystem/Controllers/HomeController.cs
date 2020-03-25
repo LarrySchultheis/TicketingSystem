@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TicketingSystem.Models;
 using TicketingSystem.ExceptionReport;
+using System.Net;
+using System.Web.Http;
 
 namespace TicketingSystem.Controllers
 {
@@ -15,7 +17,6 @@ namespace TicketingSystem.Controllers
         private readonly ILogger<HomeController> _logger;
         private IEnumerable<TicketData> latestData;
 
-        [HttpGet]
         public IActionResult Landing()
         {
             return View("Landing");
@@ -30,9 +31,16 @@ namespace TicketingSystem.Controllers
         /// Gets the Data Entry page
         /// </summary>
         /// <returns>DataEntry View</returns>
-        [HttpGet]
         public IActionResult DataEntry()
-        {            
+        {   
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                return View("Error", Utility.CreateErrorView(e));
+            }
             return View("DataEntry");
         }
 
@@ -43,6 +51,14 @@ namespace TicketingSystem.Controllers
         /// <returns>EntryClose View and TicketData entry</returns>
         public IActionResult EntryClose(TicketData td)
         {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                return View("Error", Utility.CreateErrorView(e));
+            }
             RecordRetriever rr = new RecordRetriever();
             var tdRes = rr.GetRecordByID(td.EntryId);
             return View("EntryClose", tdRes);
@@ -55,6 +71,14 @@ namespace TicketingSystem.Controllers
         /// <returns>HomePage view with Open records</returns>
         public IActionResult PostEntryClose(TicketData td)
         {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                return View("Error", Utility.CreateErrorView(e));
+            }
             DataEntry de = new DataEntry();
             RecordRetriever rr = new RecordRetriever();
             de.CloseTicket(td);
@@ -66,7 +90,6 @@ namespace TicketingSystem.Controllers
         ///  Gets the HomePage view with current open records
         /// </summary>
         /// <returns>HomePage view with open records</returns>
-        [HttpGet]
         public IActionResult HomePage()
         {
             if (User.Identity.IsAuthenticated)
@@ -82,11 +105,19 @@ namespace TicketingSystem.Controllers
             }
         }
 
+        //[HttpGet]
+        //public IActionResult TicketTable()
+        //{
+        //    RecordRetriever rr = new RecordRetriever();
+        //    var records = rr.RetrieveRecords();
+        //    latestData = records;
+        //    return View("HomePage", records);
+        //}
+
         /// <summary>
         /// Gets both open and closed tickets 
         /// </summary>
         /// <returns>HomePage view with current records</returns>
-        [HttpGet]
         public IActionResult AllTickets()
         {
             RecordRetriever rr = new RecordRetriever();
@@ -94,7 +125,6 @@ namespace TicketingSystem.Controllers
             return View("HomePage", records);
         }
 
-        [HttpGet]
         public IActionResult OpenTickets()
         {
             RecordRetriever rr = new RecordRetriever();
@@ -102,7 +132,6 @@ namespace TicketingSystem.Controllers
             return View("HomePage", records);
         }
 
-        [HttpPost]
         public IActionResult VerifyLogin(Users user)
         {
             return View("HomePage", user);
@@ -113,9 +142,16 @@ namespace TicketingSystem.Controllers
         /// </summary>
         /// <param name="td">TicketData entry from DataEntry form</param>
         /// <returns>DataEntry view with TicketData entry</returns>
-        [HttpPost]
         public IActionResult PostEntry(TicketData td)
         {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                return View("Error", Utility.CreateErrorView(e));
+            }
             try
             {
                 using (var context = new TicketingSystemDBContext())
@@ -138,9 +174,20 @@ namespace TicketingSystem.Controllers
         /// </summary>
         /// <param name="entryID">Entry ID specified in HomePage table</param>
         /// <returns>JSON containing redirect URL</returns>
-        [HttpPost]
         public JsonResult OpenEntry(string entryID)
         {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                return Json(new
+                {
+                    code = (int)e.Response.StatusCode,
+                    error = e.Response.StatusCode.ToString()
+                });
+            }
             try
             {
                 using (var context = new TicketingSystemDBContext())
@@ -173,6 +220,30 @@ namespace TicketingSystem.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { ErrorCode = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private bool Authorize()
+        {
+            var userId = User.Claims.First().Value;
+            UserData ud = Auth0APIClient.GetUserData(userId);
+            List<UserPermission> permissions = Auth0APIClient.GetPermissions(ud.user_id);
+            bool authorized = false;
+
+            foreach (UserPermission perm in permissions)
+            {
+                if (perm.permission_name == ModelUtility.AccessLevel1 ||
+                perm.permission_name == ModelUtility.AccessLevel2 || 
+                perm.permission_name == ModelUtility.AccessLevel4)
+                {
+                    authorized = true;
+                    break;
+                }
+            }
+
+            if (authorized == false)
+                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+
+            return authorized;
         }
     }
 }
