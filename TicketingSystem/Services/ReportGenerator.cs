@@ -34,22 +34,39 @@ namespace TicketingSystem.Services
 
             if (!reportName.Equals("Invalid"))
             {
-                if (reportData.ReportName == ReportName.IncentiveReport)
-                    GenerateIncentveReport(reportData, format, reportName);
+                //if (reportData.ReportName == ReportName.IncentiveReport)
+                //    GenerateIncentveReport(reportData, format, reportName);
 
-                else if (reportData.ReportName == ReportName.LaborHoursByJob)
-                    resp = await GenerateLaborHoursByJob(reportData, format, reportName);//reportData.StartDate, reportData.EndDate);
+                //else if (reportData.ReportName == ReportName.LaborHoursByJob)
+                //    resp = await GenerateLaborHoursByJob(reportData, format, reportName);//reportData.StartDate, reportData.EndDate);
 
-                else if (reportData.ReportName == ReportName.LaborHoursByJobAndEmployee)
-                    GenerateLaborHoursByJobAndEmployee(reportData, format, reportName);
+                //else if (reportData.ReportName == ReportName.LaborHoursByJobAndEmployee)
+                //    GenerateLaborHoursByJobAndEmployee(reportData, format, reportName);
 
-                else
+                string startDate = reportData.StartDate.ToString("MM/dd/yyyy");
+                string endDate = reportData.EndDate.ToString("MM/dd/yyyy");
+
+                HttpClientHandler handler = new HttpClientHandler
                 {
-                    Exception e = new Exception("Error, Report Type is not valid");
-                    throw e;
-                }
+                    PreAuthenticate = true,
+                    Credentials = new NetworkCredential(userName, password)
+                };
+                var client = new HttpClient(handler);
+
+                //var resp = await client.GetAsync(ssrsBaseURL + "LaborHoursByJob&rs:Format=csv&StartDate=" + start + "&EndDate=" + end);
+                resp = await client.GetAsync(BuildUrl(ssrsBaseURL, reportName, format, startDate, endDate));
+                return resp;
+                //var data = await resp.Content.ReadAsByteArrayAsync();
+                //using (Stream file = File.OpenWrite("test." + format))
+                //{
+                //    file.Write(data, 0, data.Length);
+                //}
             }
-            return resp;
+            else
+            {
+                Exception e = new Exception("Error, Report Type is not valid");
+                throw e;
+            }
         }
 
         public async Task<HttpResponseMessage> GenerateLaborHoursByJob(ReportInput reportInput, string format, string reportName)//DateTime startDate, DateTime endDate)
