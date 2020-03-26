@@ -31,7 +31,7 @@ namespace TicketingSystem.Controllers
             catch (HttpResponseException e)
             {
 
-                return View("Error", Utility.CreateErrorView(e));
+                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
             }
         
             RecordRetriever rr = new RecordRetriever();
@@ -52,9 +52,7 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                ErrorViewModel errorView = new ErrorViewModel();
-                errorView.ErrorCode = "401";
-                return View("Error", errorView);
+                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
             }
             RecordRetriever rr = new RecordRetriever();
             var tdRes = rr.GetRecordByID(td.EntryId);
@@ -74,12 +72,10 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                ErrorViewModel errorView = new ErrorViewModel();
-                errorView.ErrorCode = "401";
                 return Json(new
                 {
-                    newUrl = Url.Action("Error", "Edit")
-                }); 
+                    newUrl = Url.Action("Error", "Edit", Utility.CreateErrorView(e, "You do not have the permissions to view this page"))
+                }) ; 
             }
             try
             {
@@ -127,9 +123,7 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                ErrorViewModel errorView = new ErrorViewModel();
-                errorView.ErrorCode = "401";
-                return View("Error", errorView);
+                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
             }
 
             DataEditor de = new DataEditor();

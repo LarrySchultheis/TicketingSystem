@@ -39,7 +39,7 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                return View("Error", Utility.CreateErrorView(e));
+                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
             }
             return View("DataEntry");
         }
@@ -57,7 +57,7 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                return View("Error", Utility.CreateErrorView(e));
+                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
             }
             RecordRetriever rr = new RecordRetriever();
             var tdRes = rr.GetRecordByID(td.EntryId);
@@ -77,7 +77,7 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                return View("Error", Utility.CreateErrorView(e));
+                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
             }
             DataEntry de = new DataEntry();
             RecordRetriever rr = new RecordRetriever();
@@ -150,7 +150,7 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                return View("Error", Utility.CreateErrorView(e));
+                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
             }
             try
             {
