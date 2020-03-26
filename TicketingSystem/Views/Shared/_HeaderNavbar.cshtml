@@ -1,6 +1,8 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@using TicketingSystem.Services
+@using TicketingSystem.Models 
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
@@ -15,10 +17,50 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a asp-area="" asp-controller="Home" asp-action="HomePage">Home</a></li>
-                <li><a asp-area="" asp-controller="Home" asp-action="DataEntry">New Entry</a></li>
-                <li><a asp-area="" asp-controller="Edit" asp-action="Index">Edit</a></li>
-                <li><a asp-area="" asp-controller="Report" asp-action="Index">Reports</a></li>
+                @{
+                    bool showDataEntry = false, showEdit = false, showReport = false;
+                    var user = Auth0APIClient.GetUserData(User.Claims.First().Value);
+                    List<UserPermission> permissions = Auth0APIClient.GetPermissions(user.user_id);
+                    foreach (UserPermission perm in permissions)
+                    {
+                        if (perm.permission_name == ModelUtility.AccessLevel1)
+                        {
+                            showDataEntry = true;
+                            showEdit = true;
+                            showReport = true;
+                            break;
+                        }
+                        if (perm.permission_name == ModelUtility.AccessLevel2)
+                        {
+                            showDataEntry = true;
+                            showEdit = true;
+                            showReport = true;
+                            break;
+                        }
+                        if (perm.permission_name == ModelUtility.AccessLevel3)
+                        {
+                            showReport = true;
+                        }
+                        if (perm.permission_name == ModelUtility.AccessLevel4)
+                        {
+                            showDataEntry = true;
+                        }
+                    }
+                    <li><a asp-area="" asp-controller="Home" asp-action="HomePage">Home</a></li>
+                    if (showDataEntry)
+                    {
+                        <li><a asp-area="" asp-controller="Home" asp-action="DataEntry">New Entry</a></li>
+                    }
+                    if (showEdit)
+                    {
+                        <li><a asp-area="" asp-controller="Edit" asp-action="Index">Edit</a></li>
+                    }
+                    if (showReport)
+                    {
+                        <li><a asp-area="" asp-controller="Report" asp-action="Index">Reports</a></li>
+                    }
+                }
+
 
             </ul>
             <ul class="nav navbar-nav navbar-right">

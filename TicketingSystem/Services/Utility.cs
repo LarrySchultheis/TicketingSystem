@@ -27,12 +27,13 @@ namespace TicketingSystem.Services
                 outfile.Close();
             }
         }
-        public static ErrorViewModel CreateErrorView(HttpResponseException exception)
+        public static ErrorViewModel CreateErrorView(HttpResponseException exception, string reason)
         {
             ErrorViewModel errorView = new ErrorViewModel();
             int code = (int) exception.Response.StatusCode;
             string status = exception.Response.StatusCode.ToString();
             errorView.ErrorCode = code + " " + status;
+            errorView.Reason = reason;
             return errorView;
         }
 
