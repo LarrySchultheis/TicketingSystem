@@ -18,13 +18,11 @@
       <Query>
         <DataSourceName>LaborHoursByJobAndEmployee</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="StartDate">
+          <QueryParameter Name="@StartDate">
             <Value>=Parameters!StartDate.Value</Value>
-            <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
-          <QueryParameter Name="EndDate">
+          <QueryParameter Name="@EndDate">
             <Value>=Parameters!EndDate.Value</Value>
-            <rd:UserDefined>true</rd:UserDefined>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT jt.JobName, td.WorkerName, Sum(PalletNum) as TotalPallets, Sum(CasesNum) as TotalCases
@@ -39,8 +37,8 @@ Format ((((Cast (Sum(CasesNum) as decimal(10,2))) /
 --(Sum(CasesNum) / TotalTime) as TotalCases
 FROM TicketData td INNER JOIN JobType jt 
 ON td.JobTypeID = jt.JobTypeID
-WHERE EntryDate &gt;= '1/20/2020'
-and EntryDate &lt;= '2/20/2020'
+WHERE EntryDate &gt;=@StartDate
+and EntryDate &lt;= @EndDate
 
 group by jt.JobName, jt.JobTypeID, td.WorkerName</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
@@ -81,34 +79,6 @@ group by jt.JobName, jt.JobTypeID, td.WorkerName</CommandText>
     <ReportSection>
       <Body>
         <ReportItems>
-          <Textbox Name="textbox1">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Labor Hours By Job And Employee</Value>
-                    <Style>
-                      <FontFamily>Segoe UI Light</FontFamily>
-                      <FontSize>24pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>textbox1</rd:DefaultName>
-            <Height>0.42in</Height>
-            <Width>5in</Width>
-            <Style>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Tablix Name="table1">
             <TablixBody>
               <TablixColumns>
@@ -136,7 +106,7 @@ group by jt.JobName, jt.JobTypeID, td.WorkerName</CommandText>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.22in</Height>
+                  <Height>0.40917in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -411,7 +381,7 @@ group by jt.JobName, jt.JobTypeID, td.WorkerName</CommandText>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.21in</Height>
+                  <Height>0.39917in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -703,10 +673,9 @@ group by jt.JobName, jt.JobTypeID, td.WorkerName</CommandText>
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>LaborHoursByJobAndEmployee</DataSetName>
-            <Top>0.42in</Top>
-            <Height>0.43in</Height>
+            <Top>0.04167in</Top>
+            <Height>0.80833in</Height>
             <Width>7in</Width>
-            <ZIndex>1</ZIndex>
             <Style />
           </Tablix>
         </ReportItems>
@@ -715,6 +684,150 @@ group by jt.JobName, jt.JobTypeID, td.WorkerName</CommandText>
       </Body>
       <Width>7.48333in</Width>
       <Page>
+        <PageHeader>
+          <Height>1.125in</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Textbox Name="textbox1">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>Labor Hours By Job And Employee</Value>
+                      <Style>
+                        <FontFamily>Segoe UI Light</FontFamily>
+                        <FontSize>24pt</FontSize>
+                        <FontWeight>Bold</FontWeight>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>textbox1</rd:DefaultName>
+              <Top>0.2in</Top>
+              <Height>0.42in</Height>
+              <Width>5in</Width>
+              <Style>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox10">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Parameters!EndDate.Value</Value>
+                      <Style>
+                        <FontSize>16pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox10</rd:DefaultName>
+              <Top>0.70333in</Top>
+              <Left>1.61945in</Left>
+              <Height>0.32278in</Height>
+              <Width>1.59167in</Width>
+              <ZIndex>1</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox11">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Parameters!StartDate.Value</Value>
+                      <MarkupType>HTML</MarkupType>
+                      <Style>
+                        <FontSize>16pt</FontSize>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value xml:space="preserve">  </Value>
+                      <MarkupType>HTML</MarkupType>
+                      <Style>
+                        <FontSize>16pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox9</rd:DefaultName>
+              <Top>0.68944in</Top>
+              <Height>0.35056in</Height>
+              <Width>1.375in</Width>
+              <ZIndex>2</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox12">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>to</Value>
+                      <Style>
+                        <FontSize>16pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox11</rd:DefaultName>
+              <Top>0.70333in</Top>
+              <Left>1.375in</Left>
+              <Height>0.35056in</Height>
+              <Width>0.28889in</Width>
+              <ZIndex>3</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+          </ReportItems>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </PageHeader>
         <PageHeight>8.5in</PageHeight>
         <PageWidth>11in</PageWidth>
         <LeftMargin>1in</LeftMargin>

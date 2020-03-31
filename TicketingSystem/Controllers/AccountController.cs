@@ -63,5 +63,10 @@ namespace SampleMvcApp.Controllers
                 permissions = permissions
             });
         }
+
+        public IActionResult UserPage()
+        {
+            return View("UserCreation");
+        }
     }
 }
