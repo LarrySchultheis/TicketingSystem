@@ -3,20 +3,20 @@
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="LaborHoursByJob">
+    <DataSource Name="LaborHoursByJobAndEmployee">
       <ConnectionProperties>
         <DataProvider>SQL</DataProvider>
         <ConnectString>Data Source=localhost;Initial Catalog=TicketingSystemDB</ConnectString>
         <IntegratedSecurity>true</IntegratedSecurity>
       </ConnectionProperties>
       <rd:SecurityType>Integrated</rd:SecurityType>
-      <rd:DataSourceID>144b9f65-29b6-4886-b451-673991c25a41</rd:DataSourceID>
+      <rd:DataSourceID>4f9d3f5f-31a0-4e19-8566-eb2adb2886b6</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSet1">
+    <DataSet Name="LaborHoursByJobAndEmployee">
       <Query>
-        <DataSourceName>LaborHoursByJob</DataSourceName>
+        <DataSourceName>LaborHoursByJobAndEmployee</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@StartDate">
             <Value>=Parameters!StartDate.Value</Value>
@@ -25,7 +25,7 @@
             <Value>=Parameters!EndDate.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>SELECT jt.JobName, Sum(PalletNum) as TotalPallets, Sum(CasesNum) as TotalCases
+        <CommandText>SELECT jt.JobName, td.WorkerName, Sum(PalletNum) as TotalPallets, Sum(CasesNum) as TotalCases
 ,Convert(varchar, Sum(DateDiff(Minute, StartTime, EndTime))/60) + ':' + RIGHT('0' + CONVERT(varchar, Sum(DATEDIFF(minute, StartTime, EndTime)%60)), 2) as TotalTime,
 
 Format ((((Cast (Sum(PalletNum) as decimal(10,2))) /
@@ -37,15 +37,19 @@ Format ((((Cast (Sum(CasesNum) as decimal(10,2))) /
 --(Sum(CasesNum) / TotalTime) as TotalCases
 FROM TicketData td INNER JOIN JobType jt 
 ON td.JobTypeID = jt.JobTypeID
-WHERE EntryDate &gt;= @StartDate
+WHERE EntryDate &gt;=@StartDate
 and EntryDate &lt;= @EndDate
 
-group by jt.JobName, jt.JobTypeID</CommandText>
+group by jt.JobName, jt.JobTypeID, td.WorkerName</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
         <Field Name="JobName">
           <DataField>JobName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="WorkerName">
+          <DataField>WorkerName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="TotalPallets">
@@ -79,27 +83,30 @@ group by jt.JobName, jt.JobTypeID</CommandText>
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.24167in</Width>
+                  <Width>1in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.40833in</Width>
+                  <Width>1in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.5in</Width>
+                  <Width>1in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.39167in</Width>
+                  <Width>1in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.43333in</Width>
+                  <Width>1in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.79167in</Width>
+                  <Width>1in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.39528in</Height>
+                  <Height>0.40917in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -148,7 +155,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Pallets</Value>
+                                  <Value>Employee</Value>
                                   <Style>
                                     <FontFamily />
                                     <FontSize>11pt</FontSize>
@@ -157,10 +164,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style>
-                                <FontFamily />
-                                <TextAlign>Left</TextAlign>
-                              </Style>
+                              <Style />
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>textbox3</rd:DefaultName>
@@ -189,7 +193,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Cases</Value>
+                                  <Value>Pallets</Value>
                                   <Style>
                                     <FontFamily />
                                     <FontSize>11pt</FontSize>
@@ -230,7 +234,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Total Hours</Value>
+                                  <Value>Cases</Value>
                                   <Style>
                                     <FontFamily />
                                     <FontSize>11pt</FontSize>
@@ -239,7 +243,10 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <FontFamily />
+                                <TextAlign>Left</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>textbox5</rd:DefaultName>
@@ -268,7 +275,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Pallets Per Hour</Value>
+                                  <Value>Total Hours</Value>
                                   <Style>
                                     <FontFamily />
                                     <FontSize>11pt</FontSize>
@@ -299,7 +306,44 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox7">
+                        <Textbox Name="Textbox7">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Pallets Per Hour</Value>
+                                  <Style>
+                                    <FontFamily />
+                                    <FontSize>11pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Color>#666666</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox7</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox9">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -318,7 +362,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox7</rd:DefaultName>
+                          <rd:DefaultName>Textbox9</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -326,7 +370,6 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                             <BottomBorder>
                               <Style>Solid</Style>
                             </BottomBorder>
-                            <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -338,7 +381,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.38528in</Height>
+                  <Height>0.39917in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -360,6 +403,42 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>JobName</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                            </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <FontFamily />
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="WorkerName">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!WorkerName.Value</Value>
+                                  <Style>
+                                    <FontFamily />
+                                    <Color>#333333</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>WorkerName</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -515,7 +594,6 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                             <BottomBorder>
                               <Style>Solid</Style>
                             </BottomBorder>
-                            <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -551,7 +629,6 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                             <BottomBorder>
                               <Style>Solid</Style>
                             </BottomBorder>
-                            <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -566,6 +643,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -594,20 +672,20 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>DataSet1</DataSetName>
-            <Top>0.06944in</Top>
-            <Height>0.78056in</Height>
-            <Width>8.76667in</Width>
+            <DataSetName>LaborHoursByJobAndEmployee</DataSetName>
+            <Top>0.04167in</Top>
+            <Height>0.80833in</Height>
+            <Width>7in</Width>
             <Style />
           </Tablix>
         </ReportItems>
         <Height>0.85in</Height>
         <Style />
       </Body>
-      <Width>8.76667in</Width>
+      <Width>7.48333in</Width>
       <Page>
         <PageHeader>
-          <Height>1.67167in</Height>
+          <Height>1.125in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -618,7 +696,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>Labor Hours By Job </Value>
+                      <Value>Labor Hours By Job And Employee</Value>
                       <Style>
                         <FontFamily>Segoe UI Light</FontFamily>
                         <FontSize>24pt</FontSize>
@@ -630,9 +708,9 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>textbox1</rd:DefaultName>
-              <Top>0.73556in</Top>
+              <Top>0.2in</Top>
               <Height>0.42in</Height>
-              <Width>6in</Width>
+              <Width>5in</Width>
               <Style>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
@@ -657,8 +735,8 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox10</rd:DefaultName>
-              <Top>1.21111in</Top>
-              <Left>1.80278in</Left>
+              <Top>0.70333in</Top>
+              <Left>1.61945in</Left>
               <Height>0.32278in</Height>
               <Width>1.59167in</Width>
               <ZIndex>1</ZIndex>
@@ -672,7 +750,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
-            <Textbox Name="Textbox9">
+            <Textbox Name="Textbox11">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
               <Paragraphs>
@@ -697,7 +775,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox9</rd:DefaultName>
-              <Top>1.19722in</Top>
+              <Top>0.68944in</Top>
               <Height>0.35056in</Height>
               <Width>1.375in</Width>
               <ZIndex>2</ZIndex>
@@ -711,7 +789,7 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
-            <Textbox Name="Textbox11">
+            <Textbox Name="Textbox12">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
               <Paragraphs>
@@ -728,8 +806,8 @@ group by jt.JobName, jt.JobTypeID</CommandText>
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox11</rd:DefaultName>
-              <Top>1.19722in</Top>
-              <Left>1.44444in</Left>
+              <Top>0.70333in</Top>
+              <Left>1.375in</Left>
               <Height>0.35056in</Height>
               <Width>0.28889in</Width>
               <ZIndex>3</ZIndex>
@@ -791,5 +869,5 @@ group by jt.JobName, jt.JobTypeID</CommandText>
   <Language>en-US</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportID>64e4b17b-bbd8-4f57-a57e-eab606f695e4</rd:ReportID>
+  <rd:ReportID>caad5c75-a169-408a-83a1-a2f982799506</rd:ReportID>
 </Report>

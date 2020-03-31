@@ -3,7 +3,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Helpers;
+using TicketingSystem.Models;
+using TicketingSystem.Services;
 
 namespace SampleMvcApp.Controllers
 {
@@ -45,6 +50,23 @@ namespace SampleMvcApp.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        public JsonResult Permissions()
+        {
+            var userId = User.Claims.First().Value;
+            UserData ud = Auth0APIClient.GetUserData(userId);
+            List<UserPermission> permissions = Auth0APIClient.GetPermissions(ud.user_id);
+
+            return Json(new
+            {
+                permissions = permissions
+            });
+        }
+
+        public IActionResult UserPage()
+        {
+            return View("UserCreation");
         }
     }
 }

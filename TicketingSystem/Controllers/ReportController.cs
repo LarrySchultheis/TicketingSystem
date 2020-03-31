@@ -23,7 +23,7 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                return View("Error", Utility.CreateErrorView(e));
+                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
             }
             return View();
         }

@@ -14,8 +14,9 @@ namespace TicketingSystem.Models
     public enum ReportName
     {
         LaborHoursByJob,
-        LaborHoursByJobAndEmployee,
-        IncentiveReport
+        IncentiveReport,
+        LaborHoursByJobAndEmployee
+        
     }
 
     public static class ModelUtility
