@@ -9,11 +9,43 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<script>
+@*<script>
+    function validateDate(date) {
+        var strArr = date.split("-")
+        var year = strArr[0]
+        var month = strArr[1]
+        var day = strArr[2]
+
+        var now = new Date()
+        var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+        if (year > now.getFullYear()) {
+            return false
+        }
+        if (month < 1 || month > 12) {
+            return false
+        }
+        if (day < 1 || day > daysInMonth[month - 1]) {
+            return false
+        }
+        return true
+    }
 
     function getReport() {
+
         var startDate = $('#startDate').val()
         var endDate = $('#endDate').val()
+
+        if (validateDate(startDate) && validateDate(endDate)) {
+            requestReport(startDate, endDate)
+        }
+        else {
+            alert('Please enter valid dates')
+        }
+
+    }
+
+    function requestReport(startDate, endDate) {
         var reportName = $('#reportName').val()
         var reportFormat = $('#reportFormat').val()
         $.ajax({
@@ -95,7 +127,9 @@
         link.click()
     }
 
-</script>
+</script>*@
+
+<script src="~/js/report.js"></script>
 
 <div>
     <partial name="_HeaderNavbar" />
