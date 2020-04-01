@@ -10,7 +10,7 @@ namespace TicketingSystem.Services
     public class DataEntry
     {
 
-        public bool PostEntry(TicketData td)
+        public bool PostEntry(TicketData td, UserData loggedInUser)
         {
             try
             {
@@ -20,14 +20,25 @@ namespace TicketingSystem.Services
                     int jtypeID = 1;
 
                     jtypeID = context.JobType.Where(j => j.JobName == td.JobType.JobName).FirstOrDefault().JobTypeId;
-                    int authorID = context.Users.Where(a => a.FullName == "System Admin").FirstOrDefault().UserId;
-                    int workerID = context.Users.Where(w => w.FullName == td.TicketWorker.FullName).FirstOrDefault().UserId;
+                    int authorID = context.Users.Where(a => a.Auth0Uid == loggedInUser.user_id).FirstOrDefault().UserId;
+
+                    var worker = context.Users.Where(w => w.FullName == td.TicketWorker.FullName).FirstOrDefault();
+                    int workerID;
+
+                    if (worker != null)
+                    {
+                        workerID = worker.UserId;
+                        td.TicketWorkerId = workerID;
+                    }
+                    else
+                    {
+                        throw new Exception("Error, Employee with name: " + worker.FullName + " not found in System");
+                    }
 
                     td.JobTypeId = jtypeID;
                     td.EntryDate = DateTime.Today;
                     td.TicketClosed = false;
                     td.EntryAuthorId = authorID;
-                    td.TicketWorkerId = workerID;
                     td.WorkerName = td.TicketWorker.FullName;
 
                     //very important null assignment
@@ -41,7 +52,7 @@ namespace TicketingSystem.Services
                     int entryID = td.EntryId;
 
                     TicketDataLogger tdl = new TicketDataLogger();
-                    tdl.LogChange("new entry", "created new entry", entryID);
+                    tdl.LogChange("new entry", "created new entry", entryID, authorID);
 
                 }
             }

@@ -79,22 +79,22 @@ group by jt.JobName, jt.JobTypeID</CommandText>
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.24167in</Width>
+                  <Width>1.10834in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.40833in</Width>
+                  <Width>0.89999in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.5in</Width>
+                  <Width>0.875in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.39167in</Width>
+                  <Width>0.93334in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.43333in</Width>
+                  <Width>0.91666in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.79167in</Width>
+                  <Width>0.875in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -597,14 +597,14 @@ group by jt.JobName, jt.JobTypeID</CommandText>
             <DataSetName>DataSet1</DataSetName>
             <Top>0.06944in</Top>
             <Height>0.78056in</Height>
-            <Width>8.76667in</Width>
+            <Width>5.60833in</Width>
             <Style />
           </Tablix>
         </ReportItems>
         <Height>0.85in</Height>
         <Style />
       </Body>
-      <Width>8.76667in</Width>
+      <Width>6.21667in</Width>
       <Page>
         <PageHeader>
           <Height>1.67167in</Height>
@@ -750,10 +750,8 @@ group by jt.JobName, jt.JobTypeID</CommandText>
             </Border>
           </Style>
         </PageHeader>
-        <PageHeight>8.5in</PageHeight>
-        <PageWidth>11in</PageWidth>
-        <LeftMargin>1in</LeftMargin>
-        <RightMargin>1in</RightMargin>
+        <LeftMargin>0.75in</LeftMargin>
+        <RightMargin>0.75in</RightMargin>
         <TopMargin>1in</TopMargin>
         <BottomMargin>1in</BottomMargin>
         <Style />

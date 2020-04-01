@@ -11,7 +11,7 @@ namespace TicketingSystem.Services
 {
     public class DataEditor
     {
-        public bool PostEditor(TicketData td)
+        public bool PostEditor(TicketData td, UserData loggedInUser)
         {
             try
             {
@@ -20,12 +20,26 @@ namespace TicketingSystem.Services
                     IEnumerable<JobType> jobs = context.JobType;
                     int jtypeID;
                     jtypeID = context.JobType.Where(j => j.JobName == td.JobType.JobName).FirstOrDefault().JobTypeId;
-                    int authorID = context.Users.Where(a => a.FullName == "System Admin").FirstOrDefault().UserId;
-                    int workerID = context.Users.Where(w => w.FullName == td.TicketWorker.FullName).FirstOrDefault().UserId;
+
+                    int authorID = -1;
+                    int workerID;
+
+                    var author = context.Users.Where(a => a.Auth0Uid == loggedInUser.user_id).FirstOrDefault();
+                    var worker = context.Users.Where(w => w.FullName == td.TicketWorker.FullName).FirstOrDefault();
+
+                    if (author != null)
+                    {
+                        authorID = author.UserId;
+                        td.EntryAuthorId = authorID;
+                    }
+
+                    if (worker != null)
+                    {
+                        workerID = worker.UserId;
+                        td.TicketWorkerId = workerID;
+                    }
 
                     td.JobTypeId = jtypeID;
-                    td.EntryAuthorId = authorID;
-                    td.TicketWorkerId = workerID;
                     td.WorkerName = td.TicketWorker.FullName;
 
                     //very important null assignment
@@ -37,7 +51,7 @@ namespace TicketingSystem.Services
                     context.SaveChanges();
 
                     TicketDataLogger tdl = new TicketDataLogger();
-                    tdl.LogChange("new edits", "edited entry", td.EntryId);
+                    tdl.LogChange("new edits", "edited entry", td.EntryId, authorID);
                 }
             }
 

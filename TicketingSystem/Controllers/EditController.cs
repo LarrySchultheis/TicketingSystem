@@ -127,7 +127,8 @@ namespace TicketingSystem.Controllers
             }
 
             DataEditor de = new DataEditor();
-            de.PostEditor(td);
+            UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
+            de.PostEditor(td, loggedInUser);
             RecordRetriever rr = new RecordRetriever();
             var res = rr.RetrieveRecords();
             return View("Index", res);
