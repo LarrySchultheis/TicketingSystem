@@ -52,5 +52,12 @@ namespace TicketingSystem.Services
             }
         }
 
+        public static Users GetUserByName(string name)
+        {
+            using (var db = new TicketingSystemDBContext())
+            {
+                return db.Users.Where(u => u.FullName == name).First();
+            }
+        }
     }
 }

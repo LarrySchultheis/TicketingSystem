@@ -13,17 +13,18 @@ namespace TicketingSystem.Services
 {
     public static class Auth0APIClient
     {
+        static readonly string baseUrl = "https://robertswarehousing.auth0.com/api/v2/";
         static TokenData tokenData;
         static DateTime tokenGrantedAt;
 
-        public static UserData GetUserData(string UserId)
+        public static UserData GetUserData(string Auth0ID)
         {
             if (!ValidateToken())
             {
                 InitAPIToken();
             }
 
-            var client = new RestClient("https://robertswarehousing.auth0.com/api/v2/users/" + UserId);
+            var client = new RestClient("https://robertswarehousing.auth0.com/api/v2/users/" + Auth0ID);
             var req = new RestRequest(Method.GET);
             req.AddHeader("content-type", "application/json");
             req.AddHeader("authorization", "Bearer " + tokenData.access_token);
@@ -33,21 +34,6 @@ namespace TicketingSystem.Services
             UserData ud = JsonConvert.DeserializeObject<UserData>(content);
             return ud;
         }
-
-        //public static TokenData GetCredentialsToken()
-        //{
-        //    var client = new RestClient("https://robertswarehousing.auth0.com/oauth/token");
-        //    var req = new RestRequest(Method.POST);
-        //    string tokenUrl = "grant_type=client_credentials&client_id=ZLjHZNvuAQ4Vjt59sdwkKBAya8GQejQx&client_secret=Gu6SJweNziCtnVo04e2nsVH6PkCB-vUCMBcYi5Ld-f_a-q04mGuzyNil4roJbTtP&audience=https://credentials/";
-        //    req.AddHeader("content-type", "application/x-www-form-urlencoded");
-        //    req.AddParameter("application/x-www-form-urlencoded", tokenUrl, ParameterType.RequestBody);
-
-        //    string content = client.Execute(req).Content;
-
-        //    TokenData td = JsonConvert.DeserializeObject<TokenData>(content);
-        //    return td;
-        //}
-
 
         public static void InitAPIToken()
         {
@@ -62,7 +48,7 @@ namespace TicketingSystem.Services
             tokenData = JsonConvert.DeserializeObject<TokenData>(content);
         }
 
-        public static void UpdateUsers(string userId)
+        public static void UpdateUsers(string Auth0ID)
         {
             if (!ValidateToken())
             {
@@ -71,7 +57,7 @@ namespace TicketingSystem.Services
 
             using (var db = new TicketingSystemDBContext())
             {
-                UserData ud = GetUserData(userId);
+                UserData ud = GetUserData(Auth0ID);
 
                 var u = db.Users.Where(uid => uid.Email == ud.email);
                 if (u.Count() == 0)
