@@ -7,6 +7,7 @@ using NUnit.Framework;
 using OpenQA.Selenium.Support.UI;
 using System.IO;
 using TicketingSystem.Services;
+using Microsoft.Reporting.WebForms;
 
 namespace Tests.AutomatedTests
 {
@@ -18,12 +19,20 @@ namespace Tests.AutomatedTests
         private readonly string chromeDriverPath = GetDriverDirectory();
     
 
-        [Test(Description = "Run LaborHoursByJobReport")]
+        //[Test(Description = "Run LaborHoursByJobReport")]
         public void LaborHoursByJobTest()
         {
             reportUrl = "https://localhost:44326/Report/Index";
             driver.Navigate().GoToUrl(reportUrl);
-            
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+
+            var startDate = driver.FindElement(By.Id("startDate"));
+            var endDate = driver.FindElement(By.Id("endDate"));
+            var submitButton = driver.FindElement(By.Id("subBtn"));
+
+            startDate.SendKeys("1/20/2020");
+            endDate.SendKeys("2/20/2020");
+            submitButton.Click();
         }
 
         [TearDown]
