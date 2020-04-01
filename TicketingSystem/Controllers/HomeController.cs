@@ -9,6 +9,7 @@ using TicketingSystem.Models;
 using TicketingSystem.ExceptionReport;
 using System.Net;
 using System.Web.Http;
+using System.Web.Helpers;
 
 namespace TicketingSystem.Controllers
 {
@@ -80,6 +81,7 @@ namespace TicketingSystem.Controllers
                 return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
             }
             DataEntry de = new DataEntry();
+            UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
             RecordRetriever rr = new RecordRetriever();
             de.CloseTicket(td);
             var tdRes = rr.RetrieveRecords();
@@ -154,11 +156,9 @@ namespace TicketingSystem.Controllers
             }
             try
             {
-                using (var context = new TicketingSystemDBContext())
-                {
-                    DataEntry de = new DataEntry();
-                    bool success = de.PostEntry(td);
-                }
+                DataEntry de = new DataEntry();
+                UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
+                bool success = de.PostEntry(td, loggedInUser);
             }
             catch(Exception e)
             {
@@ -214,6 +214,14 @@ namespace TicketingSystem.Controllers
                     newUrl = Url.Action("HomePage", "Home", rr.RetrieveRecords())
                 });
             }
+        }
+
+        public JsonResult ValidNames()
+        {
+            return Json(new
+            {
+                names = Utility.GetValidNames()
+            });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

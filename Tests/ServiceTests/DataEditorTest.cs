@@ -33,7 +33,8 @@ namespace Tests.ServiceTests
                 };
 
                 DataEditor DaEd = new DataEditor();
-                Assert.IsTrue(DaEd.PostEditor(td));
+                UserData ud = Auth0APIClient.GetUserData("admin123@gmail.com");
+                Assert.IsTrue(DaEd.PostEditor(td, ud));
             }
         }
     }

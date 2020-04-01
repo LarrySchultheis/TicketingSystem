@@ -6,7 +6,7 @@
 }
 <!DOCTYPE html>
 
-<partial name="_HeaderNavbar"/>
+<partial name="_HeaderNavbar" />
 
 <div class="text-center">
     <h2 class="display-4">Ticket Table</h2>
@@ -23,10 +23,62 @@
 
 </div>
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+<div hidden id="dialog-message" title="Opening Entry">
+    <p>
+        <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+        Your record is being opened
+    </p>
+</div>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+@*<script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>*@
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.css" />
 
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var table = $('#ticketTable').DataTable()
+    });</script>
+
+<script>
+    function rowClicked(entryId, ticketClosed) {
+
+        if (ticketClosed == 0) {
+
+            document.getElementById('dialog-message').hidden = false
+            $("#dialog-message").dialog({
+                modal: true,
+                buttons: {
+                    Ok: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+			 $.ajax({
+				type: "POST",
+				url: '@Url.Action("OpenEntry", "Home")',
+				data: { entryID: entryId },
+				success: function () {
+					//alert('Success')
+				},
+				error: function (e) {
+					alert('Error')
+					console.log(e)
+				}
+			}).done(function (data) {
+				window.location.replace(data.newUrl)
+			})
+		}
+
+
+	}
+
+</script>

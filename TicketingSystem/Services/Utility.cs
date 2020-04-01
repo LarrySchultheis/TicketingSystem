@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +36,20 @@ namespace TicketingSystem.Services
             errorView.ErrorCode = code + " " + status;
             errorView.Reason = reason;
             return errorView;
+        }
+
+        public static List<string> GetValidNames()
+        {
+            using (var db = new TicketingSystemDBContext())
+            {
+                List<string> userNames = new List<string>();
+                var users = db.Users.ToList();
+                foreach (Users u in users)
+                {
+                    userNames.Add(u.FullName);
+                }
+                return userNames;
+            }
         }
 
     }

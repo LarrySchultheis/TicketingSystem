@@ -6,14 +6,17 @@ namespace TicketingSystem.Services
 {
     public class TicketDataLogger
     {
-        public bool LogChange(string action, string details, int entryID)
+        public bool LogChange(string action, string details, int entryID, int changedByUserID)
         {
             try
             {
                 using (var context = new TicketingSystemDBContext())
                 {
+
+
                     TicketDataLog tdLog = new TicketDataLog()
                     {
+                        ChangedByUserId = changedByUserID,
                         ChangeTime = DateTime.Now,
                         DataAction = action,
                         Details = details,
