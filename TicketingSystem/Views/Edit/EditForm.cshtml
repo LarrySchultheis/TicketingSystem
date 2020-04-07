@@ -107,9 +107,15 @@
                 <button type="submit" class="btn-dark" id="subBtn">Submit</button>
                 &nbsp;
                 <button type="reset" class="btn-dark" id="resetBtn">Reset Form</button>
+                &nbsp;
+                <button class="btn-danger" id="deleteBtn" onclick="deleteEntry()">Delete Entry</button>
+
             </div>
         </div>
     </form>
+
+    <div>
+    </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -120,5 +126,24 @@
     $(document).ready(function () {
         document.getElementById('startTime').value = '@Model.StartTime.TimeOfDay'
     });
+</script>
+
+<script>
+    function deleteEntry() {
+        	$.ajax({
+			type: "DELETE",
+			url: '@Url.Action("RemoveEntry", "Edit")',
+			data: { entryID: @Model.EntryId},
+            success: function () {
+                alert('This entry was successfully deleted')
+			},
+			error: function (e) {
+				alert('Error in ajax reqest')
+				console.log(e)
+			}
+		}).done(function (data) {
+			window.location.replace(data.newUrl)
+		})
+    }
 </script>
 

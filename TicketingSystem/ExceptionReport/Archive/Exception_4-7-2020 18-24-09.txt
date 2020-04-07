@@ -1,0 +1,5 @@
+System.ArgumentException: The key value at position 0 of the call to 'DbSet<TicketData>.Find' was of type 'string', which does not match the property type of 'int'.
+   at Microsoft.EntityFrameworkCore.Internal.EntityFinder`1.FindTracked(Object[] keyValues, IReadOnlyList`1& keyProperties)
+   at Microsoft.EntityFrameworkCore.Internal.EntityFinder`1.Find(Object[] keyValues)
+   at Microsoft.EntityFrameworkCore.Internal.InternalDbSet`1.Find(Object[] keyValues)
+   at TicketingSystem.Services.DataEditor.DeleteEntry(String entryId, UserData loggedInUser) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\DataEditor.cs:line 74

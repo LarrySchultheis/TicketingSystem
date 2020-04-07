@@ -134,6 +134,20 @@ namespace TicketingSystem.Controllers
             return View("Index", res);
         }
 
+        public JsonResult RemoveEntry(string entryId)
+        {
+            DataEditor de = new DataEditor();
+            de.DeleteEntry(entryId, Auth0APIClient.GetUserData(User.Claims.First().Value));
+
+            return Json(new
+            {
+                newUrl = Url.Action("Index", "Edit"),
+                message = "Deleted entry",
+                id = entryId
+            }); 
+
+        }
+
         private bool Authorize()
         {
             var userId = User.Claims.First().Value;

@@ -64,5 +64,30 @@ namespace TicketingSystem.Services
 
             return true;
         }
+
+        public bool DeleteEntry(string entryId, UserData loggedInUser)
+        {
+            try
+            {
+                using (var db = new TicketingSystemDBContext())
+                {
+                    TicketData td = db.TicketData.Find(int.Parse(entryId));
+                    db.TicketData.Remove(td);
+                    db.SaveChanges();
+
+                    var author = db.Users.Where(auth => auth.Auth0Uid == loggedInUser.user_id).FirstOrDefault();
+
+                    TicketDataLogger tdl = new TicketDataLogger();
+                    tdl.LogChange("delete", "deleted entry with ID: " + td.EntryId, td.EntryId, author.UserId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionReporter er = new ExceptionReporter();
+                er.DumpException(e);
+            }
+
+            return true;
+        }
     }
 }
