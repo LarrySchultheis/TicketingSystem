@@ -36,7 +36,6 @@ function getReport() {
 
 function requestReport(startDate, endDate) {
     var url = window.location.protocol + "//" + window.location.host + "/Report/RunReport";
-    console.log(url)
     var reportName = $('#reportName').val()
     var reportFormat = $('#reportFormat').val()
     $.ajax({
