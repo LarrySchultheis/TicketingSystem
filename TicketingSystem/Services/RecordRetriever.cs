@@ -29,8 +29,7 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
                 return new List<TicketData>();
 
             }
@@ -51,8 +50,7 @@ namespace TicketingSystem.Services
             }
             catch(Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
                 return new TicketData();
             }
 
@@ -76,8 +74,7 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
                 return new List<TicketData>();
             }
 

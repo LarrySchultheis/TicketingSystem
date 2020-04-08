@@ -51,8 +51,7 @@ namespace TicketingSystem.Controllers
             }
             catch (Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
             }
 
             var content = resp.Content;
@@ -66,7 +65,7 @@ namespace TicketingSystem.Controllers
             });
 
         }
-        private bool Authorize()
+        public bool Authorize()
         {
             var userId = User.Claims.First().Value;
             UserData ud = Auth0APIClient.GetUserData(userId);

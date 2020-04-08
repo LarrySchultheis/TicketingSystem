@@ -113,8 +113,7 @@ namespace TicketingSystem.Controllers
             }
             catch (Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
                 return View("Landing");
             }
 
@@ -177,8 +176,7 @@ namespace TicketingSystem.Controllers
             }
             catch(Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
             }
             RecordRetriever rr = new RecordRetriever();
             return View("HomePage", rr.RetrieveRecords());
@@ -211,6 +209,8 @@ namespace TicketingSystem.Controllers
                     RecordRetriever rr = new RecordRetriever();
                     TicketData td = rr.GetRecordByID(id);
 
+                    
+
                     return Json(new
                     {
                         newUrl = Url.Action("EntryClose", "Home", td)
@@ -219,8 +219,7 @@ namespace TicketingSystem.Controllers
             }
             catch(Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
                 RecordRetriever rr = new RecordRetriever();
 
                 //If exception occurred return the home page
@@ -245,7 +244,7 @@ namespace TicketingSystem.Controllers
             return View(new ErrorViewModel { ErrorCode = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private bool Authorize()
+        public bool Authorize()
         {
             var userId = User.Claims.First().Value;
 

@@ -40,5 +40,11 @@ namespace Tests.ServiceTests
             Assert.IsNotNull(res);
             Assert.IsTrue(res.GetType() == typeof(List<TicketData>));
         }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            TestUtility.Cleanup();
+        }
     }
 }

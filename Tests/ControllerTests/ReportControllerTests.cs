@@ -95,5 +95,17 @@ namespace Tests.ControllerTests
 			var result = await rc.RunReport(reportInput);
 			Assert.IsNotNull(result);
 		}
+
+		[Test]
+		public void AuthorizeTest()
+		{
+			Assert.IsTrue(rc.Authorize());
+		}
+
+		[TearDown]
+		public void Cleanup()
+		{
+			TestUtility.Cleanup();
+		}
 	}
 }
