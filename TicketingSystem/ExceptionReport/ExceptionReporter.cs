@@ -3,13 +3,13 @@ using System.IO;
 
 namespace TicketingSystem.ExceptionReport
 {
-    public class ExceptionReporter
+    public static class ExceptionReporter
     {
         /// <summary>
         /// Dumps exceptions to LatestException.txt and Archive directory
         /// </summary>
         /// <param name="e">Exception to dump</param>
-        public void DumpException(Exception e)
+        public static void DumpException(Exception e)
         {
             string path = Environment.CurrentDirectory + "\\ExceptionReport";
             using (StreamWriter outFile = new StreamWriter(Path.Combine(path, "LatestException.txt")))

@@ -57,8 +57,7 @@ namespace TicketingSystem.Services
 
             catch (Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
                 return false;
             }
 
@@ -83,8 +82,7 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
             }
 
             return true;

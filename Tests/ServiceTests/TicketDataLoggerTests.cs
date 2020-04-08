@@ -26,5 +26,11 @@ namespace Tests.ServiceTests
                 
             }
         }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            TestUtility.Cleanup();
+        }
     }
 }
