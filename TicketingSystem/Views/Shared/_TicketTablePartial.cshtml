@@ -14,7 +14,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr onclick="rowClicked(@item.EntryId)">
+            <tr onclick="rowClicked(@item.EntryId, @(item.TicketClosed ? 1 : 0))">
                 <td>@item.JobType.JobName</td>
                 <td>@item.TripNum</td>
                 <td>@item.StageNum</td>

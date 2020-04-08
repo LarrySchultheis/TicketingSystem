@@ -10,5 +10,6 @@ namespace TicketingSystem.Models
         public string DataAction { get; set; }
         public int EntryId { get; set; }
         public string Details { get; set; }
+        public int? ChangedByUserId { get; set; }
     }
 }

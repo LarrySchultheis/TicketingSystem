@@ -18,12 +18,19 @@ namespace Tests.ServiceTests
             using (var context = new TicketingSystemDBContext())
             {
                 var data = context.TicketData.FirstOrDefault();
+                var user = context.Users.First();
                 if (data != null)
                 {
-                    Assert.IsTrue(tdl.LogChange(action, details, data.EntryId));
+                    Assert.IsTrue(tdl.LogChange(action, details, data.EntryId, user.UserId));
                 }
                 
             }
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            TestUtility.Cleanup();
         }
     }
 }

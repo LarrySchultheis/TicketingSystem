@@ -9,6 +9,9 @@ using TicketingSystem.Models;
 using TicketingSystem.ExceptionReport;
 using System.Net;
 using System.Web.Http;
+using System.Web.Helpers;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Hosting.Internal;
 
 namespace TicketingSystem.Controllers
 {
@@ -16,6 +19,7 @@ namespace TicketingSystem.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private IEnumerable<TicketData> latestData;
+        private static UserData loggedInUser;
 
         public IActionResult Landing()
         {
@@ -80,6 +84,7 @@ namespace TicketingSystem.Controllers
                 return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
             }
             DataEntry de = new DataEntry();
+            UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
             RecordRetriever rr = new RecordRetriever();
             de.CloseTicket(td);
             var tdRes = rr.RetrieveRecords();
@@ -92,17 +97,26 @@ namespace TicketingSystem.Controllers
         /// <returns>HomePage view with open records</returns>
         public IActionResult HomePage()
         {
-            if (User.Identity.IsAuthenticated)
+            try
             {
-                RecordRetriever rr = new RecordRetriever();
-                var records = rr.RetrieveRecords();
-                latestData = records;
-                return View("HomePage", records);
+                if (User.Identity.IsAuthenticated)
+                {
+                    RecordRetriever rr = new RecordRetriever();
+                    var records = rr.RetrieveRecords();
+                    latestData = records;
+                    return View("HomePage", records);
+                }
+                else
+                {
+                    return View("Landing");
+                }
             }
-            else
+            catch (Exception e)
             {
+                ExceptionReporter.DumpException(e);
                 return View("Landing");
             }
+
         }
 
         //[HttpGet]
@@ -132,10 +146,10 @@ namespace TicketingSystem.Controllers
             return View("HomePage", records);
         }
 
-        public IActionResult VerifyLogin(Users user)
-        {
-            return View("HomePage", user);
-        }
+        //public IActionResult VerifyLogin(Users user)
+        //{
+        //    return View("HomePage", user);
+        //}
 
         /// <summary>
         /// Posts new TicketData entry to DataEntry.PostEntry service
@@ -154,16 +168,15 @@ namespace TicketingSystem.Controllers
             }
             try
             {
-                using (var context = new TicketingSystemDBContext())
-                {
-                    DataEntry de = new DataEntry();
-                    bool success = de.PostEntry(td);
-                }
+                DataEntry de = new DataEntry();
+               
+               // UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
+                bool success = de.PostEntry(td, loggedInUser);
+                
             }
             catch(Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
             }
             RecordRetriever rr = new RecordRetriever();
             return View("HomePage", rr.RetrieveRecords());
@@ -196,6 +209,8 @@ namespace TicketingSystem.Controllers
                     RecordRetriever rr = new RecordRetriever();
                     TicketData td = rr.GetRecordByID(id);
 
+                    
+
                     return Json(new
                     {
                         newUrl = Url.Action("EntryClose", "Home", td)
@@ -204,8 +219,7 @@ namespace TicketingSystem.Controllers
             }
             catch(Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
                 RecordRetriever rr = new RecordRetriever();
 
                 //If exception occurred return the home page
@@ -216,23 +230,33 @@ namespace TicketingSystem.Controllers
             }
         }
 
+        public JsonResult ValidNames()
+        {
+            return Json(new
+            {
+                names = Utility.GetValidNames()
+            });
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { ErrorCode = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private bool Authorize()
+        public bool Authorize()
         {
             var userId = User.Claims.First().Value;
+
             UserData ud = Auth0APIClient.GetUserData(userId);
+            loggedInUser = ud;
             List<UserPermission> permissions = Auth0APIClient.GetPermissions(ud.user_id);
             bool authorized = false;
 
             foreach (UserPermission perm in permissions)
             {
                 if (perm.permission_name == ModelUtility.AccessLevel1 ||
-                perm.permission_name == ModelUtility.AccessLevel2 || 
+                perm.permission_name == ModelUtility.AccessLevel2 ||
                 perm.permission_name == ModelUtility.AccessLevel4)
                 {
                     authorized = true;
@@ -244,6 +268,7 @@ namespace TicketingSystem.Controllers
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
 
             return authorized;
+            
         }
     }
 }

@@ -83,25 +83,25 @@ group by jt.JobName, jt.JobTypeID, td.WorkerName</CommandText>
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>1.06667in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>0.96667in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>0.88333in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>0.725in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>0.9in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>0.91667in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>0.83333in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -674,15 +674,15 @@ group by jt.JobName, jt.JobTypeID, td.WorkerName</CommandText>
             </TablixRowHierarchy>
             <DataSetName>LaborHoursByJobAndEmployee</DataSetName>
             <Top>0.04167in</Top>
-            <Height>0.80833in</Height>
-            <Width>7in</Width>
+            <Height>0.80834in</Height>
+            <Width>6.29167in</Width>
             <Style />
           </Tablix>
         </ReportItems>
-        <Height>0.85in</Height>
+        <Height>0.85001in</Height>
         <Style />
       </Body>
-      <Width>7.48333in</Width>
+      <Width>6.54167in</Width>
       <Page>
         <PageHeader>
           <Height>1.125in</Height>
@@ -828,10 +828,8 @@ group by jt.JobName, jt.JobTypeID, td.WorkerName</CommandText>
             </Border>
           </Style>
         </PageHeader>
-        <PageHeight>8.5in</PageHeight>
-        <PageWidth>11in</PageWidth>
-        <LeftMargin>1in</LeftMargin>
-        <RightMargin>1in</RightMargin>
+        <LeftMargin>0.75in</LeftMargin>
+        <RightMargin>0.75in</RightMargin>
         <TopMargin>1in</TopMargin>
         <BottomMargin>1in</BottomMargin>
         <Style />

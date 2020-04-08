@@ -92,8 +92,7 @@ namespace TicketingSystem.Controllers
             }
             catch(Exception e)
             {
-                ExceptionReporter er = new ExceptionReporter();
-                er.DumpException(e);
+                ExceptionReporter.DumpException(e);
                 TicketData td = new TicketData();
 
                 return Json(new
@@ -127,13 +126,28 @@ namespace TicketingSystem.Controllers
             }
 
             DataEditor de = new DataEditor();
-            de.PostEditor(td);
+            UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
+            de.PostEditor(td, loggedInUser);
             RecordRetriever rr = new RecordRetriever();
             var res = rr.RetrieveRecords();
             return View("Index", res);
         }
 
-        private bool Authorize()
+        public JsonResult RemoveEntry(string entryId)
+        {
+            DataEditor de = new DataEditor();
+            de.DeleteEntry(entryId, Auth0APIClient.GetUserData(User.Claims.First().Value));
+
+            return Json(new
+            {
+                newUrl = Url.Action("Index", "Edit"),
+                message = "Deleted entry",
+                id = entryId
+            }); 
+
+        }
+
+        public bool Authorize()
         {
             var userId = User.Claims.First().Value;
             UserData ud = Auth0APIClient.GetUserData(userId);

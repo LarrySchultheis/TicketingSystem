@@ -30,13 +30,48 @@ function updateFields() {
     }
 }
 
+function getValidNames() {
+
+}
+
 function verifyInput() {
+    var validNames
+
+    var url = window.location.protocol + "//" + window.location.host + "/Home/ValidNames"
+    $.ajax({
+        type: "GET",
+        url: url,
+        async: false,
+        success: function () {
+            //alert('Success')
+        },
+        error: function (e) {
+            console.log(e)
+        }
+    }).done(function (data) {
+        validNames = data.names
+    })
+
+    console.log(validNames)
+
     var jType = document.getElementById('jobType')
     var tripNum = document.getElementById('tripNumber')
     var stageNum = document.getElementById('stageNumber')
     var empName = document.getElementById('employeeName')
     var startTime = document.getElementById('startTime')
     var endTime
+
+    var validName = false
+    for (var i = 0; i < validNames.length; i++) {
+        if (empName.value == validNames[i]) {
+            validName = true
+        }
+    }
+
+    if (!validName) {
+        alert('Error, the worker name you entered was not found in the system')
+        return false
+    }
 
     if (jType.selectedIndex < 1) {
         alert('Please select a Job Type')
