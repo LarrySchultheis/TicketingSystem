@@ -80,17 +80,48 @@ namespace TicketingSystem.Services
                 {
                     UserData ud = GetUserData(Auth0ID);
 
-                    var u = db.Users.Where(uid => uid.Email == ud.email);
-                    if (u.Count() == 0)
-                    {
-                        Users user = new Users();
-                        user.Email = ud.email;
-                        user.Auth0Uid = ud.user_id;
-
-                        db.Users.Add(user);
-                        db.SaveChanges();
-                    }
+                    var u = db.Users.Where(uid => uid.Email == ud.email).FirstOrDefault();
+                    u.Auth0Uid = ud.user_id;
+                    db.SaveChanges();
+                    
                 }
+                return true;
+            }
+            catch (Exception e)
+            {
+                ExceptionReporter.DumpException(e);
+                return false;
+            }
+        }
+
+        public static bool AddUser(Users newUser)
+        {
+            try
+            {
+                if (!ValidateToken())
+                {
+                    InitAPIToken();
+                }
+
+                var client = new RestClient(baseUrl + "users");
+                var req = new RestRequest(Method.POST);
+
+                Auth0UserPayload usr = new Auth0UserPayload();
+                usr.email = newUser.Email;
+                usr.name = newUser.FullName;
+                usr.password = Guid.NewGuid().ToString().Substring(0,12);
+                usr.connection = "Username-Password-Authentication";
+
+                req.AddJsonBody(usr);
+
+                req.AddHeader("content-type", "application/json");
+                req.AddHeader("authorization", "Bearer " + tokenData.access_token);
+                var response = client.Execute(req);
+                var content = response.Content;
+
+                UserPostResponse upp = JsonConvert.DeserializeObject<UserPostResponse>(content);
+                UpdateUsers(upp.user_id);
+
                 return true;
             }
             catch (Exception e)

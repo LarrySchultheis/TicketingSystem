@@ -3,10 +3,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Helpers;
+using TicketingSystem.ExceptionReport;
 using TicketingSystem.Models;
 using TicketingSystem.Services;
 
@@ -64,9 +67,26 @@ namespace SampleMvcApp.Controllers
             });
         }
 
-        public IActionResult UserPage()
+        public IActionResult UsersHome()
         {
-            return View("UserCreation");
+            UserManager um = new UserManager();
+            return View("UsersHome", um.GetUsers());
+        }
+
+        public IActionResult CreateUser(Users newUser)
+        {
+            UserManager um = new UserManager();
+            try
+            {
+                um.CreateUser(newUser, Auth0APIClient.GetUserData(User.Claims.First().Value));
+
+            }
+            catch (Exception e)
+            {
+                ExceptionReporter.DumpException(e);
+            }
+
+            return View("UsersHome", um.GetUsers());
         }
     }
 }

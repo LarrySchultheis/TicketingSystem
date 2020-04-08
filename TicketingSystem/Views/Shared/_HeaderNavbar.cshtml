@@ -18,7 +18,7 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 @{
-                    bool showDataEntry = false, showEdit = false, showReport = false;
+                    bool showDataEntry = false, showEdit = false, showReport = false, showUserManagement = false;
                     var user = Auth0APIClient.GetUserData(User.Claims.First().Value);
                     List<UserPermission> permissions = Auth0APIClient.GetPermissions(user.user_id);
                     foreach (UserPermission perm in permissions)
@@ -28,6 +28,7 @@
                             showDataEntry = true;
                             showEdit = true;
                             showReport = true;
+                            showUserManagement = true;
                             break;
                         }
                         if (perm.permission_name == ModelUtility.AccessLevel2)
@@ -35,6 +36,7 @@
                             showDataEntry = true;
                             showEdit = true;
                             showReport = true;
+                            showUserManagement = true;
                             break;
                         }
                         if (perm.permission_name == ModelUtility.AccessLevel3)
@@ -58,6 +60,10 @@
                     if (showReport)
                     {
                         <li><a asp-area="" asp-controller="Report" asp-action="Index">Reports</a></li>
+                    }
+                    if (showUserManagement)
+                    {
+                        <li><a asp-area="" asp-controller="Account" asp-action="UsersHome">User Management</a></li>
                     }
                 }
 

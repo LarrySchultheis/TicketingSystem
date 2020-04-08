@@ -91,14 +91,12 @@
 
 <script>
 	function postId() {
-		console.log($('#entryId'))
 		if ($('#entryId').val() == "") {
 			alert('Please enter an entry ID')
 			return false;
 		}
 
 		var id = $('#entryId').val()
-		console.log(id)
 		$.ajax({
 			type: "POST",
 			url: '@Url.Action("GetRecord", "Edit")',

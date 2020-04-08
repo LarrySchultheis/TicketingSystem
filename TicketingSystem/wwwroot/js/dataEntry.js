@@ -52,8 +52,6 @@ function verifyInput() {
         validNames = data.names
     })
 
-    console.log(validNames)
-
     var jType = document.getElementById('jobType')
     var tripNum = document.getElementById('tripNumber')
     var stageNum = document.getElementById('stageNumber')
@@ -94,13 +92,11 @@ function verifyInput() {
         return false
     }
     if ((endTime = document.getElementById('endTime')) != null) {
-        console.log(endTime)
         if (endTime.value == "") {
             alert('Please enter a valid end time')
             return false
         }
     }
-
-    //alert('success')
     return true
+    //alert('success')
 }
