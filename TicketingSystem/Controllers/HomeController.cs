@@ -12,14 +12,15 @@ using System.Web.Http;
 using System.Web.Helpers;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Hosting.Internal;
+using System.Threading.Tasks;
+using System.Reflection;
 
 namespace TicketingSystem.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private IEnumerable<TicketData> latestData;
         private static UserData loggedInUser;
+        private static readonly int numberOfRecords = 1000;
 
         public IActionResult Landing()
         {
@@ -84,10 +85,9 @@ namespace TicketingSystem.Controllers
                 return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
             }
             DataEntry de = new DataEntry();
-            UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
             RecordRetriever rr = new RecordRetriever();
             de.CloseTicket(td);
-            var tdRes = rr.RetrieveRecords();
+            var tdRes = rr.RetrieveRecords(numberOfRecords);
             return View("HomePage", tdRes);
         }
 
@@ -95,21 +95,27 @@ namespace TicketingSystem.Controllers
         ///  Gets the HomePage view with current open records
         /// </summary>
         /// <returns>HomePage view with open records</returns>
-        public IActionResult HomePage()
+        public async Task<IActionResult> HomePage()
         {
             try
             {
                 if (User.Identity.IsAuthenticated)
                 {
                     RecordRetriever rr = new RecordRetriever();
-                    var records = rr.RetrieveRecords();
-                    latestData = records;
+                    var records = rr.RetrieveRecords(numberOfRecords);
                     return View("HomePage", records);
                 }
                 else
                 {
                     return View("Landing");
                 }
+            }
+            catch (HttpResponseException e)
+            {
+
+                //string message = await Utility.RenderErrorResponse(e.Response);
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
             }
             catch (Exception e)
             {
@@ -119,15 +125,6 @@ namespace TicketingSystem.Controllers
 
         }
 
-        //[HttpGet]
-        //public IActionResult TicketTable()
-        //{
-        //    RecordRetriever rr = new RecordRetriever();
-        //    var records = rr.RetrieveRecords();
-        //    latestData = records;
-        //    return View("HomePage", records);
-        //}
-
         /// <summary>
         /// Gets both open and closed tickets 
         /// </summary>
@@ -135,21 +132,16 @@ namespace TicketingSystem.Controllers
         public IActionResult AllTickets()
         {
             RecordRetriever rr = new RecordRetriever();
-            var records = rr.RetrieveRecords();
+            var records = rr.RetrieveRecords(numberOfRecords);
             return View("HomePage", records);
         }
 
         public IActionResult OpenTickets()
         {
             RecordRetriever rr = new RecordRetriever();
-            var records = rr.GetOpenRecords();
+            var records = rr.GetOpenRecords(numberOfRecords);
             return View("HomePage", records);
         }
-
-        //public IActionResult VerifyLogin(Users user)
-        //{
-        //    return View("HomePage", user);
-        //}
 
         /// <summary>
         /// Posts new TicketData entry to DataEntry.PostEntry service
@@ -172,14 +164,14 @@ namespace TicketingSystem.Controllers
                
                // UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
                 bool success = de.PostEntry(td, loggedInUser);
-                
             }
-            catch(Exception e)
+
+            catch (Exception e)
             {
                 ExceptionReporter.DumpException(e);
             }
             RecordRetriever rr = new RecordRetriever();
-            return View("HomePage", rr.RetrieveRecords());
+            return View("HomePage", rr.RetrieveRecords(numberOfRecords));
         }
 
         /// <summary>
@@ -225,11 +217,15 @@ namespace TicketingSystem.Controllers
                 //If exception occurred return the home page
                 return Json(new
                 {
-                    newUrl = Url.Action("HomePage", "Home", rr.RetrieveRecords())
+                    newUrl = Url.Action("HomePage", "Home", rr.RetrieveRecords(numberOfRecords))
                 });
             }
         }
 
+        /// <summary>
+        /// Returns a list of valid worker names in the system
+        /// </summary>
+        /// <returns></returns>
         public JsonResult ValidNames()
         {
             return Json(new
@@ -244,6 +240,10 @@ namespace TicketingSystem.Controllers
             return View(new ErrorViewModel { ErrorCode = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        /// <summary>
+        /// Function to authorize endpoints based on the logged in user
+        /// </summary>
+        /// <returns></returns>
         public bool Authorize()
         {
             var userId = User.Claims.First().Value;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http;
 using TicketingSystem.ExceptionReport;
 using TicketingSystem.Models;
 
@@ -9,6 +10,12 @@ namespace TicketingSystem.Services
 {
     public class UserManager
     {
+        /// <summary>
+        /// Function to create a new user in the databse and add the user to Auth0
+        /// </summary>
+        /// <param name="newUser"></param>
+        /// <param name="loggedInUser"></param>
+        /// <returns></returns>
         public bool CreateUser(Users newUser, UserData loggedInUser)
         {
             try
@@ -23,17 +30,27 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return false;
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
 
         }
 
+        /// <summary>
+        /// Function to return all of the users in the database
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Users> GetUsers()
         {
-            using (var db = new TicketingSystemDBContext())
+            try
+            { 
+                using (var db = new TicketingSystemDBContext())
+                {
+                    return db.Users.ToList();
+                }
+            }
+            catch (Exception e)
             {
-                return db.Users.ToList();
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
         }
     }

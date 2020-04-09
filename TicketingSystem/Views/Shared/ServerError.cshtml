@@ -1,0 +1,20 @@
+﻿@model TicketingSystem.Models.ServerErrorViewModel
+@{
+    ViewData["Title"] = "ServerError";
+}
+
+<partial name="_HeaderNavbar" />
+
+<h1 class="text-danger">Error: @Model.ErrorCode</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+<h2 class="text-danger">Reason: @Model.Reason</h2>
+<h2 class="text-danger">@Model.Message</h2>
+<h2 class="text-danger">Error Code: @Model.Guid</h2>
+
+
+@*@if (Model.ShowErrorCode)
+    {
+        <p>
+            <strong>Request ID:</strong> <code>@Model.ErrorCode</code>
+        </p>
+    }*@
