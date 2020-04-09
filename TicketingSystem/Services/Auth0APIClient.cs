@@ -9,15 +9,25 @@ using System.Web;
 using Newtonsoft.Json;
 using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
 using TicketingSystem.ExceptionReport;
+using System.Web.Http;
+using System.Net;
 
 namespace TicketingSystem.Services
 {
     public static class Auth0APIClient
     {
+        //Base URL for management API
         static readonly string baseUrl = "https://robertswarehousing.auth0.com/api/v2/";
+
+        //Track token and time it was granted
         static TokenData tokenData;
         static DateTime tokenGrantedAt;
 
+        /// <summary>
+        /// Get user data from Auth0 API using the unique Auth0 ID
+        /// </summary>
+        /// <param name="Auth0ID">The Auth0ID of the desired user</param>
+        /// <returns>A UserData instance of the found user</returns>
         public static UserData GetUserData(string Auth0ID)
         {
             try
@@ -39,12 +49,15 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return new UserData();
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
 
         }
 
+        /// <summary>
+        /// Initializes a new Token to allow access to the management API
+        /// </summary>
+        /// <returns>Boolean indicating success</returns>
         public static bool InitAPIToken()
         {
             try
@@ -62,12 +75,16 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return false;
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
         }
 
-        public static bool UpdateUsers(string Auth0ID)
+        /// <summary>
+        /// Updates the user in the database after creation in Auth0
+        /// </summary>
+        /// <param name="Auth0ID"></param>
+        /// <returns>Boolean indicating success</returns>
+        public static bool UpdateUser(string Auth0ID)
         {
             try
             {
@@ -80,26 +97,64 @@ namespace TicketingSystem.Services
                 {
                     UserData ud = GetUserData(Auth0ID);
 
-                    var u = db.Users.Where(uid => uid.Email == ud.email);
-                    if (u.Count() == 0)
-                    {
-                        Users user = new Users();
-                        user.Email = ud.email;
-                        user.Auth0Uid = ud.user_id;
-
-                        db.Users.Add(user);
-                        db.SaveChanges();
-                    }
+                    var u = db.Users.Where(uid => uid.Email == ud.email).FirstOrDefault();
+                    u.Auth0Uid = ud.user_id;
+                    db.SaveChanges();
+                    
                 }
                 return true;
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return false;
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
         }
 
+        /// <summary>
+        /// Creates the newly created database user in Auth0
+        /// </summary>
+        /// <param name="newUser">The Users object to be added</param>
+        /// <returns></returns>
+        public static string AddUser(Users newUser)
+        {
+            try
+            {
+                if (!ValidateToken())
+                {
+                    InitAPIToken();
+                }
+
+                var client = new RestClient(baseUrl + "users");
+                var req = new RestRequest(Method.POST);
+
+                Auth0UserPayload usr = new Auth0UserPayload();
+                usr.email = newUser.Email;
+                usr.name = newUser.FullName;
+                usr.password = Guid.NewGuid().ToString().Substring(0,12);
+                usr.connection = "Username-Password-Authentication";
+
+                req.AddJsonBody(usr);
+
+                req.AddHeader("content-type", "application/json");
+                req.AddHeader("authorization", "Bearer " + tokenData.access_token);
+                var response = client.Execute(req);
+                var content = response.Content;
+
+                UserPostResponse upp = JsonConvert.DeserializeObject<UserPostResponse>(content);
+                UpdateUser(upp.user_id);
+
+                return upp.user_id;
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
+        }
+
+        /// <summary>
+        /// Gets all users contained in Auth0
+        /// </summary>
+        /// <returns>A list of UserData containing all users</returns>
         public static List<UserData> GetAllUsers()
         {
             try
@@ -123,11 +178,15 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return new List<UserData>();
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
         }
 
+        /// <summary>
+        /// Gets all of the permissions associated with a given user
+        /// </summary>
+        /// <param name="userId">The Auth0 ID</param>
+        /// <returns>A list of permissions for the user</returns>
         public static List<UserPermission> GetPermissions(string userId)
         {
             try
@@ -150,11 +209,14 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return new List<UserPermission>();
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
         }
 
+        /// <summary>
+        /// Validates the current token and reinitializes if it has expired 
+        /// </summary>
+        /// <returns></returns>
         public static bool ValidateToken()
         {
             try
@@ -168,10 +230,77 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return false;
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
+        }
 
+        public static bool SetRole(string auth0ID, string shiftType)
+        {
+            try
+            {
+                if (!ValidateToken())
+                {
+                    InitAPIToken();
+                }
+
+                var client = new RestClient(baseUrl + "users/" + auth0ID + "/roles");
+                var req = new RestRequest(Method.POST);
+
+                //Auth0UserPayload usr = new Auth0UserPayload();
+                //usr.email = newUser.Email;
+                //usr.name = newUser.FullName;
+                //usr.password = Guid.NewGuid().ToString().Substring(0, 12);
+                //usr.connection = "Username-Password-Authentication";
+                Auth0RolesPayload payload = new Auth0RolesPayload();
+                Auth0Role role = FetchRole(shiftType);
+                string[] roles = new string[] { role.id };
+                payload.roles = roles;
+                req.AddJsonBody(payload);
+
+                req.AddHeader("content-type", "application/json");
+                req.AddHeader("authorization", "Bearer " + tokenData.access_token);
+                var response = client.Execute(req);
+                var content = response.Content;
+
+                UserPostResponse upp = JsonConvert.DeserializeObject<UserPostResponse>(content);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
+        }
+
+        public static Auth0Role FetchRole(string shiftType)
+        {
+            try
+            {
+                if (!ValidateToken())
+                {
+                    InitAPIToken();
+                }
+
+                var client = new RestClient(baseUrl + "roles");
+                var req = new RestRequest(Method.GET);
+                req.AddHeader("content-type", "application/json");
+                req.AddHeader("authorization", "Bearer " + tokenData.access_token);
+                var response = client.Execute(req);
+                var content = response.Content;
+
+                List<Auth0Role> roles = JsonConvert.DeserializeObject<List<Auth0Role>>(content);
+                foreach (var r in roles)
+                {
+                    if (r.name == shiftType)
+                    {
+                        return r;
+                    }
+                }
+                return new Auth0Role();
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
         }
     }
 }

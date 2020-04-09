@@ -1,0 +1,2 @@
+System.InvalidCastException: Unable to cast object of type 'TicketingSystem.Models.Users' to type 'TicketingSystem.Models.NewUser'.
+   at TicketingSystem.Services.Auth0APIClient.AddUser(Users newUser) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\Auth0APIClient.cs:line 115

@@ -5,33 +5,40 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TicketingSystem.Models;
 using TicketingSystem.ExceptionReport;
+using System.ComponentModel;
+using System.Web.Http;
+using System.Net;
+using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace TicketingSystem.Services
 {
     public class RecordRetriever
     {
-        public IEnumerable<TicketData> RetrieveRecords()
+        /// <summary>
+        /// Gets the top N records
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TicketData> RetrieveRecords(int numberOfRecords)
         {
+            List<TicketData> data = new List<TicketData>();
             try
             {
                 using (var context = new TicketingSystemDBContext())
                 {
-
-                    var tdata = context.TicketData.ToList();
-                    foreach (TicketData td in tdata)
+                    data = context.TicketData.Take(numberOfRecords).ToList();
+                    foreach (TicketData td in data)
                     {
                         td.JobType = context.JobType.Find(td.JobTypeId);
                         td.TicketWorker = context.Users.Find(td.TicketWorkerId);
                         td.EntryAuthor = context.Users.Find(td.EntryAuthorId);
                     }
-                    return tdata;
                 }
+                return data;
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return new List<TicketData>();
-
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
         }
 
@@ -50,34 +57,33 @@ namespace TicketingSystem.Services
             }
             catch(Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return new TicketData();
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
 
         }
 
-        public IEnumerable<TicketData> GetOpenRecords()
+        public IEnumerable<TicketData> GetOpenRecords(int numberOfRecords)
         {
+            List<TicketData> data = new List<TicketData>();
             try
             {
                 using (var context = new TicketingSystemDBContext())
                 {
-                    var tdata = context.TicketData.Where(t => t.TicketClosed == false).ToList();
-                    foreach (TicketData td in tdata)
+                    data = context.TicketData.Where(t => t.TicketClosed == false).Take(numberOfRecords).ToList();
+                    foreach (TicketData td in data)
                     {
                         td.JobType = context.JobType.Find(td.JobTypeId);
                         td.TicketWorker = context.Users.Find(td.TicketWorkerId);
                         td.EntryAuthor = context.Users.Find(td.EntryAuthorId);
                     }
-                    return tdata;
                 }
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return new List<TicketData>();
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
-
+            return data;
         }
+
     }
 }

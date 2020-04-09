@@ -35,7 +35,7 @@ namespace TicketingSystem.Controllers
             }
         
             RecordRetriever rr = new RecordRetriever();
-            var res = rr.RetrieveRecords();
+            var res = rr.RetrieveRecords(1000);
             return View("Index", res);
         }
 
@@ -129,7 +129,7 @@ namespace TicketingSystem.Controllers
             UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
             de.PostEditor(td, loggedInUser);
             RecordRetriever rr = new RecordRetriever();
-            var res = rr.RetrieveRecords();
+            var res = rr.RetrieveRecords(1000);
             return View("Index", res);
         }
 

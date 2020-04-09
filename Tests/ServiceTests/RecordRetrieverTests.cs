@@ -13,7 +13,7 @@ namespace Tests.ServiceTests
         public void RetrieveRecordsTest()
         {
             RecordRetriever rr = new RecordRetriever();
-            var res = rr.RetrieveRecords();
+            var res = rr.RetrieveRecords(10);
             IEnumerable<TicketData> testModel = new List<TicketData>();
             Assert.IsNotNull(res);
             Assert.IsTrue(res.GetType() == testModel.GetType());
@@ -36,7 +36,7 @@ namespace Tests.ServiceTests
         public void GetOpenRecordsTest()
         {
             RecordRetriever rr = new RecordRetriever();
-            var res = rr.GetOpenRecords();
+            var res = rr.GetOpenRecords(10);
             Assert.IsNotNull(res);
             Assert.IsTrue(res.GetType() == typeof(List<TicketData>));
         }

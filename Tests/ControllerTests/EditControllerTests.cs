@@ -98,7 +98,7 @@ namespace Tests.ControllerTests
 
                 ViewResult result = (ViewResult)ec.PostEdit(td);
                 RecordRetriever rr = new RecordRetriever();
-                ViewResult testView = View("Index", rr.RetrieveRecords());
+                ViewResult testView = View("Index", rr.RetrieveRecords(10));
 
                 Assert.IsNotNull(result);
                 Assert.AreEqual(testView.ViewName, result.ViewName);

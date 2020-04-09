@@ -1,0 +1,2 @@
+System.Exception: Exception of type 'System.Exception' was thrown.
+   at TicketingSystem.Services.RecordRetriever.RetrieveRecords(Int32 numberOfRecords) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\RecordRetriever.cs:line 26
