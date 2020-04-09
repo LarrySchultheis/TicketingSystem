@@ -115,7 +115,7 @@ namespace TicketingSystem.Services
         /// </summary>
         /// <param name="newUser">The Users object to be added</param>
         /// <returns></returns>
-        public static bool AddUser(Users newUser)
+        public static string AddUser(Users newUser)
         {
             try
             {
@@ -143,7 +143,7 @@ namespace TicketingSystem.Services
                 UserPostResponse upp = JsonConvert.DeserializeObject<UserPostResponse>(content);
                 UpdateUser(upp.user_id);
 
-                return true;
+                return upp.user_id;
             }
             catch (Exception e)
             {
@@ -232,7 +232,75 @@ namespace TicketingSystem.Services
             {
                 throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
+        }
 
+        public static bool SetRole(string auth0ID, string shiftType)
+        {
+            try
+            {
+                if (!ValidateToken())
+                {
+                    InitAPIToken();
+                }
+
+                var client = new RestClient(baseUrl + "users/" + auth0ID + "/roles");
+                var req = new RestRequest(Method.POST);
+
+                //Auth0UserPayload usr = new Auth0UserPayload();
+                //usr.email = newUser.Email;
+                //usr.name = newUser.FullName;
+                //usr.password = Guid.NewGuid().ToString().Substring(0, 12);
+                //usr.connection = "Username-Password-Authentication";
+                Auth0RolesPayload payload = new Auth0RolesPayload();
+                Auth0Role role = FetchRole(shiftType);
+                string[] roles = new string[] { role.id };
+                payload.roles = roles;
+                req.AddJsonBody(payload);
+
+                req.AddHeader("content-type", "application/json");
+                req.AddHeader("authorization", "Bearer " + tokenData.access_token);
+                var response = client.Execute(req);
+                var content = response.Content;
+
+                UserPostResponse upp = JsonConvert.DeserializeObject<UserPostResponse>(content);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
+        }
+
+        public static Auth0Role FetchRole(string shiftType)
+        {
+            try
+            {
+                if (!ValidateToken())
+                {
+                    InitAPIToken();
+                }
+
+                var client = new RestClient(baseUrl + "roles");
+                var req = new RestRequest(Method.GET);
+                req.AddHeader("content-type", "application/json");
+                req.AddHeader("authorization", "Bearer " + tokenData.access_token);
+                var response = client.Execute(req);
+                var content = response.Content;
+
+                List<Auth0Role> roles = JsonConvert.DeserializeObject<List<Auth0Role>>(content);
+                foreach (var r in roles)
+                {
+                    if (r.name == shiftType)
+                    {
+                        return r;
+                    }
+                }
+                return new Auth0Role();
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
         }
     }
 }

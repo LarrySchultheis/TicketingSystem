@@ -79,7 +79,6 @@ namespace SampleMvcApp.Controllers
             try
             {
                 um.CreateUser(newUser, Auth0APIClient.GetUserData(User.Claims.First().Value));
-
             }
             catch (Exception e)
             {

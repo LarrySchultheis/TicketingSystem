@@ -1,0 +1,3 @@
+System.Web.Http.HttpResponseException: Processing of the HTTP request resulted in an exception. Please see the HTTP response returned by the 'Response' property of this exception for details.
+   at TicketingSystem.Services.UserManager.CreateUser(Users newUser, UserData loggedInUser) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\UserManager.cs:line 34
+   at SampleMvcApp.Controllers.AccountController.CreateUser(Users newUser) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Controllers\AccountController.cs:line 81

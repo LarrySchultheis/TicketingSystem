@@ -24,7 +24,8 @@ namespace TicketingSystem.Services
                 {
                     db.Users.Add(newUser);
                     db.SaveChanges();
-                    Auth0APIClient.AddUser(newUser);
+                    string auth0ID = Auth0APIClient.AddUser(newUser);
+                    Auth0APIClient.SetRole(auth0ID, newUser.ShiftType);
                 }
                 return true;
             }
