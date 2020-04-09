@@ -177,7 +177,7 @@ namespace Tests.ControllerTests
                 j.JobName = "Miscellaneous";
 
                 RecordRetriever rr = new RecordRetriever();
-                var records = rr.RetrieveRecords();
+                var records = rr.RetrieveRecords(10);
 
                 Users ticketWorker = context.Users.Where(u => u.FullName == "Test User").FirstOrDefault();
                 Users entryAuthor = context.Users.Where(w => w.FullName == "Test User").FirstOrDefault();

@@ -21,7 +21,6 @@ namespace Tests.ServiceTests
                 Users dbUser = context.Users.Where(u => u.FullName == "Test User").FirstOrDefault();
                 Assert.IsTrue(de.PostEntry(td, Auth0APIClient.GetUserData(dbUser.Auth0Uid)));
             }
-
         }
 
         [Test]

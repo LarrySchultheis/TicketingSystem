@@ -16,15 +16,21 @@ namespace TicketingSystem.Services
 {
     public class ReportGenerator
     {
+        //base url of the report server
         protected static readonly string ssrsBaseURL = "http://localhost/reportserver?/TicketingSystemReporting/";
-        protected static readonly string ssrsRestURL = "http://localhost/reports/api/v2.0";
+       
+        //credentials used to access report server
         protected readonly string userName = "larry";
         protected readonly string password = "ls150682";
 
 
+        /// <summary>
+        /// Function to generate and return the report binaries
+        /// </summary>
+        /// <param name="reportData">Report data containing date range, format, and report name</param>
+        /// <returns>The HttpResponse from the report server</returns>
         public async Task<HttpResponseMessage> GenerateReport (ReportInput reportData)
         {
-        
             HttpResponseMessage resp = null;
             string format, reportName;
 
@@ -54,11 +60,25 @@ namespace TicketingSystem.Services
            
         }
 
+        /// <summary>
+        /// Helper function to build the report request URL
+        /// </summary>
+        /// <param name="baseUrl"></param>
+        /// <param name="reportName"></param>
+        /// <param name="format"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>the built url for the requested report</returns>
         private string BuildUrl (string baseUrl, string reportName, string format, string startDate, string endDate)
         {
             return baseUrl + reportName + "&rs:Format=" + format + "&StartDate=" + startDate + "&EndDate=" + endDate;
         }
 
+        /// <summary>
+        /// Helper function to get the format of the report
+        /// </summary>
+        /// <param name="reportInput"></param>
+        /// <returns>extension of the desired format</returns>
         private string GetFormat(ReportInput reportInput)
         {
             switch (reportInput.ReportFormat)
@@ -72,9 +92,13 @@ namespace TicketingSystem.Services
                 default:
                     return "csv";
             }
-
         }
 
+        /// <summary>
+        /// Helper function to return the name of the report to generate
+        /// </summary>
+        /// <param name="reportInput"></param>
+        /// <returns></returns>
         private string GetReportName(ReportInput reportInput)
         {
             switch (reportInput.ReportName)

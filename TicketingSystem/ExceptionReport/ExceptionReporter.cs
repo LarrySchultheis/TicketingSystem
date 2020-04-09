@@ -9,7 +9,7 @@ namespace TicketingSystem.ExceptionReport
         /// Dumps exceptions to LatestException.txt and Archive directory
         /// </summary>
         /// <param name="e">Exception to dump</param>
-        public static void DumpException(Exception e)
+        public static string DumpException(Exception e)
         {
             string path = Environment.CurrentDirectory + "\\ExceptionReport";
             using (StreamWriter outFile = new StreamWriter(Path.Combine(path, "LatestException.txt")))
@@ -27,7 +27,7 @@ namespace TicketingSystem.ExceptionReport
                 outfile.WriteLine(e);
                 outfile.Close();
             }
-
+            return Guid.NewGuid().ToString();
         }
     }
 }

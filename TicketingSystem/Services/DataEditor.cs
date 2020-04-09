@@ -6,11 +6,18 @@ using TicketingSystem.Models;
 using TicketingSystem.ExceptionReport;
 using System.IO;
 using System.Diagnostics;
+using System.Web.Http;
 
 namespace TicketingSystem.Services
 {
     public class DataEditor
     {
+        /// <summary>
+        /// Posts the edited TicketData object to the database and logs the user who triggered it
+        /// </summary>
+        /// <param name="td">The ticket data instance to update</param>
+        /// <param name="loggedInUser">The currently logged user</param>
+        /// <returns></returns>
         public bool PostEditor(TicketData td, UserData loggedInUser)
         {
             try
@@ -57,13 +64,17 @@ namespace TicketingSystem.Services
 
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return false;
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
-
             return true;
         }
 
+        /// <summary>
+        /// Deletes the specified ticket data entry
+        /// </summary>
+        /// <param name="entryId">The unique id of the ticket to be deleted</param>
+        /// <param name="loggedInUser"></param>
+        /// <returns></returns>
         public bool DeleteEntry(string entryId, UserData loggedInUser)
         {
             try
@@ -82,7 +93,7 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
 
             return true;

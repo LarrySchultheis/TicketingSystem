@@ -1,0 +1,2 @@
+System.Exception: Exception of type 'System.Exception' was thrown.
+   at TicketingSystem.Services.DataEntry.PostEntry(TicketData td, UserData loggedInUser) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\DataEntry.cs:line 24

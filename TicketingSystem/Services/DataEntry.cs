@@ -4,12 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using TicketingSystem.Models;
 using TicketingSystem.ExceptionReport;
+using System.Web.Http;
+using System.Net;
 
 namespace TicketingSystem.Services
 {
     public class DataEntry
     {
-
+        /// <summary>
+        /// Posts the new ticket entry to the database
+        /// </summary>
+        /// <param name="td"></param>
+        /// <param name="loggedInUser"></param>
+        /// <returns></returns>
         public bool PostEntry(TicketData td, UserData loggedInUser)
         {
             try
@@ -58,12 +65,16 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return false;
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
             return true;
         }
 
+        /// <summary>
+        /// Closes the specified ticket data entry
+        /// </summary>
+        /// <param name="td"></param>
+        /// <returns></returns>
         public bool CloseTicket(TicketData td)
         {
             try
@@ -77,8 +88,7 @@ namespace TicketingSystem.Services
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return false;
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
             return true;
         }
