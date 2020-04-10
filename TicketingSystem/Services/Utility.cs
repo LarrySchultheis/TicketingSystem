@@ -18,7 +18,7 @@ namespace TicketingSystem.Services
 	public static class Utility
 	{
 		/// <summary>
-		/// Function to create an Error Model to display to the user
+		/// Function to create a ServerErrorViewModel to display to the user
 		/// </summary>
 		/// <param name="exception"></param>
 		/// <param name="reason"></param>
@@ -46,7 +46,29 @@ namespace TicketingSystem.Services
 			return errorView;
 		}
 
-		public static ErrorViewModel CreateErrorView(HttpResponseException exception, string reason)
+		public static ErrorViewModel CreateBasicExceptionView(Exception exception, string guid)
+		{
+			ErrorViewModel errorView = new ErrorViewModel();
+
+			try
+			{
+				errorView.ErrorCode = guid;
+				errorView.Reason = exception.Message;
+			}
+			catch (Exception e)
+			{
+				ExceptionReporter.DumpException(e);
+			}
+			return errorView;
+		}
+
+		/// <summary>
+		/// Create an ErrorViewModel to display to the user
+		/// </summary>
+		/// <param name="exception"></param>
+		/// <param name="reason"></param>
+		/// <returns></returns>
+		public static ErrorViewModel CreateHttpErrorView(HttpResponseException exception, string reason)
 		{
 			ErrorViewModel errorView = new ErrorViewModel();
 
@@ -64,6 +86,11 @@ namespace TicketingSystem.Services
 			return errorView;
 		}
 
+		/// <summary>
+		/// Creates an HttpResponseMessage given an Exception
+		/// </summary>
+		/// <param name="e"></param>
+		/// <returns></returns>
 		public static HttpResponseMessage CreateResponseMessage(Exception e)
 		{
 			string guid = ExceptionReporter.DumpException(e);

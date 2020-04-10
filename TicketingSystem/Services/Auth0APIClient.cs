@@ -234,6 +234,12 @@ namespace TicketingSystem.Services
             }
         }
 
+        /// <summary>
+        /// Set the role of the chosen user in Auth0
+        /// </summary>
+        /// <param name="auth0ID"></param>
+        /// <param name="shiftType"></param>
+        /// <returns></returns>
         public static bool SetRole(string auth0ID, string shiftType)
         {
             try
@@ -246,11 +252,6 @@ namespace TicketingSystem.Services
                 var client = new RestClient(baseUrl + "users/" + auth0ID + "/roles");
                 var req = new RestRequest(Method.POST);
 
-                //Auth0UserPayload usr = new Auth0UserPayload();
-                //usr.email = newUser.Email;
-                //usr.name = newUser.FullName;
-                //usr.password = Guid.NewGuid().ToString().Substring(0, 12);
-                //usr.connection = "Username-Password-Authentication";
                 Auth0RolesPayload payload = new Auth0RolesPayload();
                 Auth0Role role = FetchRole(shiftType);
                 string[] roles = new string[] { role.id };
@@ -271,6 +272,11 @@ namespace TicketingSystem.Services
             }
         }
 
+        /// <summary>
+        /// Get the role object associated with the given shiftType
+        /// </summary>
+        /// <param name="shiftType"></param>
+        /// <returns>The Auth0Role object</returns>
         public static Auth0Role FetchRole(string shiftType)
         {
             try

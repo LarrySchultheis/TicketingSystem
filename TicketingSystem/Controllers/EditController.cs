@@ -17,12 +17,12 @@ namespace TicketingSystem.Controllers
     public class EditController : Controller
     {
         /// <summary>
-        /// Gets Index page when HomePage/Index is hit
+        /// Gets Index page when Edit/Index is hit
         /// </summary>
         /// <returns>
         /// Index View
         /// </returns>
-        public IActionResult Index()
+        public async Task<ViewResult> Index()
         {
             try
             {
@@ -31,12 +31,26 @@ namespace TicketingSystem.Controllers
             catch (HttpResponseException e)
             {
 
-                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
+                return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
             }
         
-            RecordRetriever rr = new RecordRetriever();
-            var res = rr.RetrieveRecords(1000);
-            return View("Index", res);
+            try
+            {
+                RecordRetriever rr = new RecordRetriever();
+                var res = rr.RetrieveRecords(1000);
+                return View("Index", res);
+            }
+            catch (HttpResponseException e)
+            {
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
+            }
+            catch (Exception e)
+            {
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
+            }
         }
 
         /// <summary>
@@ -44,7 +58,7 @@ namespace TicketingSystem.Controllers
         /// </summary>
         /// <param name="td">TicketData instance</param>
         /// <returns>EditForm View with specified TicketData entry</returns>
-        public IActionResult EditForm(TicketData td)
+        public async Task<ViewResult> EditForm(TicketData td)
         {
             try
             {
@@ -52,11 +66,27 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
+                return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
             }
-            RecordRetriever rr = new RecordRetriever();
-            var tdRes = rr.GetRecordByID(td.EntryId);
-            return View("EditForm", tdRes);
+
+            try
+            {
+                RecordRetriever rr = new RecordRetriever();
+                var tdRes = rr.GetRecordByID(td.EntryId);
+                return View("EditForm", tdRes);
+            }
+            catch (HttpResponseException e)
+            {
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
+            }
+            catch (Exception e)
+            {
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
+            }
+
         }
 
         /// <summary>
@@ -74,7 +104,7 @@ namespace TicketingSystem.Controllers
             {
                 return Json(new
                 {
-                    newUrl = Url.Action("Error", "Edit", Utility.CreateErrorView(e, "You do not have the permissions to view this page"))
+                    newUrl = Url.Action("Error", "Edit", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"))
                 }) ; 
             }
             try
@@ -102,7 +132,7 @@ namespace TicketingSystem.Controllers
             }
         }
 
-        public IActionResult Error()
+        public ViewResult Error()
         {
             ErrorViewModel error = new ErrorViewModel();
             error.ErrorCode = "401";
@@ -114,7 +144,7 @@ namespace TicketingSystem.Controllers
         /// </summary>
         /// <param name="td">TicketData instance from edit form</param>
         /// <returns>Index View</returns>
-        public IActionResult PostEdit(TicketData td)
+        public async Task<ViewResult> PostEdit(TicketData td)
         {
             try
             {
@@ -122,51 +152,85 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
+                return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
             }
 
-            DataEditor de = new DataEditor();
-            UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
-            de.PostEditor(td, loggedInUser);
-            RecordRetriever rr = new RecordRetriever();
-            var res = rr.RetrieveRecords(1000);
-            return View("Index", res);
+            try
+            {
+                DataEditor de = new DataEditor();
+                UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
+                de.PostEditor(td, loggedInUser);
+                RecordRetriever rr = new RecordRetriever();
+                var res = rr.RetrieveRecords(1000);
+                return View("Index", res);
+            }
+            catch (HttpResponseException e)
+            {
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
+            }
+            catch (Exception e)
+            {
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
+            }
         }
 
         public JsonResult RemoveEntry(string entryId)
         {
-            DataEditor de = new DataEditor();
-            de.DeleteEntry(entryId, Auth0APIClient.GetUserData(User.Claims.First().Value));
-
-            return Json(new
+            try
             {
-                newUrl = Url.Action("Index", "Edit"),
-                message = "Deleted entry",
-                id = entryId
-            }); 
+                DataEditor de = new DataEditor();
+                de.DeleteEntry(entryId, Auth0APIClient.GetUserData(User.Claims.First().Value));
+
+                return Json(new
+                {
+                    newUrl = Url.Action("Index", "Edit"),
+                    message = "Deleted entry",
+                    id = entryId
+                });
+            }
+            catch (Exception e)
+            {
+                ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("Index", "Edit"),
+                    message = "Server Exception",
+                    id = entryId
+                });
+            }
 
         }
 
         public bool Authorize()
         {
-            var userId = User.Claims.First().Value;
-            UserData ud = Auth0APIClient.GetUserData(userId);
-            List<UserPermission> permissions = Auth0APIClient.GetPermissions(ud.user_id);
-            bool authorized = false;
-
-            foreach (UserPermission perm in permissions)
+            try
             {
-                if (perm.permission_name == ModelUtility.AccessLevel1 || perm.permission_name == ModelUtility.AccessLevel2)
+                var userId = User.Claims.First().Value;
+                UserData ud = Auth0APIClient.GetUserData(userId);
+                List<UserPermission> permissions = Auth0APIClient.GetPermissions(ud.user_id);
+                bool authorized = false;
+
+                foreach (UserPermission perm in permissions)
                 {
-                    authorized = true;
-                    break;
+                    if (perm.permission_name == ModelUtility.AccessLevel1 || perm.permission_name == ModelUtility.AccessLevel2)
+                    {
+                        authorized = true;
+                        break;
+                    }
                 }
+
+                if (authorized == false)
+                    throw new HttpResponseException(HttpStatusCode.Unauthorized);
+
+                return authorized;
             }
-
-            if (authorized == false)
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
-
-            return authorized;
+            catch(Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Helpers;
+using System.Web.Http;
 using TicketingSystem.ExceptionReport;
 using TicketingSystem.Models;
 using TicketingSystem.Services;
@@ -21,40 +22,52 @@ namespace SampleMvcApp.Controllers
 
         public async Task Login()
         {
-            var x = 0;
-            await HttpContext.ChallengeAsync("Auth0", new AuthenticationProperties() { RedirectUri = "/" });
-
+            try
+            {
+                await HttpContext.ChallengeAsync("Auth0", new AuthenticationProperties() { RedirectUri = "/" });
+            }
+            catch (Exception e)
+            {
+                ExceptionReporter.DumpException(e);
+            }
         }
 
-        [Authorize]
+        [Microsoft.AspNetCore.Authorization.Authorize]
         public async Task Logout()
         {
-            await HttpContext.SignOutAsync("Auth0", new AuthenticationProperties
+            try
             {
-                // Indicate here where Auth0 should redirect the user after a logout.
-                // Note that the resulting absolute Uri must be whitelisted in the 
-                // **Allowed Logout URLs** settings for the client.
-                RedirectUri = Url.Action("Landing", "Home") 
-            });
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignOutAsync("Auth0", new AuthenticationProperties
+                {
+                    // Indicate here where Auth0 should redirect the user after a logout.
+                    // Note that the resulting absolute Uri must be whitelisted in the 
+                    // **Allowed Logout URLs** settings for the client.
+                    RedirectUri = Url.Action("Landing", "Home")
+                });
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            }
+            catch (Exception e)
+            {
+                ExceptionReporter.DumpException(e);
+            }
         }
+
+
+        //[Authorize]
+        //public ViewResult Claims()
+        //{
+        //    return View();
+        //}
+
+        //public ViewResult AccessDenied()
+        //{
+        //    return View();
+        //}
 
         /// <summary>
-        /// This is just a helper action to enable you to easily see all claims related to a user. It helps when debugging your
-        /// application to see the in claims populated from the Auth0 ID Token
+        /// Endpoint to return all the permissions associated with a given user 
         /// </summary>
-        /// <returns></returns>
-        [Authorize]
-        public IActionResult Claims()
-        {
-            return View();
-        }
-
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
-
+        /// <returns>JSON containing permissions</returns>
         public JsonResult Permissions()
         {
             var userId = User.Claims.First().Value;
@@ -67,25 +80,75 @@ namespace SampleMvcApp.Controllers
             });
         }
 
-        public IActionResult UsersHome()
+        /// <summary>
+        /// Endpoint to return the UsersHome view with all users in the database
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ViewResult> UsersHome()
         {
             UserManager um = new UserManager();
-            return View("UsersHome", um.GetUsers());
+            try
+            {
+                return View("UsersHome", um.GetUsers());
+            }
+            catch (HttpResponseException e)
+            {
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
+            }
+            catch (Exception e)
+            {
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
+            }
         }
 
-        public IActionResult CreateUser(Users newUser)
+        /// <summary>
+        /// Endpoint to create a new user in the database and Auth0
+        /// </summary>
+        /// <param name="newUser"></param>
+        /// <returns></returns>
+        public async Task<ViewResult> CreateUser(Users newUser)
         {
             UserManager um = new UserManager();
             try
             {
                 um.CreateUser(newUser, Auth0APIClient.GetUserData(User.Claims.First().Value));
+                return View("UsersHome", um.GetUsers());
+            }
+            catch (HttpResponseException e)
+            {
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
             }
 
-            return View("UsersHome", um.GetUsers());
+        }
+
+        public async Task<ViewResult> UserEdit(string userId)
+        {
+            UserManager um = new UserManager();
+            try
+            {
+                return View("UserEdit", um.GetUserByID(int.Parse(userId)));
+            }
+            catch (HttpResponseException e)
+            {
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
+            }
+            catch (Exception e)
+            {
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace TicketingSystem.Models
 {
+    //Models management API payload when adding a user to Auth0
     public class Auth0UserPayload
     {
         public string email { get; set; }

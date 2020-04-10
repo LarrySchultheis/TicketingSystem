@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace TicketingSystem.Models
 {
+    //Class that models a server error
     public class ServerErrorViewModel : ErrorViewModel
     {
         public string Guid { get; set; }

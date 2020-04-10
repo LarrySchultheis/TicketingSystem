@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace TicketingSystem.Models
 {
+    //Models database user information
     public partial class Users
     {
         public Users()

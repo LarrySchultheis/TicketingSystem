@@ -19,6 +19,7 @@ namespace TicketingSystem.Models
         
     }
 
+    //Models the different access levels that the system uses
     public static class ModelUtility
     {
         public static readonly string AccessLevel1 = "access:lvl1";

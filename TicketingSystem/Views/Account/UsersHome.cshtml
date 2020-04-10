@@ -8,122 +8,149 @@
     ViewData["Title"] = "UsersHome";
 }
 
-    <div class="text-center">
+<div class="text-center">
 
-        <h1>User Management</h1>
-        <br />
+<h1>User Management</h1>
+<br />
+</div>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.css" />
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.js"></script>
+
+<div>
+    <partial name="_HeaderNavbar" />
+    <div>
+        <h2>Create a new User</h2>
+
+        <form id="entryForm" class="form-horizontal" asp-action="CreateUser" asp-controller="Account" onsubmit="return verifyInput()">
+
+            <div class="form-group">
+
+                <label class="control-label col-sm-2" for="email">Email:</label>
+                <div class="col-sm-10">
+                    <input name="Email" type="email" class="form-control" id="email">
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <label class="control-label col-sm-2" for="fullName">Full Name:</label>
+                <div class="col-sm-10">
+                    <input name="FullName" type="text" class="form-control" id="fullName">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="shiftType">Shift Type:</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="ShiftType" id="shiftType">
+                        <option value="">Please Select</option>
+                        <option value="Office Worker">Office Worker</option>
+                        <option value="Accounting">Accounting</option>
+                        <option value="Warehouse">Warehouse</option>
+                        <option value="Management">Management</option>
+                        <option value="Administrator">Administrator</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn-dark" id="subBtn">Submit</button>
+                    &nbsp;
+                    <button type="reset" class="btn-dark" id="resetBtn">Reset Form</button>
+                </div>
+            </div>
+
+        </form>
     </div>
 
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <br />
 
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.css" />
+    <div>
+        <h2>Registered Users</h2>
+        <table id="userTable" class="table table-hover table-bordered table-dark">
+            <thead class="thead-light">
+                <tr>
+                    <th>UserID</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Auth0 ID</th>
+                    <th>Shift Type</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.UserId</td>
+                        <td>@item.FullName</td>
+                        <td>@item.Email</td>
+                        <td>@item.Auth0Uid</td>
+                        <td>@item.ShiftType </td>
+                        <td>@((bool)item.IsActive ? "Active" : "Inactive")</td>
+                    </tr>
 
-        <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.20/datatables.min.js"></script>
+                }
 
-        <div>
-            <partial name="_HeaderNavbar" />
-            <div>
-                <h2>Create a new User</h2>
-
-                <form id="entryForm" class="form-horizontal" asp-action="CreateUser" asp-controller="Account" onsubmit="return verifyInput()">
-
-                    <div class="form-group">
-
-                        <label class="control-label col-sm-2" for="email">Email:</label>
-                        <div class="col-sm-10">
-                            <input name="Email" type="email" class="form-control" id="email">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-
-                        <label class="control-label col-sm-2" for="fullName">Full Name:</label>
-                        <div class="col-sm-10">
-                            <input name="FullName" type="text" class="form-control" id="fullName">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="shiftType">Shift Type:</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" name="ShiftType" id="shiftType">
-                                <option value="">Please Select</option>
-                                <option value="Office Worker">Office Worker</option>
-                                <option value="Accounting">Accounting</option>
-                                <option value="Warehouse">Warehouse</option>
-                                <option value="Management">Management</option>
-                                <option value="Administrator">Administrator</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn-dark" id="subBtn">Submit</button>
-                            &nbsp;
-                            <button type="reset" class="btn-dark" id="resetBtn">Reset Form</button>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-
-            <br />
-
-            <div>
-                <h2>Registered Users</h2>
-                <table id="userTable" class="table table-hover table-bordered table-dark">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>UserID</th>
-                            <th>Full Name</th>
-                            <th>Email</th>
-                            <th>Auth0 ID</th>
-                            <th>Shift Type</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.UserId</td>
-                                <td>@item.FullName</td>
-                                <td>@item.Email</td>
-                                <td>@item.Auth0Uid</td>
-                                <td>@item.ShiftType </td>
-                                <td>@((bool)item.IsActive ? "Active" : "Inactive")</td>
-                            </tr>
-
-                        }
-
-                    </tbody>
-                </table>
-            </div>
+            </tbody>
+        </table>
+    </div>
 
 
-            <div hidden id="dialog-message" title="Downloading File">
-                <p>
-                    <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-                    Your report is being downloaded
-                </p>
+    <div hidden id="dialog-message" title="Opening User Information">
+        <p>
+            <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+            Opening information on this user
+        </p>
 
-            </div>
+    </div>
 
 
-        </div>
+</div>
 
-        <script>
-            $(document).ready(function () {
-                var table = $('#userTable').DataTable()
+<script>
+    $(document).ready(function () {
+        var table = $('#userTable').DataTable()
+    });
+
+    function rowClicked(userId) {
+
+            document.getElementById('dialog-message').hidden = false
+            $("#dialog-message").dialog({
+                modal: true,
+                buttons: {
+                    Ok: function () {
+                        $(this).dialog("close");
+                    }
+                }
             });
 
-            function verifyInput() {
+		    $.ajax({
+		        type: "POST",
+		        url: '@Url.Action("UserEdit", "Account")',
+		        data: { userId: userId },
+		        success: function () {
+			        //alert('Success')
+		        },
+		        error: function (e) {
+			        alert('Error')
+			        console.log(e)
+		        }
+	        }).done(function (data) {
+		        window.location.replace(data.newUrl)
+	        })
+        }
 
-            }
-        </script>
+
+    }
+</script>
 
 
 

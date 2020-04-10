@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using TicketingSystem.Services;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using System.Threading.Tasks;
 
 namespace Tests.ControllerTests
 {
@@ -42,9 +43,9 @@ namespace Tests.ControllerTests
             };
         }
         [Test]
-        public void HomePageTest()
+        public async Task HomePageTest()
         {
-            ViewResult result = (ViewResult)hc.HomePage();
+            ViewResult result = await hc.HomePage();
             ViewResult testView = View("HomePage", "Home");
 
             Assert.IsNotNull(result);
@@ -54,7 +55,7 @@ namespace Tests.ControllerTests
         [Test]
         public void LandingTest()
         {
-            ViewResult result = (ViewResult)hc.Landing();
+            ViewResult result = hc.Landing();
             ViewResult testView = View("Landing", "Home");
 
             Assert.IsNotNull(result);
@@ -64,7 +65,7 @@ namespace Tests.ControllerTests
         [Test]
         public void DataEntryTest()
         {
-            ViewResult result = (ViewResult)hc.DataEntry();
+            ViewResult result = hc.DataEntry();
             ViewResult testView = View("DataEntry", "Home");
 
             Assert.IsNotNull(result);
@@ -72,16 +73,16 @@ namespace Tests.ControllerTests
         }
 
         [Test]
-        public void EntryCloseTest()
+        public async Task EntryCloseTest()
         {
             TicketData td = CreateTestData();
 
             hc.PostEntry(td);
 
-            ViewResult result = (ViewResult)hc.EntryClose(td);
+            ViewResult result = await hc.EntryClose(td);
             ViewResult testView = View("HomePage", "Home");
 
-            result = (ViewResult)hc.EntryClose(td);
+            result = await hc.EntryClose(td);
             testView = View("EntryClose", "Home");
 
             Assert.IsNotNull(result);
@@ -91,11 +92,11 @@ namespace Tests.ControllerTests
 
 
         [Test]
-        public void PostEntryTest()
+        public async Task PostEntryTest()
         {
             TicketData td = CreateTestData();
 
-            ViewResult result = (ViewResult)hc.PostEntry(td);
+            ViewResult result = await hc.PostEntry(td);
             ViewResult testView = View("HomePage", "Home");
 
             Assert.IsNotNull(result);
@@ -104,12 +105,12 @@ namespace Tests.ControllerTests
         }
 
         [Test]
-        public void PostEntryCloseTest()
+        public async Task PostEntryCloseTest()
         {
             TicketData td = CreateTestData();
             hc.PostEntry(td);
 
-            ViewResult result = (ViewResult)hc.PostEntryClose(td);
+            ViewResult result = await hc.PostEntryClose(td);
             ViewResult testView = View("HomePage", "Home");
 
             Assert.IsNotNull(result);
@@ -119,9 +120,9 @@ namespace Tests.ControllerTests
         }
 
         [Test]
-        public void AllTicketsTest()
+        public async Task AllTicketsTest()
         {
-            ViewResult result = (ViewResult)hc.AllTickets();
+            ViewResult result = await hc.AllTickets();
             ViewResult testView = View("HomePage", "Home");
 
             Assert.IsNotNull(result);
@@ -130,9 +131,9 @@ namespace Tests.ControllerTests
         }
 
         [Test]
-        public void OpenTicketsTest()
+        public async Task OpenTicketsTest()
         {
-            ViewResult result = (ViewResult)hc.OpenTickets();
+            ViewResult result = await hc.OpenTickets();
             ViewResult testView = View("HomePage", "Home");
 
             Assert.IsNotNull(result);

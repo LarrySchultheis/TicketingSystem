@@ -22,12 +22,12 @@ namespace TicketingSystem.Controllers
         private static UserData loggedInUser;
         private static readonly int numberOfRecords = 1000;
 
-        public IActionResult Landing()
+        public ViewResult Landing()
         {
             return View("Landing");
         }
 
-        public IActionResult Privacy()
+        public ViewResult Privacy()
         {
             return View("Index");
         }
@@ -36,7 +36,7 @@ namespace TicketingSystem.Controllers
         /// Gets the Data Entry page
         /// </summary>
         /// <returns>DataEntry View</returns>
-        public IActionResult DataEntry()
+        public ViewResult DataEntry()
         {   
             try
             {
@@ -44,7 +44,7 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
+                return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
             }
             return View("DataEntry");
         }
@@ -54,7 +54,7 @@ namespace TicketingSystem.Controllers
         /// </summary>
         /// <param name="td">TicketData entry from HomePage table</param>
         /// <returns>EntryClose View and TicketData entry</returns>
-        public IActionResult EntryClose(TicketData td)
+        public async Task<ViewResult> EntryClose(TicketData td)
         {
             try
             {
@@ -62,11 +62,25 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
+                return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
             }
-            RecordRetriever rr = new RecordRetriever();
-            var tdRes = rr.GetRecordByID(td.EntryId);
-            return View("EntryClose", tdRes);
+            try
+            {
+                RecordRetriever rr = new RecordRetriever();
+                var tdRes = rr.GetRecordByID(td.EntryId);
+                return View("EntryClose", tdRes);
+            }
+            catch (HttpResponseException e)
+            {
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
+            }
+            catch (Exception e)
+            {
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
+            }
         }
 
         /// <summary>
@@ -74,7 +88,7 @@ namespace TicketingSystem.Controllers
         /// </summary>
         /// <param name="td">TicketData entry to close</param>
         /// <returns>HomePage view with Open records</returns>
-        public IActionResult PostEntryClose(TicketData td)
+        public async Task<ViewResult> PostEntryClose(TicketData td)
         {
             try
             {
@@ -82,20 +96,34 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
+                return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
             }
-            DataEntry de = new DataEntry();
-            RecordRetriever rr = new RecordRetriever();
-            de.CloseTicket(td);
-            var tdRes = rr.RetrieveRecords(numberOfRecords);
-            return View("HomePage", tdRes);
+            try
+            {
+                DataEntry de = new DataEntry();
+                RecordRetriever rr = new RecordRetriever();
+                de.CloseTicket(td);
+                var tdRes = rr.RetrieveRecords(numberOfRecords);
+                return View("HomePage", tdRes);
+            }
+            catch (HttpResponseException e)
+            {
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
+            }
+            catch (Exception e)
+            {
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
+            }
         }
 
         /// <summary>
         ///  Gets the HomePage view with current open records
         /// </summary>
         /// <returns>HomePage view with open records</returns>
-        public async Task<IActionResult> HomePage()
+        public async Task<ViewResult> HomePage()
         {
             try
             {
@@ -112,15 +140,14 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-
-                //string message = await Utility.RenderErrorResponse(e.Response);
                 ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
                 return View("ServerError", error);
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
-                return View("Landing");
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
             }
 
         }
@@ -129,18 +156,46 @@ namespace TicketingSystem.Controllers
         /// Gets both open and closed tickets 
         /// </summary>
         /// <returns>HomePage view with current records</returns>
-        public IActionResult AllTickets()
+        public async Task<ViewResult> AllTickets()
         {
-            RecordRetriever rr = new RecordRetriever();
-            var records = rr.RetrieveRecords(numberOfRecords);
-            return View("HomePage", records);
+            try
+            {
+                RecordRetriever rr = new RecordRetriever();
+                var records = rr.RetrieveRecords(numberOfRecords);
+                return View("HomePage", records);
+            }
+            catch (HttpResponseException e)
+            {
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
+            }
+            catch (Exception e)
+            {
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
+            }
         }
 
-        public IActionResult OpenTickets()
+        public async Task<ViewResult> OpenTickets()
         {
-            RecordRetriever rr = new RecordRetriever();
-            var records = rr.GetOpenRecords(numberOfRecords);
-            return View("HomePage", records);
+            try
+            {
+                RecordRetriever rr = new RecordRetriever();
+                var records = rr.GetOpenRecords(numberOfRecords);
+                return View("HomePage", records);
+            }
+            catch (HttpResponseException e)
+            {
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
+            }
+            catch (Exception e)
+            {
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
+            }
         }
 
         /// <summary>
@@ -148,7 +203,7 @@ namespace TicketingSystem.Controllers
         /// </summary>
         /// <param name="td">TicketData entry from DataEntry form</param>
         /// <returns>DataEntry view with TicketData entry</returns>
-        public IActionResult PostEntry(TicketData td)
+        public async Task<ViewResult> PostEntry(TicketData td)
         {
             try
             {
@@ -156,22 +211,27 @@ namespace TicketingSystem.Controllers
             }
             catch (HttpResponseException e)
             {
-                return View("Error", Utility.CreateErrorView(e, "You do not have the permissions to view this page"));
+                return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
             }
             try
             {
                 DataEntry de = new DataEntry();
-               
-               // UserData loggedInUser = Auth0APIClient.GetUserData(User.Claims.First().Value);
                 bool success = de.PostEntry(td, loggedInUser);
+                RecordRetriever rr = new RecordRetriever();
+                return View("HomePage", rr.RetrieveRecords(numberOfRecords));
             }
-
+            catch (HttpResponseException e)
+            {
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return View("ServerError", error);
+            }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
+                var guid = ExceptionReporter.DumpException(e);
+                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+                return View("Error", error);
             }
-            RecordRetriever rr = new RecordRetriever();
-            return View("HomePage", rr.RetrieveRecords(numberOfRecords));
+
         }
 
         /// <summary>
@@ -235,7 +295,7 @@ namespace TicketingSystem.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public ViewResult Error()
         {
             return View(new ErrorViewModel { ErrorCode = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
@@ -246,29 +306,36 @@ namespace TicketingSystem.Controllers
         /// <returns></returns>
         public bool Authorize()
         {
-            var userId = User.Claims.First().Value;
-
-            UserData ud = Auth0APIClient.GetUserData(userId);
-            loggedInUser = ud;
-            List<UserPermission> permissions = Auth0APIClient.GetPermissions(ud.user_id);
-            bool authorized = false;
-
-            foreach (UserPermission perm in permissions)
+            try
             {
-                if (perm.permission_name == ModelUtility.AccessLevel1 ||
-                perm.permission_name == ModelUtility.AccessLevel2 ||
-                perm.permission_name == ModelUtility.AccessLevel4)
+                var userId = User.Claims.First().Value;
+
+                UserData ud = Auth0APIClient.GetUserData(userId);
+                loggedInUser = ud;
+                List<UserPermission> permissions = Auth0APIClient.GetPermissions(ud.user_id);
+                bool authorized = false;
+
+                foreach (UserPermission perm in permissions)
                 {
-                    authorized = true;
-                    break;
+                    if (perm.permission_name == ModelUtility.AccessLevel1 ||
+                    perm.permission_name == ModelUtility.AccessLevel2 ||
+                    perm.permission_name == ModelUtility.AccessLevel4)
+                    {
+                        authorized = true;
+                        break;
+                    }
                 }
+
+                if (authorized == false)
+                    throw new HttpResponseException(HttpStatusCode.Unauthorized);
+
+                return authorized;
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
 
-            if (authorized == false)
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
-
-            return authorized;
-            
         }
     }
 }

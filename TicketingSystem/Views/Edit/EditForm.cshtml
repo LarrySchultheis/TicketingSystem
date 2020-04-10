@@ -91,6 +91,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="control-label col-sm-2" for="endTime">End Time:</label>
+            <div class="col-sm-10">
+                <input asp-for="EndTime" type="time" class="form-control" id="endTime" data-attr="default">
+            </div>
+        </div>
+        <div class="form-group">
             <label class="control-label col-sm-2" for="isClosed">Ticket Closed</label>
             <div class="col-sm-10">
                 <input asp-for="TicketClosed" type="checkbox" id="isClosed" data-attr="default">
@@ -127,7 +133,14 @@
 
 <script>
     $(document).ready(function () {
+        @{ 
+            var startTime = Model.StartTime.TimeOfDay;
+            DateTime end = (DateTime)Model.EndTime;
+            var endTime = end.TimeOfDay;
+        }
         document.getElementById('startTime').value = '@Model.StartTime.TimeOfDay'
+        document.getElementById('endTime').value = '@(((DateTime)Model.EndTime).TimeOfDay)'
+
     });
 </script>
 

@@ -1,0 +1,102 @@
+﻿@model TicketingSystem.Models.Users
+
+@{
+    ViewData["Title"] = "UserEdit";
+}
+
+<!DOCTYPE html>
+<h2 class="display-4">Edit User</h2>
+<br />
+<br />
+<body>
+
+    <partial name="_HeaderNavbar" />
+
+    <div>
+        <partial name="_HeaderNavbar" />
+        <div>
+            <h2>Create a new User</h2>
+
+            <form id="entryForm" class="form-horizontal" asp-action="PostEdit" asp-controller="Account">
+
+                <div class="form-group">
+
+                    <label class="control-label col-sm-2" for="email">Email:</label>
+                    <div class="col-sm-10">
+                        <input name="Email" type="email" class="form-control" id="email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+
+                    <label class="control-label col-sm-2" for="fullName">Full Name:</label>
+                    <div class="col-sm-10">
+                        <input name="FullName" type="text" class="form-control" id="fullName">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="isActive">Is Active:</label>
+                    <div class="col-sm-10">
+                        <input name="IsActive" type="checkbox" id="isActive">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="shiftType">Shift Type:</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="ShiftType" id="shiftType">
+                            <option value="">Please Select</option>
+                            <option value="Office Worker">Office Worker</option>
+                            <option value="Accounting">Accounting</option>
+                            <option value="Warehouse">Warehouse</option>
+                            <option value="Management">Management</option>
+                            <option value="Administrator">Administrator</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn-dark" id="subBtn">Submit</button>
+                        &nbsp;
+                        <button type="reset" class="btn-dark" id="resetBtn">Reset Form</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="col-sm-offset-2 col-sm-10">
+
+            <button class="btn-danger" id="deleteBtn" onclick="deleteUser()">Delete User</button>
+        </div>
+    </div>
+
+        <br />
+        <br />
+</body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+<script src="~/js/dataEntry.js"></script>
+
+<script>
+    function deleteUser() {
+        	$.ajax({
+			type: "DELETE",
+			url: '@Url.Action("DeleteUser", "Account")',
+			data: { userId: @Model.UserId},
+            success: function () {
+                alert('This user was successfully deleted')
+			},
+			error: function (e) {
+				alert('Error in ajax reqest')
+				console.log(e)
+			}
+		}).done(function (data) {
+			window.location.replace(data.newUrl)
+		})
+    }
+
+</script>
+

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace TicketingSystem.Models
 {
+    //Models the token received from Auth0 for use with the management API
     public class TokenData
     {
         public string access_token { get; set; }

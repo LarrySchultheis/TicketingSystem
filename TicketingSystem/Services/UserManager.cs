@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,6 +48,26 @@ namespace TicketingSystem.Services
                 using (var db = new TicketingSystemDBContext())
                 {
                     return db.Users.ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
+        }
+
+        /// <summary>
+        /// Gets the user with the given ID
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public Users GetUserByID(int userID)
+        {
+            try
+            {
+                using (var db = new TicketingSystemDBContext())
+                {
+                    return db.Users.Find(userID);
                 }
             }
             catch (Exception e)

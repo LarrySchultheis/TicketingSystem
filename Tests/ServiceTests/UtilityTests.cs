@@ -15,7 +15,7 @@ namespace Tests.ServiceTests
         public void CreateErrorViewTest()
         {
             HttpResponseException e = new HttpResponseException(HttpStatusCode.OK);
-            var result = Utility.CreateErrorView(e, "test");
+            var result = Utility.CreateHttpErrorView(e, "test");
             Assert.IsNotNull(result);
         }
 
