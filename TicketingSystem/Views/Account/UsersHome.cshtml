@@ -88,7 +88,7 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    <tr onclick="rowClicked(@item.UserId)">
                         <td>@item.UserId</td>
                         <td>@item.FullName</td>
                         <td>@item.Email</td>
@@ -131,10 +131,9 @@
                     }
                 }
             });
-
 		    $.ajax({
-		        type: "POST",
-		        url: '@Url.Action("UserEdit", "Account")',
+		        type: "GET",
+		        url: '@Url.Action("EditUser", "Account")',
 		        data: { userId: userId },
 		        success: function () {
 			        //alert('Success')
@@ -143,13 +142,13 @@
 			        alert('Error')
 			        console.log(e)
 		        }
-	        }).done(function (data) {
+            }).done(function (data) {
 		        window.location.replace(data.newUrl)
 	        })
-        }
-
-
     }
+
+
+    
 </script>
 
 

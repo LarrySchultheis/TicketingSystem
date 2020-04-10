@@ -75,5 +75,28 @@ namespace TicketingSystem.Services
                 throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
         }
+
+        public bool DeleteUser(int UserId)
+        {
+            try
+            {
+                using (var db = new TicketingSystemDBContext())
+                {
+                    Users user = db.Users.Find(UserId);
+                    string auth0ID = user.Auth0Uid;
+
+                    db.Users.Remove(user);
+                    db.SaveChanges();
+
+                    Auth0APIClient.DeleteUser(auth0ID);
+
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
+        }
     }
 }

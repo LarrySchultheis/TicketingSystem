@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace TicketingSystem.Models
 {
-    //Models database user information
     public partial class Users
     {
         public Users()
@@ -15,7 +14,7 @@ namespace TicketingSystem.Models
         public int UserId { get; set; }
         public string Email { get; set; }
         public string ShiftType { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
         public string FullName { get; set; }
         public string Auth0Uid { get; set; }
 

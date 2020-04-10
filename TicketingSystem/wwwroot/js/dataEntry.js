@@ -58,6 +58,8 @@ function verifyInput() {
     var empName = document.getElementById('employeeName')
     var startTime = document.getElementById('startTime')
     var endTime
+    var startDate = document.getElementById('startDate')
+    var endDate = document.getElementById('endDate')
 
     var validName = false
     for (var i = 0; i < validNames.length; i++) {
@@ -96,6 +98,14 @@ function verifyInput() {
             alert('Please enter a valid end time')
             return false
         }
+    }
+    if (startDate.value == "") {
+        alert('Please enter a valid start date')
+        return false
+    }
+    if (endDate.value == "") {
+        alert('Please enter a valid end date')
+        return false
     }
     return true
     //alert('success')

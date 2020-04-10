@@ -308,5 +308,30 @@ namespace TicketingSystem.Services
                 throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
         }
+
+        public static bool DeleteUser(string Auth0ID)
+        {
+            try
+            {
+                if (!ValidateToken())
+                {
+                    InitAPIToken();
+                }
+
+                var client = new RestClient(baseUrl + "users/" + Auth0ID);
+                var req = new RestRequest(Method.DELETE);
+                req.AddHeader("content-type", "application/json");
+                req.AddHeader("authorization", "Bearer " + tokenData.access_token);
+
+                var response = client.Execute(req);
+                var content = response.Content;
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
+        }
     }
 }

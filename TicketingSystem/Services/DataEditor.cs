@@ -24,9 +24,6 @@ namespace TicketingSystem.Services
             {
                 using (var context = new TicketingSystemDBContext())
                 {
-                    IEnumerable<JobType> jobs = context.JobType;
-                    TicketData ticketToEdit = context.TicketData.Find(td.EntryId);
-
 
                     int jtypeID;
                     jtypeID = context.JobType.Where(j => j.JobName == td.JobType.JobName).FirstOrDefault().JobTypeId;
@@ -40,24 +37,24 @@ namespace TicketingSystem.Services
                     if (author != null)
                     {
                         authorID = author.UserId;
-                        ticketToEdit.EntryAuthorId = authorID;
+                        td.EntryAuthorId = authorID;
                     }
 
                     if (worker != null)
                     {
                         workerID = worker.UserId;
-                        ticketToEdit.TicketWorkerId = workerID;
+                        td.TicketWorkerId = workerID;
                     }
 
-                    ticketToEdit.JobTypeId = jtypeID;
-                    ticketToEdit.WorkerName = td.TicketWorker.FullName;
+                    td.JobTypeId = jtypeID;
+                    td.WorkerName = td.TicketWorker.FullName;
 
                     //very important null assignment
-                    ticketToEdit.JobType = null;
-                    ticketToEdit.TicketWorker = null;
-                    ticketToEdit.EntryAuthor = null;
+                    td.JobType = null;
+                    td.TicketWorker = null;
+                    td.EntryAuthor = null;
 
-                    context.TicketData.Update(ticketToEdit);
+                    context.TicketData.Update(td);
                     context.SaveChanges();
 
                     TicketDataLogger tdl = new TicketDataLogger();

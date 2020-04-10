@@ -25,4 +25,8 @@
     <ProjectReference Include="..\TicketingSystem\TicketingSystem.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AutomatedTests\" />
+  </ItemGroup>
+
 </Project>

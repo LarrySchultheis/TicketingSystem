@@ -4,6 +4,7 @@ using TicketingSystem.Services;
 using TicketingSystem.Models;
 using System;
 using System.Linq;
+using NUnit.Framework.Internal;
 
 namespace Tests.ServiceTests
 {
@@ -28,8 +29,10 @@ namespace Tests.ServiceTests
         {
             using (var context = new TicketingSystemDBContext())
             {
-                var td = context.TicketData.FirstOrDefault();
+                var td = TestUtility.CreateTestData();
                 DataEntry de = new DataEntry();
+                Users dbUser = context.Users.Where(u => u.FullName == "Test User").FirstOrDefault();
+                de.PostEntry(td, Auth0APIClient.GetUserData(dbUser.Auth0Uid));
                 Assert.IsTrue(de.CloseTicket(td));
             }
 

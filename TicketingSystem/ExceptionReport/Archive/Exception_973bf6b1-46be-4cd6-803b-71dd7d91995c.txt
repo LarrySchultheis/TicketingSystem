@@ -1,0 +1,7 @@
+System.InvalidOperationException: The association between entity types 'Users' and 'TicketData' has been severed but the relationship is either marked as 'Required' or is implicitly required because the foreign key is not nullable. If the dependent/child entity should be deleted when a required relationship is severed, then setup the relationship to use cascade deletes.  Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the key values.
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.InternalEntityEntry.HandleConceptualNulls(Boolean sensitiveLoggingEnabled)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.GetInternalEntriesToSave()
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges(Boolean acceptAllChangesOnSuccess)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChanges()
+   at TicketingSystem.Services.DataEditor.PostEditor(TicketData td, UserData loggedInUser) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\DataEditor.cs:line 61

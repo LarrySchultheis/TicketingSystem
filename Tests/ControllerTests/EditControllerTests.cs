@@ -95,6 +95,7 @@ namespace Tests.ControllerTests
                 de.PostEntry(TestUtility.CreateTestData(), Auth0APIClient.GetUserData(user.Auth0Uid));
 
                 TicketData td = db.TicketData.Where(t => t.EntryAuthorId == user.UserId).FirstOrDefault();
+                td.JobType = db.JobType.Where(jt => jt.JobTypeId == td.JobTypeId).FirstOrDefault();
                 td.Comments = "Changed entry in PostEditTest";
 
                 ViewResult result = await ec.PostEdit(td);

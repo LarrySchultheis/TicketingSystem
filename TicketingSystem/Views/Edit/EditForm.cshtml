@@ -85,6 +85,18 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="control-label col-sm-2" for="startDate">Start Date:</label>
+            <div class="col-sm-10">
+                <input asp-for="StartDate" type="date" class="form-control" id="startDate" value="@string.Format("{0:yyyy-MM-dd}", Model.StartDate)" data-attr="default">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="endDate">End Date:</label>
+            <div class="col-sm-10">
+                <input asp-for="EndDate" type="date" class="form-control" id="endDate" value="@string.Format("{0:yyyy-MM-dd}", Model.EndDate)" data-attr="default">
+            </div>
+        </div>
+        <div class="form-group">
             <label class="control-label col-sm-2" for="startTime">Start Time:</label>
             <div class="col-sm-10">
                 <input asp-for="StartTime" type="time" class="form-control" id="startTime" data-attr="default">
@@ -133,13 +145,9 @@
 
 <script>
     $(document).ready(function () {
-        @{ 
-            var startTime = Model.StartTime.TimeOfDay;
-            DateTime end = (DateTime)Model.EndTime;
-            var endTime = end.TimeOfDay;
-        }
-        document.getElementById('startTime').value = '@Model.StartTime.TimeOfDay'
-        document.getElementById('endTime').value = '@(((DateTime)Model.EndTime).TimeOfDay)'
+
+        document.getElementById('startTime').value = '@Model.StartTime'
+        document.getElementById('endTime').value = '@Model.EndTime'
 
     });
 </script>
