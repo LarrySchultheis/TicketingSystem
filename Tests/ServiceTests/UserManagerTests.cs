@@ -47,13 +47,12 @@ namespace Tests.ServiceTests
         [Test]
         public void CreateUserTest()
         {
-            Users newUser = new Users();
-            newUser.Email = "larrytixsysuser@gmail.com";
-            newUser.FullName = "Unit Test User";
-            newUser.ShiftType = "Warehouse";
+
 
             using (var db = new TicketingSystemDBContext())
             {
+                Users newUser = TestUtility.CreateTestUser();
+
                 Users loggedUser = db.Users.Where(u => u.FullName == "Test User").FirstOrDefault();
                 UserData userData = Auth0APIClient.GetUserData(loggedUser.Auth0Uid);
 

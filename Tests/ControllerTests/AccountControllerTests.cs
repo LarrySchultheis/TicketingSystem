@@ -80,10 +80,7 @@ namespace Tests.ControllerTests
         [Test]
         public async Task CreateUserTest()
         {
-            Users newUser = new Users();
-            newUser.Email = "larrytixsysuser@gmail.com";
-            newUser.FullName = "Unit Test User";
-            newUser.ShiftType = "Warehouse";
+            Users newUser = TestUtility.CreateTestUser();
 
             ViewResult actual = await ac.CreateUser(newUser);
             ViewResult expected = View("UsersHome");
@@ -95,14 +92,15 @@ namespace Tests.ControllerTests
         [Test]
         public void DeleteUserTest()
         {
+            Users newUser = TestUtility.CreateTestUser();
+            UserManager um = new UserManager();
+            um.CreateUser(newUser, Auth0APIClient.GetUserData(User.Claims.First().Value));
             using (var db = new TicketingSystemDBContext())
             {
-                Users user = db.Users.Where(u => u.FullName == "Unit Test User").FirstOrDefault();
-                JsonResult result = ac.DeleteUser(user.UserId.ToString());
+                JsonResult result = ac.DeleteUser(db.Users.Where(u => u.FullName == "Unit Test User").First().UserId.ToString());
                 string val = result.Value.ToString();
 
                 Assert.IsNotNull(result);
-
             }
         }
 
@@ -117,14 +115,14 @@ namespace Tests.ControllerTests
         [TearDown]
         public void Cleanup()
         {
+            UserManager um = new UserManager();
             using (var db = new TicketingSystemDBContext())
             {
-                var users = db.Users.Where(u => u.FullName == "Unit Test User");
+                var users = db.Users.Where(u => u.FullName == "Unit Test User").ToList();
                 foreach (Users u in users)
                 {
-                    db.Remove(u);
+                    um.DeleteUser(u.UserId);
                 }
-                db.SaveChanges();
             }
         }
     }

@@ -65,5 +65,14 @@ namespace Tests
                 db.SaveChanges();
             }
         }
+
+        public static Users CreateTestUser()
+        {
+            Users newUser = new Users();
+            newUser.Email = "larrytixsysuser@gmail.com";
+            newUser.FullName = "Unit Test User";
+            newUser.ShiftType = "Warehouse";
+            return newUser;
+        }
     }
 }
