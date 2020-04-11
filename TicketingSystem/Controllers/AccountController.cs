@@ -54,18 +54,6 @@ namespace SampleMvcApp.Controllers
             }
         }
 
-
-        //[Authorize]
-        //public ViewResult Claims()
-        //{
-        //    return View();
-        //}
-
-        //public ViewResult AccessDenied()
-        //{
-        //    return View();
-        //}
-
         /// <summary>
         /// Endpoint to return all the permissions associated with a given user 
         /// </summary>
@@ -185,74 +173,74 @@ namespace SampleMvcApp.Controllers
 
         }
 
-        public JsonResult EditUser(string userId)
-        {
-            try
-            {
-                Authorize();
-            }
-            catch (HttpResponseException e)
-            {
-                return Json(new
-                {
-                    newUrl = Url.Action("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"))
-                });
-            }
-            try
-            {
-                UserManager um = new UserManager();
-                Users user = um.GetUserByID(int.Parse(userId));
-                //return View("UserEdit", um.GetUserByID(int.Parse(userId)));
-                return Json(new
-                {
-                    newUrl = Url.Action("UserEdit", "Account", user)
-                }) ;
-            }
-            catch (HttpResponseException e)
-            {
-                return Json(new
-                {
-                    newUrl = Url.Action("ServerError", Utility.CreateServerErrorView(e))
-                });
-            }
-            catch (Exception e)
-            {
-                var guid = ExceptionReporter.DumpException(e);
-                return Json(new
-                {
-                    newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
-                });
-            }
-        }
+        //public JsonResult EditUser(string userId)
+        //{
+        //    try
+        //    {
+        //        Authorize();
+        //    }
+        //    catch (HttpResponseException e)
+        //    {
+        //        return Json(new
+        //        {
+        //            newUrl = Url.Action("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"))
+        //        });
+        //    }
+        //    try
+        //    {
+        //        UserManager um = new UserManager();
+        //        Users user = um.GetUserByID(int.Parse(userId));
+        //        //return View("UserEdit", um.GetUserByID(int.Parse(userId)));
+        //        return Json(new
+        //        {
+        //            newUrl = Url.Action("UserEdit", "Account", user)
+        //        }) ;
+        //    }
+        //    catch (HttpResponseException e)
+        //    {
+        //        return Json(new
+        //        {
+        //            newUrl = Url.Action("ServerError", Utility.CreateServerErrorView(e))
+        //        });
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        var guid = ExceptionReporter.DumpException(e);
+        //        return Json(new
+        //        {
+        //            newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
+        //        });
+        //    }
+        //}
 
-        public async Task<ViewResult> UserEdit(Users user)
-        {
-            try
-            {
-                Authorize();
-            }
-            catch (HttpResponseException e)
-            {
-                return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
-            }
+        //public async Task<ViewResult> UserEdit(Users user)
+        //{
+        //    try
+        //    {
+        //        Authorize();
+        //    }
+        //    catch (HttpResponseException e)
+        //    {
+        //        return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
+        //    }
             
-            try
-            {
-                UserManager um = new UserManager();
-                return View("UserEdit", user);
-            }
-            catch (HttpResponseException e)
-            {
-                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
-                return View("ServerError", error);
-            }
-            catch (Exception e)
-            {
-                var guid = ExceptionReporter.DumpException(e);
-                ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
-                return View("Error", error);
-            }
-        }
+        //    try
+        //    {
+        //        UserManager um = new UserManager();
+        //        return View("UserEdit", user);
+        //    }
+        //    catch (HttpResponseException e)
+        //    {
+        //        ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+        //        return View("ServerError", error);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        var guid = ExceptionReporter.DumpException(e);
+        //        ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+        //        return View("Error", error);
+        //    }
+        //}
 
         //public async Task<ViewResult> PostEdit(Users user)
         //{
@@ -285,6 +273,10 @@ namespace SampleMvcApp.Controllers
         //}
 
 
+        /// <summary>
+        /// Endpoint to trigger an update of database users from Auth0
+        /// </summary>
+        /// <returns></returns>
         public JsonResult UpdateUsers()
         {
             try
@@ -320,6 +312,12 @@ namespace SampleMvcApp.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Endpoint to delete a user from the database and Auth0
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public JsonResult DeleteUser(string userId)
         {
             try

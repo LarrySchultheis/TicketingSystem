@@ -132,6 +132,10 @@ namespace TicketingSystem.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint to create a 401 error page
+        /// </summary>
+        /// <returns></returns>
         public ViewResult Error()
         {
             ErrorViewModel error = new ErrorViewModel();
@@ -177,6 +181,12 @@ namespace TicketingSystem.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Endpoint to delete an entry from the database
+        /// </summary>
+        /// <param name="entryId"></param>
+        /// <returns></returns>
         public JsonResult RemoveEntry(string entryId)
         {
             try
@@ -204,6 +214,10 @@ namespace TicketingSystem.Controllers
 
         }
 
+        /// <summary>
+        /// Function to authorize the currently logged in user
+        /// </summary>
+        /// <returns></returns>
         public bool Authorize()
         {
             try

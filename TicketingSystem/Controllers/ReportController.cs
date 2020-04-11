@@ -28,6 +28,11 @@ namespace TicketingSystem.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Endpoint to run the selected report
+        /// </summary>
+        /// <param name="reportData"></param>
+        /// <returns></returns>
         public async Task<JsonResult> RunReport(ReportInput reportData)
         {
             try
@@ -65,6 +70,11 @@ namespace TicketingSystem.Controllers
             });
 
         }
+
+        /// <summary>
+        /// Function to authorize the currently logged in user
+        /// </summary>
+        /// <returns></returns>
         public bool Authorize()
         {
             try

@@ -46,6 +46,13 @@ namespace TicketingSystem.Services
 			return errorView;
 		}
 
+
+		/// <summary>
+		/// Function to create a basic exception view
+		/// </summary>
+		/// <param name="exception"></param>
+		/// <param name="guid"></param>
+		/// <returns></returns>
 		public static ErrorViewModel CreateBasicExceptionView(Exception exception, string guid)
 		{
 			ErrorViewModel errorView = new ErrorViewModel();

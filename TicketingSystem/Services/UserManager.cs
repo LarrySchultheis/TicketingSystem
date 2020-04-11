@@ -76,31 +76,10 @@ namespace TicketingSystem.Services
             }
         }
 
-        //public bool UpdateUser(Users user)
-        //{
-        //    try
-        //    {
-        //        using (var db = new TicketingSystemDBContext())
-        //        {
-        //            Users userToUpdate = db.Users.Find(user.UserId);
-        //            userToUpdate.Email = user.Email;
-        //            userToUpdate.FullName = user.FullName;
-        //            userToUpdate.IsActive = user.IsActive;
-        //            userToUpdate.ShiftType = user.ShiftType;
-        //            db.SaveChanges();
-
-        //            //Auth0APIClient.UpdateUser(userToUpdate);
-        //            //Auth0APIClient.SetRole(userToUpdate.Auth0Uid, userToUpdate.ShiftType);
-        //        }
-        //        return true;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new HttpResponseException(Utility.CreateResponseMessage(e));
-        //    }
-        //}
-
-
+        /// <summary>
+        /// Function to update users in the database from Auth0
+        /// </summary>
+        /// <returns></returns>
         public bool UpdateUsersFromAuth0()
         {
             try
@@ -119,9 +98,6 @@ namespace TicketingSystem.Services
 
                         db.Users.Update(dbuser);
                         db.SaveChanges();
-
-                        //dbUserUpdate.ShiftType = Auth0APIClient.FetchRole();
-                        var x = 0;
                     }
                 }
                 return true;
@@ -133,6 +109,12 @@ namespace TicketingSystem.Services
             }
         }
 
+
+        /// <summary>
+        /// Function to delete a user from DB and Auth0
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
         public bool DeleteUser(int UserId)
         {
             try

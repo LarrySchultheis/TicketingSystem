@@ -177,6 +177,10 @@ namespace TicketingSystem.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint to get only open records
+        /// </summary>
+        /// <returns></returns>
         public async Task<ViewResult> OpenTickets()
         {
             try

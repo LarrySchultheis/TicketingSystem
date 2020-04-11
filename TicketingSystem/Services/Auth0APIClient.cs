@@ -309,6 +309,12 @@ namespace TicketingSystem.Services
             }
         }
 
+
+        /// <summary>
+        /// Get user roles from auth0
+        /// </summary>
+        /// <param name="auth0ID"></param>
+        /// <returns></returns>
         public static List<Auth0Role> GetUserRole(string auth0ID)
         {
             try
@@ -334,40 +340,12 @@ namespace TicketingSystem.Services
             }
         }
 
-        //public static bool UpdateUser(Users user)
-        //{
-        //    try
-        //    {
-        //        if (!ValidateToken())
-        //        {
-        //            InitAPIToken();
-        //        }
 
-        //        var client = new RestClient(baseUrl + "users/" + user.Auth0Uid);
-        //        var req = new RestRequest(Method.PATCH);
-
-        //        Auth0UserPayload usr = new Auth0UserPayload();
-        //        usr.email = user.Email;
-        //        usr.name = user.FullName;
-        //        usr.connection = "Username-Password-Authentication";
-        //        //usr.password = Guid.NewGuid().ToString().Substring(0, 12);
-
-        //        req.AddJsonBody(usr);
-
-        //        req.AddHeader("content-type", "application/json");
-        //        req.AddHeader("authorization", "Bearer " + tokenData.access_token);
-        //        var response = client.Execute(req);
-        //        var content = response.Content;
-
-        //        return true;
-               
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new HttpResponseException(Utility.CreateResponseMessage(e));
-        //    }
-        //}
-
+        /// <summary>
+        /// Delete a user from Auth0
+        /// </summary>
+        /// <param name="Auth0ID"></param>
+        /// <returns></returns>
         public static bool DeleteUser(string Auth0ID)
         {
             try

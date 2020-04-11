@@ -92,7 +92,40 @@ namespace Tests.ControllerTests
             Assert.AreEqual(actual.ViewName, expected.ViewName);
         }
 
+        [Test]
+        public void DeleteUserTest()
+        {
+            using (var db = new TicketingSystemDBContext())
+            {
+                Users user = db.Users.Where(u => u.FullName == "Unit Test User").FirstOrDefault();
+                JsonResult result = ac.DeleteUser(user.UserId.ToString());
+                string val = result.Value.ToString();
 
+                Assert.IsNotNull(result);
 
+            }
+        }
+
+        [Test]
+        public void AuthorizeTest()
+        {
+            var result = ac.Authorize();
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result);
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            using (var db = new TicketingSystemDBContext())
+            {
+                var users = db.Users.Where(u => u.FullName == "Unit Test User");
+                foreach (Users u in users)
+                {
+                    db.Remove(u);
+                }
+                db.SaveChanges();
+            }
+        }
     }
 }

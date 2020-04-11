@@ -55,5 +55,18 @@ namespace Tests.ServiceTests
 		{
 			Assert.IsTrue(Auth0APIClient.ValidateToken());
 		}
+
+		[Test]
+		public void UpdateDBUserTest()
+		{
+			using (var db = new TicketingSystemDBContext())
+			{
+				Users user = db.Users.Where(u => u.FullName == "Test User").FirstOrDefault();
+				var actual = Auth0APIClient.UpdateDBUser(user.Auth0Uid);
+
+				Assert.IsNotNull(actual);
+				Assert.IsTrue(actual);
+			}
+		}
 	}
 }
