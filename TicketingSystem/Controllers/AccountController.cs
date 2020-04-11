@@ -254,6 +254,72 @@ namespace SampleMvcApp.Controllers
             }
         }
 
+        //public async Task<ViewResult> PostEdit(Users user)
+        //{
+        //    try
+        //    {
+        //        Authorize();
+        //    }
+        //    catch (HttpResponseException e)
+        //    {
+        //        return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
+        //    }
+        //    try
+        //    {
+        //        UserManager um = new UserManager();
+        //        um.UpdateUser(user);
+
+        //        return View("UsersHome", um.GetUsers());
+        //    }
+        //    catch (HttpResponseException e)
+        //    {
+        //        ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+        //        return View("ServerError", error);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        var guid = ExceptionReporter.DumpException(e);
+        //        ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
+        //        return View("Error", error);
+        //    }
+        //}
+
+
+        public JsonResult UpdateUsers()
+        {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    message = "401 Not Authorized",
+                    guid = guid
+                });
+            }
+            try
+            {
+                UserManager um = new UserManager();
+                um.UpdateUsersFromAuth0();
+                return Json(new
+                {
+                    newUrl = Url.Action("UsersHome", um.GetUsers())
+                });
+            }
+            catch (Exception e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    message = e.Message,
+                    guid = guid
+                });
+            }
+        }
+
         public JsonResult DeleteUser(string userId)
         {
             try

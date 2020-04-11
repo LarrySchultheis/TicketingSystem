@@ -84,7 +84,7 @@ namespace TicketingSystem.Services
         /// </summary>
         /// <param name="Auth0ID"></param>
         /// <returns>Boolean indicating success</returns>
-        public static bool UpdateUser(string Auth0ID)
+        public static bool UpdateDBUser(string Auth0ID)
         {
             try
             {
@@ -141,7 +141,7 @@ namespace TicketingSystem.Services
                 var content = response.Content;
 
                 UserPostResponse upp = JsonConvert.DeserializeObject<UserPostResponse>(content);
-                UpdateUser(upp.user_id);
+                UpdateDBUser(upp.user_id);
 
                 return upp.user_id;
             }
@@ -308,6 +308,65 @@ namespace TicketingSystem.Services
                 throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
         }
+
+        public static List<Auth0Role> GetUserRole(string auth0ID)
+        {
+            try
+            {
+                if (!ValidateToken())
+                {
+                    InitAPIToken();
+                }
+
+                var client = new RestClient(baseUrl + "users/" + auth0ID + "/roles");
+                var req = new RestRequest(Method.GET);
+                req.AddHeader("content-type", "application/json");
+                req.AddHeader("authorization", "Bearer " + tokenData.access_token);
+                var response = client.Execute(req);
+                var content = response.Content;
+
+                List<Auth0Role> roles = JsonConvert.DeserializeObject<List<Auth0Role>>(content);
+                return roles;
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
+        }
+
+        //public static bool UpdateUser(Users user)
+        //{
+        //    try
+        //    {
+        //        if (!ValidateToken())
+        //        {
+        //            InitAPIToken();
+        //        }
+
+        //        var client = new RestClient(baseUrl + "users/" + user.Auth0Uid);
+        //        var req = new RestRequest(Method.PATCH);
+
+        //        Auth0UserPayload usr = new Auth0UserPayload();
+        //        usr.email = user.Email;
+        //        usr.name = user.FullName;
+        //        usr.connection = "Username-Password-Authentication";
+        //        //usr.password = Guid.NewGuid().ToString().Substring(0, 12);
+
+        //        req.AddJsonBody(usr);
+
+        //        req.AddHeader("content-type", "application/json");
+        //        req.AddHeader("authorization", "Bearer " + tokenData.access_token);
+        //        var response = client.Execute(req);
+        //        var content = response.Content;
+
+        //        return true;
+               
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new HttpResponseException(Utility.CreateResponseMessage(e));
+        //    }
+        //}
 
         public static bool DeleteUser(string Auth0ID)
         {

@@ -88,7 +88,7 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr onclick="rowClicked(@item.UserId)">
+                    <tr>
                         <td>@item.UserId</td>
                         <td>@item.FullName</td>
                         <td>@item.Email</td>
@@ -103,6 +103,11 @@
         </table>
     </div>
 
+    <div>
+        <h3>Update Users from Auth0</h3>
+        <button type="submit" class="btn-danger" id="updateBtn" onclick="updateUsers()">Update</button>
+
+    </div>
 
     <div hidden id="dialog-message" title="Opening User Information">
         <p>
@@ -119,6 +124,22 @@
     $(document).ready(function () {
         var table = $('#userTable').DataTable()
     });
+
+    function updateUsers() {
+        $.ajax({
+		    type: "GET",
+		    url: '@Url.Action("UpdateUsers", "Account")',
+		    success: function () {
+			    //alert('Success')
+		    },
+		    error: function (e) {
+			    alert('Error')
+			    console.log(e)
+		    }
+        }).done(function (data) {
+		    window.location.replace(data.newUrl)
+	    })
+    }
 
     function rowClicked(userId) {
 
@@ -148,7 +169,7 @@
     }
 
 
-    
+
 </script>
 
 

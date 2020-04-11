@@ -76,6 +76,63 @@ namespace TicketingSystem.Services
             }
         }
 
+        //public bool UpdateUser(Users user)
+        //{
+        //    try
+        //    {
+        //        using (var db = new TicketingSystemDBContext())
+        //        {
+        //            Users userToUpdate = db.Users.Find(user.UserId);
+        //            userToUpdate.Email = user.Email;
+        //            userToUpdate.FullName = user.FullName;
+        //            userToUpdate.IsActive = user.IsActive;
+        //            userToUpdate.ShiftType = user.ShiftType;
+        //            db.SaveChanges();
+
+        //            //Auth0APIClient.UpdateUser(userToUpdate);
+        //            //Auth0APIClient.SetRole(userToUpdate.Auth0Uid, userToUpdate.ShiftType);
+        //        }
+        //        return true;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new HttpResponseException(Utility.CreateResponseMessage(e));
+        //    }
+        //}
+
+
+        public bool UpdateUsersFromAuth0()
+        {
+            try
+            {
+                using (var db = new TicketingSystemDBContext())
+                {
+                    var users = Auth0APIClient.GetAllUsers();
+                    foreach (var user in users)
+                    {
+                        Users dbuser = db.Users.Where(u => u.Auth0Uid == user.user_id).FirstOrDefault();
+                        dbuser.Email = user.email;
+                        dbuser.FullName = user.name;
+                        var roles = Auth0APIClient.GetUserRole(dbuser.Auth0Uid);
+
+                        dbuser.ShiftType = roles.ElementAt(0).name;
+
+                        db.Users.Update(dbuser);
+                        db.SaveChanges();
+
+                        //dbUserUpdate.ShiftType = Auth0APIClient.FetchRole();
+                        var x = 0;
+                    }
+                }
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
+        }
+
         public bool DeleteUser(int UserId)
         {
             try
