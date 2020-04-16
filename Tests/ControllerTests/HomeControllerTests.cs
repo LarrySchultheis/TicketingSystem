@@ -72,17 +72,11 @@ namespace Tests.ControllerTests
             Assert.AreEqual(testView.ViewName, result.ViewName);
         }
 
-        [Test]
-        public async Task EntryCloseTest()
+        public async Task EntryCloseTest(TicketData td)
         {
-            TicketData td = CreateTestData();
-
-            hc.PostEntry(td);
-
             ViewResult result = await hc.EntryClose(td);
             ViewResult testView = View("HomePage", "Home");
 
-            result = await hc.EntryClose(td);
             testView = View("EntryClose", "Home");
 
             Assert.IsNotNull(result);
@@ -99,16 +93,16 @@ namespace Tests.ControllerTests
             ViewResult result = await hc.PostEntry(td);
             ViewResult testView = View("HomePage", "Home");
 
+            await EntryCloseTest(td);
+            await PostEntryCloseTest(td);
+
             Assert.IsNotNull(result);
             Assert.AreEqual(testView.ViewData, result.ViewData);
             Assert.AreEqual(testView.ViewName, result.ViewName);
         }
 
-        [Test]
-        public async Task PostEntryCloseTest()
+        public async Task PostEntryCloseTest(TicketData td)
         {
-            TicketData td = CreateTestData();
-            hc.PostEntry(td);
 
             ViewResult result = await hc.PostEntryClose(td);
             ViewResult testView = View("HomePage", "Home");
@@ -116,7 +110,6 @@ namespace Tests.ControllerTests
             Assert.IsNotNull(result);
             Assert.AreEqual(testView.ViewData, result.ViewData);
             Assert.AreEqual(testView.ViewName, result.ViewName);
-
         }
 
         [Test]

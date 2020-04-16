@@ -22,29 +22,22 @@ namespace Tests.ServiceTests
 
                 DataEditor DaEd = new DataEditor();
                 Users dbUser = context.Users.Where(u => u.FullName == "Test User").FirstOrDefault();
-                Assert.IsTrue(DaEd.PostEditor(td, Auth0APIClient.GetUserData(dbUser.Auth0Uid)));
+                UserData ud = Auth0APIClient.GetUserData(dbUser.Auth0Uid);
+
+                var result = DaEd.PostEditor(td, ud);
+
+                DeleteEntryTest(td, ud);
+
+                Assert.IsTrue(result);
             }
         }
 
-        [Test]
-        public void DeleteEntryTest()
+        public void DeleteEntryTest(TicketData td, UserData ud)
         {
-            using (var db = new TicketingSystemDBContext())
-            {
-                Users user = db.Users.Where(u => u.FullName == "Test User").FirstOrDefault();
-
-                DataEntry dataEntry = new DataEntry();
-                dataEntry.PostEntry(TestUtility.CreateTestData(), Auth0APIClient.GetUserData(user.Auth0Uid));
-
-                TicketData td = TestUtility.GetTestData();
-
-                UserData ud = Auth0APIClient.GetUserData(td.EntryAuthor.Auth0Uid);
-
-                DataEditor dataEditor = new DataEditor();
-                Assert.IsTrue(dataEditor.DeleteEntry(td.EntryId.ToString(), ud));
-
-
-            }
+            DataEditor dataEditor = new DataEditor();
+            var result = dataEditor.DeleteEntry(td.EntryId.ToString(), ud);
+            Assert.IsTrue(result);
+            
         }
 
         [TearDown]

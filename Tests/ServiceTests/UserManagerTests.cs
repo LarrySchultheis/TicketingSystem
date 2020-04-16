@@ -58,20 +58,25 @@ namespace Tests.ServiceTests
 
                 bool actual = um.CreateUser(newUser, userData);
 
+                DeleteUserTest(newUser);
+
                 Assert.IsTrue(actual);
             }
         }
 
-        [Test]
-        public void DeleteUserTest()
+        public void DeleteUserTest(Users user)
         {
-            using (var db = new TicketingSystemDBContext())
-            {
-                int id = db.Users.Where(u => u.FullName == "Unit Test User").FirstOrDefault().UserId;
-                var actual = um.DeleteUser(id);
+
+                var actual = um.DeleteUser(user.UserId);
 
                 Assert.IsTrue(actual);
-            }
+            
         }
+
+        //[TearDown]
+        //public void Cleanup()
+        //{
+        //    TestUtility.UserCleanup();
+        //}
     }
 }

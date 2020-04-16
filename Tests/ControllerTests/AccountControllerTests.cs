@@ -85,23 +85,34 @@ namespace Tests.ControllerTests
             ViewResult actual = await ac.CreateUser(newUser);
             ViewResult expected = View("UsersHome");
 
+            DeleteUserTest(newUser);
+
             Assert.IsNotNull(actual);
             Assert.AreEqual(actual.ViewName, expected.ViewName);
         }
 
-        [Test]
-        public void DeleteUserTest()
+        public void DeleteUserTest(Users user)
         {
-            Users newUser = TestUtility.CreateTestUser();
-            UserManager um = new UserManager();
-            um.CreateUser(newUser, Auth0APIClient.GetUserData(User.Claims.First().Value));
+            //Users newUser = TestUtility.CreateTestUser();
+            //UserManager um = new UserManager();
+            //um.CreateUser(newUser, Auth0APIClient.GetUserData(User.Claims.First().Value));
+            //using (var db = new TicketingSystemDBContext())
+            //{
+            //    JsonResult result = ac.DeleteUser(db.Users.Where(u => u.FullName == "Unit Test User").First().UserId.ToString());
+            //    string val = result.Value.ToString();
+
+            //    Assert.IsNotNull(result);
+            //}
+
             using (var db = new TicketingSystemDBContext())
             {
-                JsonResult result = ac.DeleteUser(db.Users.Where(u => u.FullName == "Unit Test User").First().UserId.ToString());
-                string val = result.Value.ToString();
+                string auth0Id = db.Users.Find(user.UserId).Auth0Uid;
+                JsonResult res = ac.DeleteUser(auth0Id);
 
-                Assert.IsNotNull(result);
+                Assert.IsNotNull(res);
             }
+
+
         }
 
         [Test]

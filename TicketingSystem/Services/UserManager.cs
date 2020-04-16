@@ -23,9 +23,12 @@ namespace TicketingSystem.Services
             {
                 using (var db = new TicketingSystemDBContext())
                 {
+                    string tempPass = Guid.NewGuid().ToString().Substring(0, 12);
+                    string encrypted = Utility.Encrypt(tempPass);
+                    newUser.PassWrd = encrypted;
                     db.Users.Add(newUser);
                     db.SaveChanges();
-                    string auth0ID = Auth0APIClient.AddUser(newUser);
+                    string auth0ID = Auth0APIClient.AddUser(newUser, tempPass);
                     Auth0APIClient.SetRole(auth0ID, newUser.ShiftType);
                 }
                 return true;
@@ -109,6 +112,32 @@ namespace TicketingSystem.Services
             }
         }
 
+        //Not supported due to management API restrictions
+
+        //public bool UpdateUser(Users user)
+        //{
+        //    try
+        //    {
+        //        using (var db = new TicketingSystemDBContext())
+        //        {
+        //            Users oldUser = db.Users.Find(user.UserId);
+        //            string oldShiftType = oldUser.ShiftType;
+        //            oldUser.Email = user.Email;
+        //            oldUser.FullName = user.FullName;
+        //            oldUser.ShiftType = user.ShiftType;
+        //            db.Users.Update(oldUser);
+        //            db.SaveChanges();
+
+        //            //  Auth0APIClient.UpdateUser(oldUser);
+        //            Auth0APIClient.UpdateRole(oldUser.Auth0Uid, oldShiftType, user.ShiftType);
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new HttpResponseException(Utility.CreateResponseMessage(e));
+        //    }
+        //    return true;
+        //}
 
         /// <summary>
         /// Function to delete a user from DB and Auth0

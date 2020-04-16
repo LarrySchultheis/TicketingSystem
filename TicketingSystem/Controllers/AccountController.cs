@@ -173,6 +173,8 @@ namespace SampleMvcApp.Controllers
 
         }
 
+        //Not supported due to management API restrictions
+
         //public JsonResult EditUser(string userId)
         //{
         //    try
@@ -194,7 +196,7 @@ namespace SampleMvcApp.Controllers
         //        return Json(new
         //        {
         //            newUrl = Url.Action("UserEdit", "Account", user)
-        //        }) ;
+        //        });
         //    }
         //    catch (HttpResponseException e)
         //    {
@@ -223,7 +225,7 @@ namespace SampleMvcApp.Controllers
         //    {
         //        return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
         //    }
-            
+
         //    try
         //    {
         //        UserManager um = new UserManager();
@@ -242,7 +244,7 @@ namespace SampleMvcApp.Controllers
         //    }
         //}
 
-        //public async Task<ViewResult> PostEdit(Users user)
+        //public async Task<JsonResult> PostEdit(Users user)
         //{
         //    try
         //    {
@@ -250,25 +252,33 @@ namespace SampleMvcApp.Controllers
         //    }
         //    catch (HttpResponseException e)
         //    {
-        //        return View("Error", Utility.CreateHttpErrorView(e, "You do not have the permissions to view this page"));
+        //        string guid = ExceptionReporter.DumpException(e);
+        //        return Json(new
+        //        {
+        //            newUrl = Url.Action("UsersHome"),
+        //            message = "401 Not Authorized",
+        //            guid = guid
+        //        });
         //    }
         //    try
         //    {
         //        UserManager um = new UserManager();
         //        um.UpdateUser(user);
 
-        //        return View("UsersHome", um.GetUsers());
-        //    }
-        //    catch (HttpResponseException e)
-        //    {
-        //        ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
-        //        return View("ServerError", error);
+        //        return Json(new
+        //        {
+        //            newUrl = Url.Action("UsersHome", "Account")
+        //        });
         //    }
         //    catch (Exception e)
         //    {
-        //        var guid = ExceptionReporter.DumpException(e);
-        //        ErrorViewModel error = Utility.CreateBasicExceptionView(e, guid);
-        //        return View("Error", error);
+        //        string guid = ExceptionReporter.DumpException(e);
+        //        return Json(new
+        //        {
+        //            newUrl = Url.Action("UsersHome"),
+        //            message = e.Message,
+        //            guid = guid
+        //        });
         //    }
         //}
 

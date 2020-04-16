@@ -159,6 +159,10 @@ namespace TicketingSystem.Models
                     .IsRequired()
                     .HasDefaultValueSql("((1))");
 
+                entity.Property(e => e.PassWrd)
+                    .HasMaxLength(256)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.ShiftType)
                     .HasMaxLength(256)
                     .IsUnicode(false);

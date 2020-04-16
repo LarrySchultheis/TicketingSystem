@@ -1,4 +1,6 @@
 ﻿@model List<TicketingSystem.Models.Users>
+@using TicketingSystem.Services 
+@using TicketingSystem.Models 
 
 @{
     Layout = "_Layout";
@@ -71,6 +73,22 @@
     </div>
 
     <br />
+    @{
+        var user = Auth0APIClient.GetUserData(User.Claims.First().Value);
+        var roles = Auth0APIClient.GetUserRole(user.user_id);
+        foreach (Auth0Role role in roles)
+        {
+            if (role.name == "Administrator")
+            {
+                <div>
+                    <h3>Update Users from Auth0</h3>
+                    <button type="submit" class="btn-warning" id="updateBtn" onclick="updateUsers()">Update</button>
+                </div>
+                <br />
+            }
+        }
+    }
+
 
     <div>
         <h2>Registered Users</h2>
@@ -83,18 +101,20 @@
                     <th>Auth0 ID</th>
                     <th>Shift Type</th>
                     <th>Status</th>
+                    <th>Delete User</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    <tr onclick="rowClicked(@item.UserId)">
                         <td>@item.UserId</td>
                         <td>@item.FullName</td>
                         <td>@item.Email</td>
                         <td>@item.Auth0Uid</td>
                         <td>@item.ShiftType </td>
                         <td>@((bool)item.IsActive ? "Active" : "Inactive")</td>
+                        <td><button class="btn-danger" onclick="deleteUser(@item.UserId.ToString())">Delete</button></td>
                     </tr>
 
                 }
@@ -103,11 +123,7 @@
         </table>
     </div>
 
-    <div>
-        <h3>Update Users from Auth0</h3>
-        <button type="submit" class="btn-danger" id="updateBtn" onclick="updateUsers()">Update</button>
 
-    </div>
 
     <div hidden id="dialog-message" title="Opening User Information">
         <p>
@@ -141,7 +157,24 @@
 	    })
     }
 
-    function rowClicked(userId) {
+    function deleteUser(userId) {
+        $.ajax({
+            type: "DELETE",
+            url: '@Url.Action("DeleteUser", "Account")',
+            data: {userId: userId},
+		    success: function () {
+			    alert('Successfully deleted user')
+		    },
+		    error: function (e) {
+			    alert('Error deleting user')
+			    console.log(e)
+		    }
+        }).done(function (data) {
+		    window.location.replace(data.newUrl)
+	    })
+    }
+
+    @*function rowClicked(userId) {
 
             document.getElementById('dialog-message').hidden = false
             $("#dialog-message").dialog({
@@ -164,9 +197,10 @@
 			        console.log(e)
 		        }
             }).done(function (data) {
+
 		        window.location.replace(data.newUrl)
 	        })
-    }
+    }*@
 
 
 

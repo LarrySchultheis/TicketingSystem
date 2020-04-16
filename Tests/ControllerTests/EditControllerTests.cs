@@ -63,9 +63,12 @@ namespace Tests.ControllerTests
                 de.PostEntry(TestUtility.CreateTestData(), Auth0APIClient.GetUserData(user.Auth0Uid));
 
                 TicketData td = db.TicketData.Where(t => t.EntryAuthorId == user.UserId).FirstOrDefault();
+                td.JobType = db.JobType.Where(jt => jt.JobTypeId == td.JobTypeId).FirstOrDefault();
                 
                 ViewResult result = await ec.EditForm(td);
                 ViewResult testView = View("EditForm", td);
+
+                await PostEditorTest(td);
 
                 Assert.IsNotNull(result);
                 Assert.AreEqual(testView.ViewName, result.ViewName);
@@ -84,19 +87,10 @@ namespace Tests.ControllerTests
             Assert.AreEqual(testView.ViewName, result.ViewName);
         }
 
-        [Test]
-        public async Task PostEditorTest()
+        public async Task PostEditorTest(TicketData td)
         {
             using (var db = new TicketingSystemDBContext())
             {
-                Users user = db.Users.Where(u => u.FullName == "Test User").FirstOrDefault();
-
-                DataEntry de = new DataEntry();
-                de.PostEntry(TestUtility.CreateTestData(), Auth0APIClient.GetUserData(user.Auth0Uid));
-
-                TicketData td = db.TicketData.Where(t => t.EntryAuthorId == user.UserId).FirstOrDefault();
-                td.JobType = db.JobType.Where(jt => jt.JobTypeId == td.JobTypeId).FirstOrDefault();
-                td.Comments = "Changed entry in PostEditTest";
 
                 ViewResult result = await ec.PostEdit(td);
                 RecordRetriever rr = new RecordRetriever();

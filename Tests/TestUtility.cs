@@ -66,6 +66,16 @@ namespace Tests
             }
         }
 
+        public static void UserCleanup()
+        {
+            using (var db = new TicketingSystemDBContext())
+            {
+                Users user = db.Users.Where(u => u.FullName == "Unit Test User").FirstOrDefault();
+                UserManager um = new UserManager();
+                um.DeleteUser(user.UserId);
+            }
+        }
+
         public static Users CreateTestUser()
         {
             Users newUser = new Users();

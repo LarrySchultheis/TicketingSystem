@@ -115,7 +115,7 @@ namespace TicketingSystem.Services
         /// </summary>
         /// <param name="newUser">The Users object to be added</param>
         /// <returns></returns>
-        public static string AddUser(Users newUser)
+        public static string AddUser(Users newUser, string tempPass)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace TicketingSystem.Services
                 Auth0UserPayload usr = new Auth0UserPayload();
                 usr.email = newUser.Email;
                 usr.name = newUser.FullName;
-                usr.password = Guid.NewGuid().ToString().Substring(0,12);
+                usr.password = tempPass;
                 usr.connection = "Username-Password-Authentication";
 
                 req.AddJsonBody(usr);
@@ -263,7 +263,6 @@ namespace TicketingSystem.Services
                 var response = client.Execute(req);
                 var content = response.Content;
 
-                UserPostResponse upp = JsonConvert.DeserializeObject<UserPostResponse>(content);
                 return true;
             }
             catch (Exception e)
@@ -271,6 +270,45 @@ namespace TicketingSystem.Services
                 throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
         }
+
+        /// <summary>
+        /// Set the role of the chosen user in Auth0
+        /// </summary>
+        /// <param name="auth0ID"></param>
+        /// <param name="shiftType"></param>
+        /// <returns></returns>
+        //public static bool UpdateRole (string auth0ID, string oldshiftType, string newShiftType)
+        //{
+        //    try
+        //    {
+        //        if (!ValidateToken())
+        //        {
+        //            InitAPIToken();
+        //        }
+
+        //        var client = new RestClient(baseUrl + "users/" + auth0ID + "/roles");
+        //        var req = new RestRequest(Method.DELETE);
+
+        //        Auth0RolesPayload payload = new Auth0RolesPayload();
+        //        Auth0Role role = FetchRole(oldshiftType);
+        //        string[] roles = new string[] { role.id };
+        //        payload.roles = roles;
+        //        req.AddJsonBody(payload);
+
+        //        req.AddHeader("content-type", "application/json");
+        //        req.AddHeader("authorization", "Bearer " + tokenData.access_token);
+        //        var response = client.Execute(req);
+        //        var content = response.Content;
+
+        //        SetRole(auth0ID, newShiftType);
+
+        //        return true;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new HttpResponseException(Utility.CreateResponseMessage(e));
+        //    }
+        //}
 
         /// <summary>
         /// Get the role object associated with the given shiftType
@@ -340,6 +378,50 @@ namespace TicketingSystem.Services
             }
         }
 
+        //Not supported due to management API restrictions 
+
+        //public static bool UpdateUser(Users user)
+        //{
+        //    try
+        //    {
+        //        if (!ValidateToken())
+        //        {
+        //            InitAPIToken();
+        //        }
+
+        //        var client = new RestClient(baseUrl + "users/" + user.Auth0Uid);
+        //        var req = new RestRequest(Method.PATCH);
+
+        //        Auth0RolesPayload payload = new Auth0RolesPayload();
+        //        Auth0Role role = FetchRole(shiftType);
+        //        Auth0UserPayload payload = new Auth0UserPayload();
+
+        //        string[] roles = new string[] { role.id };
+        //        payload.roles = roles;
+        //        using (var db = new TicketingSystemDBContext())
+        //        {
+        //            string pass = Utility.Decrypt(db.Users.Where(usr => usr.Email == user.Email).FirstOrDefault().PassWrd);
+        //            payload.password = pass;
+        //        }
+
+        //        payload.email = user.Email;
+        //        payload.name = user.FullName;
+        //        payload.connection = "Username-Password-Authentication";
+        //        req.AddJsonBody(payload);
+
+        //        req.AddHeader("content-type", "application/json");
+        //        req.AddHeader("authorization", "Bearer " + tokenData.access_token);
+        //        var response = client.Execute(req);
+        //        var content = response.Content;
+
+        //        UserPostResponse upp = JsonConvert.DeserializeObject<UserPostResponse>(content);
+        //        return true;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw new HttpResponseException(Utility.CreateResponseMessage(e));
+        //    }
+        //}
 
         /// <summary>
         /// Delete a user from Auth0
