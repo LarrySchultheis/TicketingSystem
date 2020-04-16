@@ -24,7 +24,7 @@ namespace Tests.ServiceTests
                 UserData ud = Auth0APIClient.GetUserData(dbUser.Auth0Uid);
 
                 var result = de.PostEntry(td, ud);
-
+                CloseTicketTest(td);
 
                 Assert.IsTrue(result);
             }
@@ -32,10 +32,8 @@ namespace Tests.ServiceTests
 
         public void CloseTicketTest(TicketData td)
         {
-
             DataEntry de = new DataEntry();
             Assert.IsTrue(de.CloseTicket(td));
-            
         }
 
         [TearDown]

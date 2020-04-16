@@ -70,9 +70,13 @@ namespace Tests
         {
             using (var db = new TicketingSystemDBContext())
             {
-                Users user = db.Users.Where(u => u.FullName == "Unit Test User").FirstOrDefault();
+                var users = db.Users.Where(u => u.FullName == "Unit Test User");
                 UserManager um = new UserManager();
-                um.DeleteUser(user.UserId);
+
+                foreach (Users u in users)
+                {
+                    um.DeleteUser(u.UserId);
+                }
             }
         }
 
@@ -81,7 +85,7 @@ namespace Tests
             Users newUser = new Users();
             newUser.Email = "larrytixsysuser@gmail.com";
             newUser.FullName = "Unit Test User";
-            newUser.ShiftType = "Warehouse";
+            newUser.ShiftType = "Office Worker";
             return newUser;
         }
     }
