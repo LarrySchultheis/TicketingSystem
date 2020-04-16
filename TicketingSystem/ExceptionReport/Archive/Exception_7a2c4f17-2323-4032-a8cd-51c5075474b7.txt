@@ -1,0 +1,4 @@
+System.ArgumentNullException: Value cannot be null.
+Parameter name: s
+   at System.Int32.Parse(String s)
+   at SampleMvcApp.Controllers.AccountController.DeleteUser(String userId) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Controllers\AccountController.cs:line 339

@@ -67,11 +67,13 @@ namespace TicketingSystem.Models
                     .HasMaxLength(256)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EndTime).HasColumnType("datetime");
+                entity.Property(e => e.EndDate).HasColumnType("date");
+
+                entity.Property(e => e.EndTime)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.EntryAuthorId).HasColumnName("EntryAuthorID");
-
-                entity.Property(e => e.EntryDate).HasColumnType("date");
 
                 entity.Property(e => e.JobTypeId).HasColumnName("JobTypeID");
 
@@ -83,7 +85,12 @@ namespace TicketingSystem.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.StartTime).HasColumnType("datetime");
+                entity.Property(e => e.StartDate).HasColumnType("date");
+
+                entity.Property(e => e.StartTime)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TicketWorkerId).HasColumnName("TicketWorkerID");
 
@@ -96,7 +103,7 @@ namespace TicketingSystem.Models
                     .WithMany(p => p.TicketDataEntryAuthor)
                     .HasForeignKey(d => d.EntryAuthorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TicketDat__Entry__02FC7413");
+                    .HasConstraintName("FK__TicketDat__Entry__4D5F7D71");
 
                 entity.HasOne(d => d.JobType)
                     .WithMany(p => p.TicketData)
@@ -108,7 +115,7 @@ namespace TicketingSystem.Models
                     .WithMany(p => p.TicketDataTicketWorker)
                     .HasForeignKey(d => d.TicketWorkerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TicketDat__Ticke__04E4BC85");
+                    .HasConstraintName("FK__TicketDat__Ticke__4E53A1AA");
             });
 
             modelBuilder.Entity<TicketDataLog>(entity =>
@@ -148,7 +155,13 @@ namespace TicketingSystem.Models
                     .HasMaxLength(256)
                     .IsUnicode(false);
 
-                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.PassWrd)
+                    .HasMaxLength(256)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ShiftType)
                     .HasMaxLength(256)

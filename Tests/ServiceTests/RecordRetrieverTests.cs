@@ -24,6 +24,10 @@ namespace Tests.ServiceTests
         {
             using (var context = new TicketingSystemDBContext())
             {
+                var td = TestUtility.CreateTestData();
+                DataEntry de = new DataEntry();
+                Users dbUser = context.Users.Where(u => u.FullName == "Test User").FirstOrDefault();
+                de.PostEntry(td, Auth0APIClient.GetUserData(dbUser.Auth0Uid));
                 int id = context.TicketData.First().EntryId;
                 RecordRetriever rr = new RecordRetriever();
                 var res = rr.GetRecordByID(id);

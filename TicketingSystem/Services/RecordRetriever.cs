@@ -42,6 +42,11 @@ namespace TicketingSystem.Services
             }
         }
 
+        /// <summary>
+        /// Get the record with the given entryID
+        /// </summary>
+        /// <param name="entryID"></param>
+        /// <returns></returns>
         public TicketData GetRecordByID (int entryID)
         {
             try
@@ -62,6 +67,11 @@ namespace TicketingSystem.Services
 
         }
 
+        /// <summary>
+        /// Get only open records
+        /// </summary>
+        /// <param name="numberOfRecords"></param>
+        /// <returns></returns>
         public IEnumerable<TicketData> GetOpenRecords(int numberOfRecords)
         {
             List<TicketData> data = new List<TicketData>();

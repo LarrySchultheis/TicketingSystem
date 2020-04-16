@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace TicketingSystem.Models
 {
+    //Models permissions in Auth0
     public class UserPermission
     {
         public string permission_name { get; set; }

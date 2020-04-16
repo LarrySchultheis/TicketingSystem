@@ -11,6 +11,8 @@ using TicketingSystem.Models;
 using TicketingSystem.ExceptionReport;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace TicketingSystem.Services
 {
@@ -18,7 +20,7 @@ namespace TicketingSystem.Services
 	public static class Utility
 	{
 		/// <summary>
-		/// Function to create an Error Model to display to the user
+		/// Function to create a ServerErrorViewModel to display to the user
 		/// </summary>
 		/// <param name="exception"></param>
 		/// <param name="reason"></param>
@@ -46,7 +48,36 @@ namespace TicketingSystem.Services
 			return errorView;
 		}
 
-		public static ErrorViewModel CreateErrorView(HttpResponseException exception, string reason)
+
+		/// <summary>
+		/// Function to create a basic exception view
+		/// </summary>
+		/// <param name="exception"></param>
+		/// <param name="guid"></param>
+		/// <returns></returns>
+		public static ErrorViewModel CreateBasicExceptionView(Exception exception, string guid)
+		{
+			ErrorViewModel errorView = new ErrorViewModel();
+
+			try
+			{
+				errorView.ErrorCode = guid;
+				errorView.Reason = exception.Message;
+			}
+			catch (Exception e)
+			{
+				ExceptionReporter.DumpException(e);
+			}
+			return errorView;
+		}
+
+		/// <summary>
+		/// Create an ErrorViewModel to display to the user
+		/// </summary>
+		/// <param name="exception"></param>
+		/// <param name="reason"></param>
+		/// <returns></returns>
+		public static ErrorViewModel CreateHttpErrorView(HttpResponseException exception, string reason)
 		{
 			ErrorViewModel errorView = new ErrorViewModel();
 
@@ -64,6 +95,11 @@ namespace TicketingSystem.Services
 			return errorView;
 		}
 
+		/// <summary>
+		/// Creates an HttpResponseMessage given an Exception
+		/// </summary>
+		/// <param name="e"></param>
+		/// <returns></returns>
 		public static HttpResponseMessage CreateResponseMessage(Exception e)
 		{
 			string guid = ExceptionReporter.DumpException(e);
@@ -119,6 +155,55 @@ namespace TicketingSystem.Services
 			}
 		}
 
+
+		public static string Encrypt(string encryptString)
+		{
+			string EncryptionKey = "crackM3IfYouC@n";
+			byte[] clearBytes = Encoding.Unicode.GetBytes(encryptString);
+			using (Aes encryptor = Aes.Create())
+			{
+				Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] {
+			0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76
+		});
+				encryptor.Key = pdb.GetBytes(32);
+				encryptor.IV = pdb.GetBytes(16);
+				using (MemoryStream ms = new MemoryStream())
+				{
+					using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+					{
+						cs.Write(clearBytes, 0, clearBytes.Length);
+						cs.Close();
+					}
+					encryptString = Convert.ToBase64String(ms.ToArray());
+				}
+			}
+			return encryptString;
+		}
+
+		public static string Decrypt(string cipherText)
+		{
+			string EncryptionKey = "crackM3IfYouC@n";
+			cipherText = cipherText.Replace(" ", "+");
+			byte[] cipherBytes = Convert.FromBase64String(cipherText);
+			using (Aes encryptor = Aes.Create())
+			{
+				Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] {
+			0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76
+		});
+				encryptor.Key = pdb.GetBytes(32);
+				encryptor.IV = pdb.GetBytes(16);
+				using (MemoryStream ms = new MemoryStream())
+				{
+					using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
+					{
+						cs.Write(cipherBytes, 0, cipherBytes.Length);
+						cs.Close();
+					}
+					cipherText = Encoding.Unicode.GetString(ms.ToArray());
+				}
+			}
+			return cipherText;
+		}
 
 	}
 }

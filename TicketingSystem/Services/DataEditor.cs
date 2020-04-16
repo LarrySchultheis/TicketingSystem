@@ -24,7 +24,7 @@ namespace TicketingSystem.Services
             {
                 using (var context = new TicketingSystemDBContext())
                 {
-                    IEnumerable<JobType> jobs = context.JobType;
+
                     int jtypeID;
                     jtypeID = context.JobType.Where(j => j.JobName == td.JobType.JobName).FirstOrDefault().JobTypeId;
 

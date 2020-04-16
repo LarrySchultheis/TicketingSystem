@@ -37,8 +37,8 @@ Format ((((Cast (Sum(CasesNum) as decimal(10,2))) /
 --(Sum(CasesNum) / TotalTime) as TotalCases
 FROM TicketData td INNER JOIN JobType jt 
 ON td.JobTypeID = jt.JobTypeID
-WHERE EntryDate &gt;= @StartDate
-and EntryDate &lt;= @EndDate
+WHERE StartDate &gt;= @StartDate
+and EndDate &lt;= @EndDate
 
 group by jt.JobName, jt.JobTypeID</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>

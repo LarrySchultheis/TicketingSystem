@@ -7,22 +7,38 @@
             <th>Stage Number</th>
             <th>Number of Pallets</th>
             <th>Employee Name</th>
-            <th>Time</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+ 
             <th>Status</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr onclick="rowClicked(@item.EntryId, @(item.TicketClosed ? 1 : 0))">
-                <td>@item.JobType.JobName</td>
-                <td>@item.TripNum</td>
-                <td>@item.StageNum</td>
-                <td>@item.PalletNum</td>
-                <td>@item.TicketWorker.FullName</td>
-                <td>@item.StartTime</td>
-                <td>@(item.TicketClosed ? "Closed" : "Open")</td>
-            </tr>
+        <tr onclick="rowClicked(@item.EntryId, @(item.TicketClosed ? 1 : 0))">
+            <td>@item.JobType.JobName</td>
+            <td>@item.TripNum</td>
+            <td>@item.StageNum</td>
+            <td>@item.PalletNum</td>
+            <td>@item.TicketWorker.FullName</td>
+            <td>@item.StartTime</td>
+            <td>@item.EndTime</td>
+            <td>@item.StartDate.Date.ToString("d")</td>
+            <td>
+                @{
+                    if (item.EndDate != null)
+                    {
+                        @item.EndDate.Date.ToString("d")
+                    }
+                }
+            </td>
+            
+            
+            <td>@(item.TicketClosed ? "Closed" : "Open")</td>
+        </tr>
 
         }
 

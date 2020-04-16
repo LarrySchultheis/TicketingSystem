@@ -6,6 +6,7 @@ using TicketingSystem.Services;
 
 namespace TicketingSystem.Models
 {
+    //Class to model report input when generating reports
     public class ReportInput
     {
         public DateTime StartDate { get; set; }

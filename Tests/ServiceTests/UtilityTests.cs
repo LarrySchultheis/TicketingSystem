@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -11,11 +12,14 @@ namespace Tests.ServiceTests
     [TestFixture]
     class UtilityTests
     {
+        string encrypted;
+        string message = "I hope this works";
+
         [Test]
         public void CreateErrorViewTest()
         {
             HttpResponseException e = new HttpResponseException(HttpStatusCode.OK);
-            var result = Utility.CreateErrorView(e, "test");
+            var result = Utility.CreateHttpErrorView(e, "test");
             Assert.IsNotNull(result);
         }
 
@@ -30,5 +34,17 @@ namespace Tests.ServiceTests
         {
             Assert.IsNotNull(Utility.GetUserByName("Test User"));
         }
+
+        [Test]
+        public void EncryptDecryptTest()
+        {
+            string message = "hope this works";
+            encrypted = Utility.Encrypt(message);
+            Assert.IsNotNull(encrypted);
+
+            string decrypted = Utility.Decrypt(encrypted);
+            Assert.AreEqual(decrypted, message);
+        }
+
     }
 }

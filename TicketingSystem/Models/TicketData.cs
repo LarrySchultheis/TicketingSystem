@@ -7,8 +7,8 @@ namespace TicketingSystem.Models
     {
         public int EntryId { get; set; }
         public int TripNum { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
         public string Comments { get; set; }
         public int PalletNum { get; set; }
         public string PalletType { get; set; }
@@ -20,9 +20,10 @@ namespace TicketingSystem.Models
         public string StageNum { get; set; }
         public int JobTypeId { get; set; }
         public int EntryAuthorId { get; set; }
-        public DateTime EntryDate { get; set; }
         public string WorkerName { get; set; }
         public int TicketWorkerId { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         public Users EntryAuthor { get; set; }
         public JobType JobType { get; set; }

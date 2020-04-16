@@ -43,10 +43,10 @@ namespace TicketingSystem.Services
                     }
 
                     td.JobTypeId = jtypeID;
-                    td.EntryDate = DateTime.Today;
                     td.TicketClosed = false;
                     td.EntryAuthorId = authorID;
                     td.WorkerName = td.TicketWorker.FullName;
+                    td.StartDate = DateTime.Today;
 
                     //very important null assignment
                     td.JobType = null;
@@ -81,8 +81,11 @@ namespace TicketingSystem.Services
             {
                 using (var context = new TicketingSystemDBContext())
                 {
+                 
                     context.TicketData.Find(td.EntryId).TicketClosed = true;
                     context.TicketData.Find(td.EntryId).EndTime = td.EndTime;
+                    context.TicketData.Find(td.EntryId).EndDate = td.EndDate;
+
                     context.SaveChanges();
                 }
             }

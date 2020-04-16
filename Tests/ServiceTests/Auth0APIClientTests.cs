@@ -55,5 +55,39 @@ namespace Tests.ServiceTests
 		{
 			Assert.IsTrue(Auth0APIClient.ValidateToken());
 		}
+
+		[Test]
+		public void UpdateDBUserTest()
+		{
+			using (var db = new TicketingSystemDBContext())
+			{
+				Users user = db.Users.Where(u => u.FullName == "Test User").FirstOrDefault();
+				var actual = Auth0APIClient.UpdateDBUser(user.Auth0Uid);
+
+				Assert.IsNotNull(actual);
+				Assert.IsTrue(actual);
+			}
+		}
+
+		//[Test]
+		//public void AddUserTest()
+		//{
+		//	Users user = TestUtility.CreateTestUser();
+		//	string id = Auth0APIClient.AddUser(user);
+
+		//	Assert.IsNotNull(id);
+		//}
+
+		//[Test]
+		//public void DeleteUserTest()
+		//{
+		//	using (var db = new TicketingSystemDBContext())
+		//	{
+		//		Users user = db.Users.Where(u => u.FullName == "Unit Test User").FirstOrDefault();
+		//		bool result = Auth0APIClient.DeleteUser(user.Auth0Uid);
+		//		Assert.IsNotNull(result);
+		//		Assert.IsTrue(result);
+		//	}
+		//}
 	}
 }

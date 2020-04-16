@@ -1,0 +1,3 @@
+System.Web.Http.HttpResponseException: Processing of the HTTP request resulted in an exception. Please see the HTTP response returned by the 'Response' property of this exception for details.
+   at TicketingSystem.Services.Auth0APIClient.AddUser(Users newUser, String tempPass) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\Auth0APIClient.cs:line 150
+   at TicketingSystem.Services.UserManager.CreateUser(Users newUser, UserData loggedInUser) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\UserManager.cs:line 31

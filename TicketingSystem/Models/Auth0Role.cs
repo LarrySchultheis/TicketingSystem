@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace TicketingSystem.Models
 {
+    //Class used to model roles consumed by the Auth0 Management API
     public class Auth0Role
     {
         public string id { get; set; }
