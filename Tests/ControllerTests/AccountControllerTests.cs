@@ -107,7 +107,7 @@ namespace Tests.ControllerTests
             using (var db = new TicketingSystemDBContext())
             {
                 string auth0Id = db.Users.Find(user.UserId).Auth0Uid;
-                JsonResult res = ac.DeleteUser(auth0Id);
+                JsonResult res = ac.ToggleActivation(auth0Id);
 
                 Assert.IsNotNull(res);
             }
@@ -132,7 +132,7 @@ namespace Tests.ControllerTests
                 var users = db.Users.Where(u => u.FullName == "Unit Test User").ToList();
                 foreach (Users u in users)
                 {
-                    um.DeleteUser(u.UserId);
+                    um.ToggleActivation(u.UserId);
                 }
             }
         }
