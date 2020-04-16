@@ -47,8 +47,6 @@ namespace Tests.ServiceTests
         [Test]
         public void CreateUserTest()
         {
-
-
             using (var db = new TicketingSystemDBContext())
             {
                 Users newUser = TestUtility.CreateTestUser();
@@ -58,25 +56,36 @@ namespace Tests.ServiceTests
 
                 bool actual = um.CreateUser(newUser, userData);
 
+                ToggleActivationTest(newUser);
                 DeleteUserTest(newUser);
 
                 Assert.IsTrue(actual);
             }
         }
 
-        public void DeleteUserTest(Users user)
+        public void ToggleActivationTest(Users user)
         {
-
-                var actual = um.DeleteUser(user.UserId);
-
-                Assert.IsTrue(actual);
-            
+            var res = um.ToggleActivation(user.UserId);
+            Assert.IsTrue(res);
         }
 
-        //[TearDown]
-        //public void Cleanup()
-        //{
-        //    TestUtility.UserCleanup();
-        //}
+        public void DeleteUserTest(Users user)
+        {
+            var actual = um.DeleteUser(user.UserId);
+            Assert.IsTrue(actual);
+        }
+
+        [Test]
+        public void UpdateUserFromAuth0Test()
+        {
+            bool result = um.UpdateUsersFromAuth0();
+            Assert.IsTrue(result);
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            TestUtility.UserCleanup();
+        }
     }
 }

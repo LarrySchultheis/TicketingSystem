@@ -28,8 +28,13 @@ namespace TicketingSystem.Services
                     newUser.PassWrd = encrypted;
                     db.Users.Add(newUser);
                     db.SaveChanges();
-                    string auth0ID = Auth0APIClient.AddUser(newUser, tempPass);
-                    Auth0APIClient.SetRole(auth0ID, newUser.ShiftType);
+
+                    if (newUser.ShiftType != "Warehouse")
+                    {
+                        string auth0ID = Auth0APIClient.AddUser(newUser, tempPass);
+                        Auth0APIClient.SetRole(auth0ID, newUser.ShiftType);
+                    }
+
                 }
                 return true;
             }
@@ -144,7 +149,7 @@ namespace TicketingSystem.Services
         /// </summary>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public bool DeleteUser(int UserId)
+        public bool ToggleActivation(int UserId)
         {
             try
             {
@@ -152,12 +157,28 @@ namespace TicketingSystem.Services
                 {
                     Users user = db.Users.Find(UserId);
                     string auth0ID = user.Auth0Uid;
-
-                    db.Users.Remove(user);
+                    user.IsActive = !user.IsActive;
+                    db.Users.Update(user);
                     db.SaveChanges();
 
-                    Auth0APIClient.DeleteUser(auth0ID);
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
+        }
 
+        public bool DeleteUser(int UserId)
+        {
+            try
+            {
+                using (var db = new TicketingSystemDBContext())
+                {
+                    Users user = db.Users.Find(UserId);
+                    db.Users.Remove(user);
+                    db.SaveChanges();
                     return true;
                 }
             }

@@ -328,7 +328,7 @@ namespace SampleMvcApp.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public JsonResult DeleteUser(string userId)
+        public JsonResult ToggleActivation(string userId)
         {
             try
             {
@@ -346,11 +346,11 @@ namespace SampleMvcApp.Controllers
             UserManager um = new UserManager();
             try
             {
-                um.DeleteUser(int.Parse(userId));
+                um.ToggleActivation(int.Parse(userId));
                 return Json(new
                 {
                     newUrl = Url.Action("UsersHome", um.GetUsers()),
-                    message = "Deleted User",
+                    message = "Changed User Status",
                     id = userId
                 }) ;
             }

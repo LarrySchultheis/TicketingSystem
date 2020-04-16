@@ -82,7 +82,7 @@
             {
                 <div>
                     <h3>Update Users from Auth0</h3>
-                    <button type="submit" class="btn-warning" id="updateBtn" onclick="updateUsers()">Update</button>
+                    <button type="submit" class="btn-danger" id="updateBtn" onclick="updateUsers()">Update</button>
                 </div>
                 <br />
             }
@@ -101,21 +101,33 @@
                     <th>Auth0 ID</th>
                     <th>Shift Type</th>
                     <th>Status</th>
-                    <th>Delete User</th>
+                    <th>Change User Status</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr onclick="rowClicked(@item.UserId)">
-                        <td>@item.UserId</td>
-                        <td>@item.FullName</td>
-                        <td>@item.Email</td>
-                        <td>@item.Auth0Uid</td>
-                        <td>@item.ShiftType </td>
-                        <td>@((bool)item.IsActive ? "Active" : "Inactive")</td>
-                        <td><button class="btn-danger" onclick="deleteUser(@item.UserId.ToString())">Delete</button></td>
-                    </tr>
+                <tr>
+                    <td>@item.UserId</td>
+                    <td>@item.FullName</td>
+                    <td>@item.Email</td>
+                    <td>@item.Auth0Uid</td>
+                    <td>@item.ShiftType </td>
+                    <td>@((bool)item.IsActive ? "Active" : "Inactive")</td>
+
+                    @{
+                        if ((bool)item.IsActive)
+                        {
+                            <td><button class="btn-danger" onclick="toggleActivation(@item.UserId.ToString())">Deactivate</button></td>
+                        }
+                        else
+                        {
+                            <td><button class="btn-primary" onclick="toggleActivation(@item.UserId.ToString())">Reactivate</button></td>
+                        }
+
+                    }
+
+                </tr>
 
                 }
 
@@ -157,16 +169,16 @@
 	    })
     }
 
-    function deleteUser(userId) {
+    function toggleActivation(userId) {
         $.ajax({
-            type: "DELETE",
-            url: '@Url.Action("DeleteUser", "Account")',
+            type: "POST",
+            url: '@Url.Action("ToggleActivation", "Account")',
             data: {userId: userId},
 		    success: function () {
-			    alert('Successfully deleted user')
+			    alert('Successfully changed user status')
 		    },
 		    error: function (e) {
-			    alert('Error deleting user')
+			    alert('Error changing user status')
 			    console.log(e)
 		    }
         }).done(function (data) {
