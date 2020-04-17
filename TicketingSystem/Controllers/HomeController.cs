@@ -27,11 +27,6 @@ namespace TicketingSystem.Controllers
             return View("Landing");
         }
 
-        public ViewResult Privacy()
-        {
-            return View("Index");
-        }
-
         /// <summary>
         /// Gets the Data Entry page
         /// </summary>

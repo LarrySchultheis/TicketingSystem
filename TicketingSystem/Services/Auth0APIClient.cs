@@ -17,11 +17,11 @@ namespace TicketingSystem.Services
     public static class Auth0APIClient
     {
         //Base URL for management API
-        static readonly string baseUrl = "https://robertswarehousing.auth0.com/api/v2/";
+        private static readonly string baseUrl = "https://robertswarehousing.auth0.com/api/v2/";
 
         //Track token and time it was granted
-        static TokenData tokenData;
-        static DateTime tokenGrantedAt;
+        private static TokenData tokenData;
+        private static DateTime tokenGrantedAt;
 
         /// <summary>
         /// Get user data from Auth0 API using the unique Auth0 ID
