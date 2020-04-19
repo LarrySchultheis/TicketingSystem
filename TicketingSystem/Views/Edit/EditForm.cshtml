@@ -122,18 +122,22 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn-dark" id="subBtn">Submit</button>
+                <button class="btn btn-primary" type="submit" id="subBtn">Submit</button>
                 &nbsp;
-                <button type="reset" class="btn-dark" id="resetBtn">Reset Form</button>
+                <button class="btn btn-danger" type="reset" id="resetBtn">Reset Form</button>
                 &nbsp;
+
 
             </div>
         </div>
     </form>
-    <div class="col-sm-offset-2 col-sm-10">
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-danger" id="deleteBtn" onclick="deleteEntry()">Delete Entry</button>
 
-        <button class="btn-danger" id="deleteBtn" onclick="deleteEntry()">Delete Entry</button>
+        </div>
     </div>
+
 
 <br />
 <br />
@@ -141,7 +145,6 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
         crossorigin="anonymous"></script>
-<script src="~/js/dataEntry.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -169,5 +172,146 @@
 			window.location.replace(data.newUrl)
 		})
     }
+
+    function updateFields() {
+    $('*[data-attr="nonDefault"]').remove()
+    var jType = document.getElementById('jobType')
+
+    if (jType.selectedIndex == 2) { //case picker
+        //add cases number and pallet wrap number
+        $('<input name="CasesNum" type="number" class="form-control" id="casesNum" data-attr="nonDefault">').appendTo($('#casesNumberInnerContainer'))
+        $('<label class="control-label col-sm-2" for="casesNum" id="casesNumLbl" data-attr="nonDefault">Cases Number:</label>').insertBefore($('#casesNumberInnerContainer'))
+        document.getElementById('casesNum').value = "@Model.CasesNum"
+
+        $('<input name="PalletWrapNum" type="number" class="form-control" id="palletWrapNum" data-attr="nonDefault">').appendTo($('#palletWrapsInnerContainer'))
+        $('<label class="control-label col-sm-2" for="palletWrapNum" id="palletWrapsNumberLbl" data-attr="nonDefault">Pallet Wraps Number:</label>').insertBefore($('#palletWrapsInnerContainer'))
+        document.getElementById('palletWrapNum').value = "@Model.PalletWrapNum"
+
+    }
+    else if (jType.selectedIndex == 5) { //inbound
+        //add trailer no. and carrier fields
+        $('<input name="TrailerNum" type="number" class="form-control" id="trailerNum" data-attr="nonDefault">').appendTo($('#trailerNumberInnerContainer'))
+        $('<label class="control-label col-sm-2" for="trailerNum" id="trailerNumberLbl" data-attr="nonDefault">Trailer Number:</label>').insertBefore($('#trailerNumberInnerContainer'))
+        document.getElementById('trailerNum').value = "@Model.TrailerNum"
+
+
+        $('<input name="Carrier" type="text" class="form-control" id="carrier" data-attr="nonDefault">').appendTo($('#carrierInnerContainer'))
+        $('<label class="control-label col-sm-2" for="carrier" id="carrierLbl" data-attr="nonDefault">Carrier:</label>').insertBefore($('#carrierInnerContainer'))
+        document.getElementById('carrier').value = "@Model.Carrier"
+
+    }
+    else if (jType.selectedIndex == 6) { //outbound
+        //add barrier/ALCOR and ASN fields
+
+        }
+
+        var jt = document.getElementById("jobType")
+        console.log(jt)
+        var options = jt.children
+        console.log(options)
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].value != "@Model.JobType.JobName") {
+                options[i].disabled = true
+            }
+        }
+    }
+
+    function verifyInput() {
+        var validNames
+
+        var url = window.location.protocol + "//" + window.location.host + "/Home/ValidNames"
+        $.ajax({
+            type: "GET",
+            url: url,
+            async: false,
+            success: function () {
+                //alert('Success')
+            },
+            error: function (e) {
+                console.log(e)
+            }
+        }).done(function (data) {
+            if (data.newUrl != null) {
+                window.location.replace(data.newUrl)
+            }
+            validNames = data.names
+        })
+
+        var jType = document.getElementById('jobType')
+        var tripNum = document.getElementById('tripNumber')
+        var stageNum = document.getElementById('stageNumber')
+        var empName = document.getElementById('employeeName')
+        var startTime = document.getElementById('startTime')
+        var endTime = document.getElementById('endTime')
+        var startDate = document.getElementById('startDate')
+        var endDate = document.getElementById('endDate')
+
+
+        if (jType.selectedIndex < 1) {
+            alert('Please select a Job Type')
+            return false
+        }
+        if (tripNum.value == "") {
+            alert('Please enter a valid trip number')
+            return false
+        }
+        if (stageNum.value == "") {
+            alert('Please enter a valid stage number')
+            return false
+        }
+        stageNum.value = stageNum.value.replace("s", "S")
+        var regEx = new RegExp("S[0-9]+")
+        if (!regEx.test(stageNum.value)) {
+            alert('Please enter a valid stage number')
+            return false
+        }
+        if (empName.value == "") {
+            alert('Please enter a valid employee name')
+            return false
+        }
+
+        var validName = false
+        for (var i = 0; i < validNames.length; i++) {
+            if (empName.value == validNames[i]) {
+                validName = true
+            }
+        }
+        if (!validName) {
+            alert('Error, the worker name you entered was not found in the system')
+            return false
+        }
+
+        if (startTime.value == "") {
+            alert('Please enter a valid start time')
+            return false
+        }
+        if (endTime.value == "") {
+            alert('Please enter a valid end time')
+            return false
+        }
+        if (startDate.value == "") {
+            alert('Please enter a valid start date')
+            return false
+        }
+
+        var splitDate = endDate.value.split("-")
+        var year = splitDate[0].substring(0, 4)
+
+        endDate.value = year + "-" + splitDate[1] + "-" + splitDate[2]
+        if (endDate.value == "" || endDate.value < startDate.value) {
+            alert('Please enter a valid end date')
+            return false
+        }
+
+        return true
+        //alert('success')
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        updateFields()
+        document.getElementById('startTime').value = '@Model.StartTime'
+    });
 </script>
 

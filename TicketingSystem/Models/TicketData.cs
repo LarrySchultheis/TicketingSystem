@@ -12,10 +12,7 @@ namespace TicketingSystem.Models
         public string Comments { get; set; }
         public int PalletNum { get; set; }
         public string PalletType { get; set; }
-        public int? PalletWrapNum { get; set; }
-        public string Carrier { get; set; }
         public int CasesNum { get; set; }
-        public int? TrailerNum { get; set; }
         public bool TicketClosed { get; set; }
         public string StageNum { get; set; }
         public int JobTypeId { get; set; }
@@ -24,6 +21,9 @@ namespace TicketingSystem.Models
         public int TicketWorkerId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public string Carrier { get; set; }
+        public int PalletWrapNum { get; set; }
+        public int TrailerNum { get; set; }
 
         public Users EntryAuthor { get; set; }
         public JobType JobType { get; set; }

@@ -1,0 +1,3 @@
+System.InvalidOperationException: Sequence contains no elements
+   at System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   at TicketingSystem.Controllers.HomeController.Authorize() in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Controllers\HomeController.cs:line 310

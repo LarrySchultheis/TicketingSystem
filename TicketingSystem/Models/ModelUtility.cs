@@ -8,8 +8,7 @@ namespace TicketingSystem.Models
     public enum ReportFormat
     {
         PDF,
-        CSV,
-        DOCX
+        CSV
     }
     public enum ReportName
     {

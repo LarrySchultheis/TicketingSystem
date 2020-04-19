@@ -2,26 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using TicketingSystem.Models;
-using System.Web;
 using Newtonsoft.Json;
-using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
-using TicketingSystem.ExceptionReport;
 using System.Web.Http;
-using System.Net;
 
 namespace TicketingSystem.Services
 {
     public static class Auth0APIClient
     {
         //Base URL for management API
-        static readonly string baseUrl = "https://robertswarehousing.auth0.com/api/v2/";
+        private static readonly string baseUrl = "https://robertswarehousing.auth0.com/api/v2/";
 
         //Track token and time it was granted
-        static TokenData tokenData;
-        static DateTime tokenGrantedAt;
+        private static TokenData tokenData;
+        private static DateTime tokenGrantedAt;
 
         /// <summary>
         /// Get user data from Auth0 API using the unique Auth0 ID

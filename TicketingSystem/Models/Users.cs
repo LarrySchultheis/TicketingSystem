@@ -12,12 +12,12 @@ namespace TicketingSystem.Models
         }
 
         public int UserId { get; set; }
-        public string Email { get; set; }
         public string ShiftType { get; set; }
         public string FullName { get; set; }
         public string Auth0Uid { get; set; }
         public string PassWrd { get; set; }
         public bool? IsActive { get; set; }
+        public string Email { get; set; }
 
         public ICollection<TicketData> TicketDataEntryAuthor { get; set; }
         public ICollection<TicketData> TicketDataTicketWorker { get; set; }
