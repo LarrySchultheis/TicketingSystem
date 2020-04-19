@@ -148,8 +148,8 @@ namespace TicketingSystem.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(256);
+                    .HasMaxLength(256)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.FullName)
                     .HasMaxLength(256)

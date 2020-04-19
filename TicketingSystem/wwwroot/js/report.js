@@ -90,6 +90,8 @@ function requestReport(startDate, endDate) {
             fileName += ".pdf"
         else if (contentType == 'text/csv; charset=utf-8')
             fileName += ".csv"
+        else if (contentType == 'application/vnd.ms-excel')
+            fileName += ".xls"
         else
             fileType = null
 

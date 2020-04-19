@@ -68,8 +68,7 @@ namespace SampleMvcApp.Controllers
             {
                 return Json(new
                 {
-                    guid = ExceptionReporter.DumpException(e),
-                    message = await e.Response.Content.ReadAsStringAsync()
+                    newUrl = Url.Action("Error", Utility.CreateHttpErrorView(e, "401 Unauthorized"))
                 });
             }
             try
@@ -85,13 +84,11 @@ namespace SampleMvcApp.Controllers
             }
             catch (HttpResponseException e)
             {
-                string message = await e.Response.Content.ReadAsStringAsync();
                 string guid = ExceptionReporter.DumpException(e);
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
                 return Json(new
                 {
-                    error = message,
-                    guid = guid
-
+                    newUrl = Url.Action("ServerError", error)
                 });
             }
             catch (Exception e)
@@ -99,9 +96,7 @@ namespace SampleMvcApp.Controllers
                 string guid = ExceptionReporter.DumpException(e);
                 return Json(new
                 {
-                    error = e.Message,
-                    guid = guid
-
+                    newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
                 });
             }
         }
@@ -287,7 +282,7 @@ namespace SampleMvcApp.Controllers
         /// Endpoint to trigger an update of database users from Auth0
         /// </summary>
         /// <returns></returns>
-        public JsonResult UpdateUsers()
+        public async Task<JsonResult> UpdateUsers()
         {
             try
             {
@@ -298,8 +293,7 @@ namespace SampleMvcApp.Controllers
                 string guid = ExceptionReporter.DumpException(e);
                 return Json(new
                 {
-                    message = "401 Not Authorized",
-                    guid = guid
+                    newUrl = Url.Action("Error", Utility.CreateHttpErrorView(e, "401 Unauthorized"))
                 });
             }
             try
@@ -308,7 +302,17 @@ namespace SampleMvcApp.Controllers
                 um.UpdateUsersFromAuth0();
                 return Json(new
                 {
+                    message = "successful update",
                     newUrl = Url.Action("UsersHome", um.GetUsers())
+                });
+            }
+            catch (HttpResponseException e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("ServerError", error)
                 });
             }
             catch (Exception e)
@@ -316,19 +320,12 @@ namespace SampleMvcApp.Controllers
                 string guid = ExceptionReporter.DumpException(e);
                 return Json(new
                 {
-                    message = e.Message,
-                    guid = guid
+                    newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
                 });
             }
         }
 
-
-        /// <summary>
-        /// Endpoint to delete a user from the database and Auth0
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public JsonResult ToggleActivation(string userId)
+        public async Task<JsonResult> ImportUsers()
         {
             try
             {
@@ -339,8 +336,66 @@ namespace SampleMvcApp.Controllers
                 string guid = ExceptionReporter.DumpException(e);
                 return Json(new
                 {
-                    message = "401 Not Authorized",
-                    guid = guid
+                    newUrl = Url.Action("Error", Utility.CreateHttpErrorView(e, "401 Unauthorized"))
+                });
+            }
+            try
+            {
+                UserManager um = new UserManager();
+                um.ImportUsersFromAuth0();
+                return Json(new
+                {
+                    message = "successful import",
+                    newUrl = Url.Action("UsersHome", um.GetUsers())
+                }); 
+            }
+            catch (HttpResponseException e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("ServerError", error)
+                });
+            }
+            catch (Exception e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
+                });
+            }
+
+        }
+
+        public ViewResult ServerError(ServerErrorViewModel error)
+        {
+            return View("Error", error);
+        }
+
+        public ViewResult Error(ErrorViewModel error)
+        {
+            return View("Error", error);
+        }
+
+        /// <summary>
+        /// Endpoint to delete a user from the database and Auth0
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<JsonResult> ToggleActivation(string userId)
+        {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("Error", Utility.CreateHttpErrorView(e, "401 Unauthorized"))
                 });
             }
             UserManager um = new UserManager();
@@ -354,13 +409,68 @@ namespace SampleMvcApp.Controllers
                     id = userId
                 }) ;
             }
+            catch (HttpResponseException e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("ServerError", error)
+                });
+            }
             catch (Exception e)
             {
                 string guid = ExceptionReporter.DumpException(e);
                 return Json(new
                 {
-                    message = e.Message,
-                    guid = guid
+                    newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
+                });
+            }
+        }
+
+        public async Task<JsonResult> GetEmails()
+        {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("Error", Utility.CreateHttpErrorView(e, "401 Unauthorized"))
+                });
+            }
+            try
+            {
+                UserManager um = new UserManager();
+                List<string> emails = new List<string>();
+                foreach (Users u in um.GetUsers())
+                {
+                    emails.Add(u.Email);
+                }
+
+                return Json(new
+                {
+                    emails = emails
+                });
+            }
+            catch (HttpResponseException e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("ServerError", error)
+                });
+            }
+            catch (Exception e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
                 });
             }
         }

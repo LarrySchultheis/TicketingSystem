@@ -80,7 +80,7 @@ namespace Tests.ControllerTests
         {
             ErrorViewModel error = new ErrorViewModel();
             error.ErrorCode = "401";
-            ViewResult result = ec.Error();
+            ViewResult result = ec.Error(error);
             ViewResult testView = View("Error", error);
 
             Assert.IsNotNull(result);

@@ -21,21 +21,16 @@ namespace TicketingSystem.Services
         {
             try
             {
-                using (var db = new TicketingSystemDBContext())
+                string tempPass = CreateAndAddUser(newUser);
+
+                if (tempPass.Equals("Email Exists"))
+                    return false;
+
+                if (newUser.ShiftType != "Warehouse")
                 {
-                    string tempPass = Guid.NewGuid().ToString().Substring(0, 12);
-                    string encrypted = Utility.Encrypt(tempPass);
-                    newUser.PassWrd = encrypted;
-                    db.Users.Add(newUser);
-                    db.SaveChanges();
-
-                    if (newUser.ShiftType != "Warehouse")
-                    {
-                        string auth0ID = Auth0APIClient.AddUser(newUser, tempPass);
-                        Auth0APIClient.SetRole(auth0ID, newUser.ShiftType);
-                    }
-
-                }
+                    string auth0ID = Auth0APIClient.AddUser(newUser, tempPass);
+                    Auth0APIClient.SetRole(auth0ID, newUser.ShiftType);
+                }  
                 return true;
             }
             catch (Exception e)
@@ -43,6 +38,28 @@ namespace TicketingSystem.Services
                 throw new HttpResponseException(Utility.CreateResponseMessage(e));
             }
 
+        }
+
+        private string CreateAndAddUser(Users newUser)
+        {
+            using (var db = new TicketingSystemDBContext())
+            {
+
+                string tempPass = Guid.NewGuid().ToString().Substring(0, 12);
+                string encrypted = Utility.Encrypt(tempPass);
+                newUser.PassWrd = encrypted;
+                newUser.IsActive = true;
+
+                if (db.Users.Where(us => us.Email == newUser.Email).Any())
+                {
+                    return "Email Exists";
+                }
+
+                db.Users.Add(newUser);
+                db.SaveChanges();
+
+                return tempPass;
+            }
         }
 
         /// <summary>
@@ -98,18 +115,52 @@ namespace TicketingSystem.Services
                     foreach (var user in users)
                     {
                         Users dbuser = db.Users.Where(u => u.Auth0Uid == user.user_id).FirstOrDefault();
-                        dbuser.Email = user.email;
-                        dbuser.FullName = user.name;
-                        var roles = Auth0APIClient.GetUserRole(dbuser.Auth0Uid);
+                        if (dbuser != null)
+                        {
+                            dbuser.Email = user.email;
+                            dbuser.FullName = user.name;
+                            var roles = Auth0APIClient.GetUserRole(dbuser.Auth0Uid);
 
-                        dbuser.ShiftType = roles.ElementAt(0).name;
+                            dbuser.ShiftType = roles.ElementAt(0).name;
 
-                        db.Users.Update(dbuser);
-                        db.SaveChanges();
+                            db.Users.Update(dbuser);
+                            db.SaveChanges();
+                        }
+
                     }
                 }
                 return true;
+            }
+            catch (Exception e)
+            {
+                throw new HttpResponseException(Utility.CreateResponseMessage(e));
+            }
+        }
 
+        public bool ImportUsersFromAuth0()
+        {
+            try
+            {
+                using (var db = new TicketingSystemDBContext())
+                {
+                    var users = Auth0APIClient.GetAllUsers();
+                    foreach(var u in users)
+                    {
+                        if(!db.Users.Where(usr => usr.Email == u.email).Any())
+                        {
+                            string shiftType = Auth0APIClient.GetUserRole(u.user_id)[0].name;
+
+                            Users newUser = new Users();
+                            newUser.Auth0Uid = u.user_id;
+                            newUser.FullName = u.name;
+                            newUser.Email = u.email;
+                            newUser.ShiftType = shiftType;
+
+                            CreateAndAddUser(newUser);
+                        }
+                    }
+                }
+                return true;
             }
             catch (Exception e)
             {

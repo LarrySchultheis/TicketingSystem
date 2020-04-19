@@ -16,17 +16,23 @@ namespace TicketingSystem.ExceptionReport
             string path = Environment.CurrentDirectory + "\\ExceptionReport";
             using (StreamWriter outFile = new StreamWriter(Path.Combine(path, "LatestException.txt")))
             {
-                outFile.WriteLine(e);
-                outFile.Close();
+                WriteDetails(e, outFile, guid);
             }
             path += "\\Archive";
 
-            using (StreamWriter outfile = new StreamWriter(Path.Combine(path, "Exception_" + guid + ".txt")))
+            using (StreamWriter outFile = new StreamWriter(Path.Combine(path, "Exception_" + guid + ".txt")))
             {
-                outfile.WriteLine(e);
-                outfile.Close();
+                WriteDetails(e, outFile, guid);
             }
             return guid;
+        }
+
+        private static void WriteDetails(Exception e, StreamWriter outFile, string guid)
+        {
+            outFile.WriteLine(e);
+            outFile.WriteLine("Exception thrown: " + DateTime.Now.ToString());
+            outFile.WriteLine("Error Code: " + guid);
+            outFile.Close();
         }
     }
 }

@@ -1,0 +1,4 @@
+System.Exception: test
+   at TicketingSystem.Controllers.HomeController.HomePage() in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Controllers\HomeController.cs:line 125
+Exception thrown: 4/17/2020 21:17:47
+Error Code: 307d75d3-130c-4b0c-ac17-8b68e32003ce

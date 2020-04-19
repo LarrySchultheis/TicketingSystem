@@ -238,7 +238,7 @@ namespace TicketingSystem.Controllers
         /// </summary>
         /// <param name="entryID">Entry ID specified in HomePage table</param>
         /// <returns>JSON containing redirect URL</returns>
-        public JsonResult OpenEntry(string entryID)
+        public async Task<JsonResult> OpenEntry(string entryID)
         {
             try
             {
@@ -248,8 +248,7 @@ namespace TicketingSystem.Controllers
             {
                 return Json(new
                 {
-                    code = (int)e.Response.StatusCode,
-                    error = e.Response.StatusCode.ToString()
+                    newUrl = Url.Action("Error", Utility.CreateHttpErrorView(e, "401 Unauthorized"))
                 });
             }
             try
@@ -260,23 +259,28 @@ namespace TicketingSystem.Controllers
                     RecordRetriever rr = new RecordRetriever();
                     TicketData td = rr.GetRecordByID(id);
 
-                    
-
+               
                     return Json(new
                     {
                         newUrl = Url.Action("EntryClose", "Home", td)
                     });
                 }
             }
-            catch(Exception e)
+            catch (HttpResponseException e)
             {
-                ExceptionReporter.DumpException(e);
-                RecordRetriever rr = new RecordRetriever();
-
-                //If exception occurred return the home page
+                string guid = ExceptionReporter.DumpException(e);
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
                 return Json(new
                 {
-                    newUrl = Url.Action("HomePage", "Home", rr.RetrieveRecords(numberOfRecords))
+                    newUrl = Url.Action("ServerError", error)
+                });
+            }
+            catch (Exception e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
                 });
             }
         }
@@ -293,10 +297,14 @@ namespace TicketingSystem.Controllers
             });
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public ViewResult Error()
+        public ViewResult ServerError(ServerErrorViewModel error)
         {
-            return View(new ErrorViewModel { ErrorCode = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View("Error", error);
+        }
+
+        public ViewResult Error(ErrorViewModel error)
+        {
+            return View("Error", error);
         }
 
         /// <summary>

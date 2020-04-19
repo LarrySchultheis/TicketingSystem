@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
 using NUnit.Framework;
@@ -6,9 +10,12 @@ using SampleMvcApp.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
+using System.Web.Helpers;
+using System.Web.Http;
+using TicketingSystem.ExceptionReport;
 using TicketingSystem.Models;
 using TicketingSystem.Services;
 
@@ -91,7 +98,7 @@ namespace Tests.ControllerTests
             Assert.AreEqual(actual.ViewName, expected.ViewName);
         }
 
-        public void DeleteUserTest(Users user)
+        public async void DeleteUserTest(Users user)
         {
             //Users newUser = TestUtility.CreateTestUser();
             //UserManager um = new UserManager();
@@ -107,7 +114,7 @@ namespace Tests.ControllerTests
             using (var db = new TicketingSystemDBContext())
             {
                 string auth0Id = db.Users.Find(user.UserId).Auth0Uid;
-                JsonResult res = ac.ToggleActivation(auth0Id);
+                JsonResult res = await ac.ToggleActivation(auth0Id);
 
                 Assert.IsNotNull(res);
             }
@@ -123,6 +130,15 @@ namespace Tests.ControllerTests
             Assert.IsTrue(result);
         }
 
+        [Test]
+        public async Task GetEmailsTest()
+        {
+            JsonResult res = await ac.GetEmails();
+            string val = res.Value.ToString();
+            Assert.IsNotNull(res);
+            Assert.IsTrue(val.Contains("emails"));
+        }
+
         [TearDown]
         public void Cleanup()
         {
@@ -132,7 +148,8 @@ namespace Tests.ControllerTests
                 var users = db.Users.Where(u => u.FullName == "Unit Test User").ToList();
                 foreach (Users u in users)
                 {
-                    um.ToggleActivation(u.UserId);
+                    Auth0APIClient.DeleteUser(u.Auth0Uid);
+                    um.DeleteUser(u.UserId);
                 }
             }
         }

@@ -2,15 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using TicketingSystem.Models;
-using System.Web;
 using Newtonsoft.Json;
-using Microsoft.ReportingServices.ReportProcessing.ReportObjectModel;
-using TicketingSystem.ExceptionReport;
 using System.Web.Http;
-using System.Net;
 
 namespace TicketingSystem.Services
 {
