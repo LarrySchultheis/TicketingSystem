@@ -71,6 +71,7 @@ namespace Tests.ServiceTests
 
         public void DeleteUserTest(Users user)
         {
+            Auth0APIClient.DeleteUser(user.Auth0Uid);
             var actual = um.DeleteUser(user.UserId);
             Assert.IsTrue(actual);
         }
@@ -85,7 +86,8 @@ namespace Tests.ServiceTests
         [Test]
         public void ImportUsersFromAuth0Test()
         {
-
+            bool result = um.ImportUsersFromAuth0();
+            Assert.IsTrue(result);
         }
 
         [TearDown]

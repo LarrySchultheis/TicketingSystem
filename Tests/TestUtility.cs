@@ -64,18 +64,28 @@ namespace Tests
                 db.TicketData.RemoveRange(data);
                 db.SaveChanges();
             }
+
+
         }
 
         public static void UserCleanup()
         {
+            UserManager um = new UserManager();
             using (var db = new TicketingSystemDBContext())
             {
-                var users = db.Users.Where(u => u.FullName == "Unit Test User");
-                UserManager um = new UserManager();
-
-                foreach (Users u in users)
+                var dbUsers = db.Users.Where(u => u.FullName == "Unit Test User").ToList();
+                foreach (Users u in dbUsers)
                 {
                     um.DeleteUser(u.UserId);
+                }
+
+                var auth0Users = Auth0APIClient.GetAllUsers();
+                foreach (var u in auth0Users)
+                {
+                    if (u.name == "Unit Test User")
+                    {
+                        Auth0APIClient.DeleteUser(u.user_id);
+                    }
                 }
             }
         }
