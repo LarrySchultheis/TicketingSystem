@@ -1,0 +1,3 @@
+System.Exception: Error: Users email is already registered in database
+   at TicketingSystem.Services.UserManager.CreateAndAddUser(Users newUser) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\UserManager.cs:line 55
+   at TicketingSystem.Services.UserManager.CreateUser(Users newUser, UserData loggedInUser) in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\UserManager.cs:line 24

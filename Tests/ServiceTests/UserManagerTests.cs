@@ -82,6 +82,12 @@ namespace Tests.ServiceTests
             Assert.IsTrue(result);
         }
 
+        [Test]
+        public void ImportUsersFromAuth0Test()
+        {
+
+        }
+
         [TearDown]
         public void Cleanup()
         {

@@ -94,7 +94,7 @@ namespace TicketingSystem.Controllers
         /// </summary>
         /// <param name="entryId">Entry ID input from index</param>
         /// <returns>JSON holding redirect URL</returns>
-        public JsonResult GetRecord(string entryId)
+        public async Task<JsonResult> GetRecord(string entryId)
         {
             try
             {
@@ -120,14 +120,21 @@ namespace TicketingSystem.Controllers
                     });
                 }
             }
-            catch(Exception e)
+            catch (HttpResponseException e)
             {
-                ExceptionReporter.DumpException(e);
-                TicketData td = new TicketData();
-
+                string guid = ExceptionReporter.DumpException(e);
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
                 return Json(new
                 {
-                    newUrl = Url.Action("EntryClose", "Home", td)
+                    newUrl = Url.Action("ServerError", error)
+                });
+            }
+            catch (Exception e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
                 });
             }
         }
@@ -136,10 +143,13 @@ namespace TicketingSystem.Controllers
         /// Endpoint to create a 401 error page
         /// </summary>
         /// <returns></returns>
-        public ViewResult Error()
+        public ViewResult ServerError(ServerErrorViewModel error)
         {
-            ErrorViewModel error = new ErrorViewModel();
-            error.ErrorCode = "401";
+            return View("Error", error);
+        }
+
+        public ViewResult Error(ErrorViewModel error)
+        {
             return View("Error", error);
         }
 
@@ -187,8 +197,21 @@ namespace TicketingSystem.Controllers
         /// </summary>
         /// <param name="entryId"></param>
         /// <returns></returns>
-        public JsonResult RemoveEntry(string entryId)
+        public async Task<JsonResult> RemoveEntry(string entryId)
         {
+            try
+            {
+                Authorize();
+            }
+            catch (HttpResponseException e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("Error", Utility.CreateHttpErrorView(e, "401 Unauthorized"))
+                });
+            }
+
             try
             {
                 DataEditor de = new DataEditor();
@@ -201,14 +224,21 @@ namespace TicketingSystem.Controllers
                     id = entryId
                 });
             }
-            catch (Exception e)
+            catch (HttpResponseException e)
             {
-                ExceptionReporter.DumpException(e);
+                string guid = ExceptionReporter.DumpException(e);
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
                 return Json(new
                 {
-                    newUrl = Url.Action("Index", "Edit"),
-                    message = "Server Exception",
-                    id = entryId
+                    newUrl = Url.Action("ServerError", error)
+                });
+            }
+            catch (Exception e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
                 });
             }
 

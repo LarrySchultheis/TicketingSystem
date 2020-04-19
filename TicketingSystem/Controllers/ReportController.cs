@@ -43,8 +43,7 @@ namespace TicketingSystem.Controllers
             {
                 return Json(new
                 {
-                    code = (int)e.Response.StatusCode,
-                    error = e.Response.StatusCode.ToString()
+                    newUrl = Url.Action("Error", Utility.CreateHttpErrorView(e, "401 Unauthorized"))
                 });
             }
             HttpResponseMessage resp = null;
@@ -52,22 +51,34 @@ namespace TicketingSystem.Controllers
             {
                 ReportGenerator rg = new ReportGenerator();
                 resp = await rg.GenerateReport(reportData);
+                var content = resp.Content;
+                var bytes = await resp.Content.ReadAsByteArrayAsync();
 
+                return Json(new
+                {
+                    content = content,
+                    data = bytes
+                });
+            }
+            catch (HttpResponseException e)
+            {
+                string guid = ExceptionReporter.DumpException(e);
+                ServerErrorViewModel error = await Utility.CreateServerErrorView(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("ServerError", error)
+                });
             }
             catch (Exception e)
             {
-                ExceptionReporter.DumpException(e);
+                string guid = ExceptionReporter.DumpException(e);
+                return Json(new
+                {
+                    newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
+                });
             }
 
-            var content = resp.Content;
-            var bytes = await resp.Content.ReadAsByteArrayAsync();
 
-
-            return Json(new
-            {
-                content = content,
-                data = bytes
-            });
 
         }
 

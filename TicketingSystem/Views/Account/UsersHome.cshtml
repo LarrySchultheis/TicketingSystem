@@ -29,7 +29,7 @@
     <div>
         <h2>Create a new User</h2>
 
-        <form id="entryForm" class="form-horizontal" asp-action="CreateUser" asp-controller="Account" onsubmit="return verifyInput()">
+        <form id="entryForm" class="form-horizontal" asp-action="CreateUser" asp-controller="Account" onsubmit="return verifyUserData()">
 
             <div class="form-group">
 
@@ -63,9 +63,9 @@
 
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn-dark" id="subBtn">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="subBtn">Submit</button>
                     &nbsp;
-                    <button type="reset" class="btn-dark" id="resetBtn">Reset Form</button>
+                    <button type="reset" class="btn btn-danger" id="resetBtn">Reset Form</button>
                 </div>
             </div>
 
@@ -82,9 +82,16 @@
             {
                 <div>
                     <h3>Update Users from Auth0</h3>
-                    <button type="submit" class="btn-danger" id="updateBtn" onclick="updateUsers()">Update</button>
+                    <p>Updates current database users with any changes from Auth0</p>
+                    <button type="submit" class="btn btn-danger" id="updateBtn" onclick="updateUsers()">Update</button>
+                </div>
+                <div>
+                    <h3>Import Users from Auth0</h3>
+                    <p>Adds newly created Auth0 users to the database</p>
+                    <button type="submit" class="btn btn-primary" id="updateBtn" onclick="importUsers()">Import</button>
                 </div>
                 <br />
+
             }
         }
     }
@@ -107,27 +114,27 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td>@item.UserId</td>
-                    <td>@item.FullName</td>
-                    <td>@item.Email</td>
-                    <td>@item.Auth0Uid</td>
-                    <td>@item.ShiftType </td>
-                    <td>@((bool)item.IsActive ? "Active" : "Inactive")</td>
+                    <tr>
+                        <td>@item.UserId</td>
+                        <td>@item.FullName</td>
+                        <td>@item.Email</td>
+                        <td>@item.Auth0Uid</td>
+                        <td>@item.ShiftType </td>
+                        <td>@((bool)item.IsActive ? "Active" : "Inactive")</td>
 
-                    @{
-                        if ((bool)item.IsActive)
-                        {
-                            <td><button class="btn-danger" onclick="toggleActivation(@item.UserId.ToString())">Deactivate</button></td>
+                        @{
+                            if ((bool)item.IsActive)
+                            {
+                                <td><button class="btn btn-sm btn-danger" onclick="toggleActivation(@item.UserId.ToString())">Deactivate</button></td>
+                            }
+                            else
+                            {
+                                <td><button class="btn btn-sm btn-primary" onclick="toggleActivation(@item.UserId.ToString())">Reactivate</button></td>
+                            }
+
                         }
-                        else
-                        {
-                            <td><button class="btn-primary" onclick="toggleActivation(@item.UserId.ToString())">Reactivate</button></td>
-                        }
 
-                    }
-
-                </tr>
+                    </tr>
 
                 }
 
@@ -153,6 +160,56 @@
         var table = $('#userTable').DataTable()
     });
 
+    function verifyUserData() {
+        var emailInput = document.getElementById('email').value
+        var name = document.getElementById('fullName').value
+        var shiftType = document.getElementById('shiftType').value
+        var emails
+
+        let valid = true;
+
+        if (name == "") {
+            alert('Please enter a name')
+            return false
+        }
+        if (shiftType== "") {
+            alert('Please select a shift type')
+            return false
+        }
+
+        var resp = getEmails();
+        var emails = resp.emails
+
+        for (var i = 0; i < emails.length; i++) {
+            if (emails[i] == emailInput) {
+                alert('Error: the email you have entered is already registered in our database')
+                valid = false;
+                break;
+            }
+        }
+        return valid;
+    }
+
+    function getEmails() {
+        var resp = $.ajax({
+		    type: "GET",
+            url: '@Url.Action("GetEmails", "Account")',
+            async: false,
+		    success: function () {
+			    //alert('Success')
+		    },
+		    error: function (e) {
+			    alert('Error')
+                console.log(e)
+		    }
+        }).done(function (data) {
+            if (data.emails == null) {
+                window.location.replace(data.newUrl)
+            }
+        })
+        return resp.responseJSON
+    }
+
     function updateUsers() {
         $.ajax({
 		    type: "GET",
@@ -165,6 +222,23 @@
 			    console.log(e)
 		    }
         }).done(function (data) {
+		    window.location.replace(data.newUrl)
+	    })
+    }
+
+    function importUsers() {
+        $.ajax({
+		    type: "GET",
+		    url: '@Url.Action("ImportUsers", "Account")',
+		    success: function () {
+			    //alert('Success')
+		    },
+		    error: function (e) {
+			    alert('Error')
+			    console.log(e)
+		    }
+        }).done(function (data) {
+
 		    window.location.replace(data.newUrl)
 	    })
     }

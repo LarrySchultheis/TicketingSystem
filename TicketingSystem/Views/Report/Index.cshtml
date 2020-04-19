@@ -34,7 +34,7 @@
         <div>
             <select name="ReportName" id="reportName">
                 <option value="0">Labor Hours by Job</option>
-                <option value="1">Incentive Report</option>
+                <option value="1" disabled>Incentive Report</option>
                 <option value="2">Labor Hours by Job and Employee</option>
             </select>
         </div>
@@ -43,7 +43,7 @@
         <div>
             <select name="ReportFormat" id="reportFormat">
                 <option value="0">PDF</option>
-                <option value="1">CSV</option>
+                <option value="1">Excel</option>
                 @*<option value="2">DOCX</option>*@
             </select>
         </div>
@@ -52,7 +52,7 @@
 
         <div>
             <div>
-                <button type="submit" class="btn-dark" id="subBtn" onclick="getReport()">Submit</button>
+                <button class="btn btn-primary" type="submit" class="btn-dark" id="subBtn" onclick="getReport()">Submit</button>
             </div>
         </div>
     </div>
