@@ -53,7 +53,7 @@ namespace Tests.ControllerTests
         {
             JsonResult json = await ac.Permissions();
             string val = json.Value.ToString();
-            
+
             Assert.IsNotNull(json);
             Assert.IsTrue(val.Contains("permissions"));
 
@@ -92,35 +92,10 @@ namespace Tests.ControllerTests
             ViewResult actual = await ac.CreateUser(newUser);
             ViewResult expected = View("UsersHome");
 
-            DeleteUserTest(newUser);
-
             Assert.IsNotNull(actual);
             Assert.AreEqual(actual.ViewName, expected.ViewName);
         }
 
-        public async void DeleteUserTest(Users user)
-        {
-            //Users newUser = TestUtility.CreateTestUser();
-            //UserManager um = new UserManager();
-            //um.CreateUser(newUser, Auth0APIClient.GetUserData(User.Claims.First().Value));
-            //using (var db = new TicketingSystemDBContext())
-            //{
-            //    JsonResult result = ac.DeleteUser(db.Users.Where(u => u.FullName == "Unit Test User").First().UserId.ToString());
-            //    string val = result.Value.ToString();
-
-            //    Assert.IsNotNull(result);
-            //}
-
-            using (var db = new TicketingSystemDBContext())
-            {
-                string auth0Id = db.Users.Find(user.UserId).Auth0Uid;
-                JsonResult res = await ac.ToggleActivation(auth0Id);
-
-                Assert.IsNotNull(res);
-            }
-
-
-        }
 
         [Test]
         public void AuthorizeTest()
@@ -142,16 +117,7 @@ namespace Tests.ControllerTests
         [TearDown]
         public void Cleanup()
         {
-            UserManager um = new UserManager();
-            using (var db = new TicketingSystemDBContext())
-            {
-                var users = db.Users.Where(u => u.FullName == "Unit Test User").ToList();
-                foreach (Users u in users)
-                {
-                    Auth0APIClient.DeleteUser(u.Auth0Uid);
-                    um.DeleteUser(u.UserId);
-                }
-            }
+            TestUtility.UserCleanup();
         }
     }
 }
