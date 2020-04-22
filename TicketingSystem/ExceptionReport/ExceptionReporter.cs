@@ -12,7 +12,10 @@ namespace TicketingSystem.ExceptionReport
         /// <returns>unique GUID for tracking purposes</returns>
         public static string DumpException(Exception e)
         {
+            //generate unique code for exception
             var guid = Guid.NewGuid().ToString();
+
+            //Write exception to LatestException and archive
             string path = Environment.CurrentDirectory + "\\ExceptionReport";
             using (StreamWriter outFile = new StreamWriter(Path.Combine(path, "LatestException.txt")))
             {
@@ -27,6 +30,12 @@ namespace TicketingSystem.ExceptionReport
             return guid;
         }
 
+        /// <summary>
+        /// Writes exception details to given StreamWriter
+        /// </summary>
+        /// <param name="e">The exception to write</param>
+        /// <param name="outFile">The Stream of the file to write to</param>
+        /// <param name="guid">A GUID to uniquely ID the exception</param>
         private static void WriteDetails(Exception e, StreamWriter outFile, string guid)
         {
             outFile.WriteLine(e);

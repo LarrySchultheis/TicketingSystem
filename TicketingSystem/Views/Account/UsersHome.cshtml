@@ -56,7 +56,6 @@
                         <option value="Accounting">Accounting</option>
                         <option value="Warehouse">Warehouse</option>
                         <option value="Management">Management</option>
-                        <option value="Administrator">Administrator</option>
                     </select>
                 </div>
             </div>
@@ -105,7 +104,6 @@
                     <th>UserID</th>
                     <th>Full Name</th>
                     <th>Email</th>
-                    <th>Auth0 ID</th>
                     <th>Shift Type</th>
                     <th>Status</th>
                     <th>Change User Status</th>
@@ -114,27 +112,30 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>@item.UserId</td>
-                        <td>@item.FullName</td>
-                        <td>@item.Email</td>
-                        <td>@item.Auth0Uid</td>
-                        <td>@item.ShiftType </td>
-                        <td>@((bool)item.IsActive ? "Active" : "Inactive")</td>
+                    if (item.ShiftType != "Administrator")
+                    {
+                        <tr>
+                            <td>@item.UserId</td>
+                            <td>@item.FullName</td>
+                            <td>@item.Email</td>
+                            <td>@item.ShiftType </td>
+                            <td>@((bool)item.IsActive ? "Active" : "Inactive")</td>
 
-                        @{
-                            if ((bool)item.IsActive)
-                            {
-                                <td><button class="btn btn-sm btn-danger" onclick="toggleActivation(@item.UserId.ToString())">Deactivate</button></td>
+                            @{
+                                if ((bool)item.IsActive)
+                                {
+                                    <td><button class="btn btn-sm btn-danger" onclick="toggleActivation(@item.UserId.ToString())">Deactivate</button></td>
+                                }
+                                else
+                                {
+                                    <td><button class="btn btn-sm btn-primary" onclick="toggleActivation(@item.UserId.ToString())">Reactivate</button></td>
+                                }
+
                             }
-                            else
-                            {
-                                <td><button class="btn btn-sm btn-primary" onclick="toggleActivation(@item.UserId.ToString())">Reactivate</button></td>
-                            }
 
-                        }
+                        </tr>
+                    }
 
-                    </tr>
 
                 }
 

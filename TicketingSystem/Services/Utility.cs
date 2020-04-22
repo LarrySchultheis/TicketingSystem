@@ -155,7 +155,11 @@ namespace TicketingSystem.Services
 			}
 		}
 
-
+		/// <summary>
+		/// Encrypt/Decrypt functions if generated passwords need to be stored locally 
+		/// </summary>
+		/// <param name="encryptString"></param>
+		/// <returns></returns>
 		public static string Encrypt(string encryptString)
 		{
 			string EncryptionKey = "crackM3IfYouC@n";

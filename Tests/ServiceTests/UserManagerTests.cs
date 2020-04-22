@@ -41,6 +41,7 @@ namespace Tests.ServiceTests
                 var actual = um.GetUserByID(userId);
 
                 Assert.IsNotNull(actual);
+                Assert.AreEqual(userId, actual.UserId);
             }
         }
 

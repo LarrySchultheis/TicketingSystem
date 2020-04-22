@@ -7,7 +7,7 @@
     ViewData["Title"] = "EntryClose";
 }
 <!DOCTYPE html>
-<h2 class="display-4">Existing Data Entry</h2>
+<h2 class="display-4">Close Ticket</h2>
 <br />
 <br />
 
@@ -238,8 +238,18 @@
         var year = splitDate[0].substring(0, 4)
         endDate.value = year + "-" + splitDate[1] + "-" + splitDate[2]
 
-        if (endDate.value == "" || endDate.value < startDate.value) {
+        if (endDate.value == "") {
             alert('Please enter a valid end date')
+            return false
+        }
+
+        if (endDate.value < startDate.value) {
+            alert('Error, the end date cannot before the start date')
+            return false
+        }
+
+        if (endDate.value == startDate.value && endTime.value <= startTime.value) {
+            alert('Error, the end time cannot be before the start time')
             return false
         }
 

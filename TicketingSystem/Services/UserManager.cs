@@ -23,11 +23,11 @@ namespace TicketingSystem.Services
             {
                 string tempPass = CreateAndAddUser(newUser);
 
-                if (tempPass.Equals("Email Exists"))
-                    return false;
-
                 if (newUser.ShiftType != "Warehouse")
                 {
+                    if (tempPass.Equals("Email Exists"))
+                        return false;
+
                     string auth0ID = Auth0APIClient.AddUser(newUser, tempPass);
                     Auth0APIClient.SetRole(auth0ID, newUser.ShiftType);
                 }  
@@ -40,6 +40,11 @@ namespace TicketingSystem.Services
 
         }
 
+        /// <summary>
+        /// Helper function to create a User and add it to the database
+        /// </summary>
+        /// <param name="newUser"></param>
+        /// <returns></returns>
         private string CreateAndAddUser(Users newUser)
         {
             using (var db = new TicketingSystemDBContext())
@@ -50,9 +55,12 @@ namespace TicketingSystem.Services
                 newUser.PassWrd = encrypted;
                 newUser.IsActive = true;
 
-                if (db.Users.Where(us => us.Email == newUser.Email).Any())
+                if (newUser.ShiftType != "Warehouse")
                 {
-                    return "Email Exists";
+                    if (db.Users.Where(us => us.Email == newUser.Email).Any())
+                    {
+                        return "Email Exists";
+                    }
                 }
 
                 db.Users.Add(newUser);
@@ -137,6 +145,10 @@ namespace TicketingSystem.Services
             }
         }
 
+        /// <summary>
+        /// Function to import new users from Auth0
+        /// </summary>
+        /// <returns></returns>
         public bool ImportUsersFromAuth0()
         {
             try
@@ -221,6 +233,11 @@ namespace TicketingSystem.Services
             }
         }
 
+        /// <summary>
+        /// Function to delete a user from the Database 
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
         public bool DeleteUser(int UserId)
         {
             try

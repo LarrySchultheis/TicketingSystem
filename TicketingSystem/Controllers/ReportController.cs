@@ -77,9 +77,6 @@ namespace TicketingSystem.Controllers
                     newUrl = Url.Action("Error", Utility.CreateBasicExceptionView(e, guid))
                 });
             }
-
-
-
         }
 
         /// <summary>

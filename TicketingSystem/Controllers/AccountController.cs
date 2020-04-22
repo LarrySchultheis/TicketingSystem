@@ -325,6 +325,10 @@ namespace SampleMvcApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint to ImportUsers from Auth0
+        /// </summary>
+        /// <returns></returns>
         public async Task<JsonResult> ImportUsers()
         {
             try
@@ -428,6 +432,10 @@ namespace SampleMvcApp.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint that returns a list of valid emails in the system
+        /// </summary>
+        /// <returns></returns>
         public async Task<JsonResult> GetEmails()
         {
             try

@@ -18,10 +18,10 @@ namespace TicketingSystem.Services
     {
         //base url of the report server
         protected static readonly string ssrsBaseURL = "http://localhost/reportserver?/TicketingSystemReporting/";
-       
+
         //credentials used to access report server
-        protected readonly string userName = "larry";
-        protected readonly string password = "ls150682";
+        protected readonly string userName = "user";
+        protected readonly string password = "pass";
 
 
         /// <summary>
