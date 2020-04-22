@@ -1,0 +1,6 @@
+System.ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+   at System.Collections.Generic.List`1.get_Item(Int32 index)
+   at TicketingSystem.Services.UserManager.ImportUsersFromAuth0() in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\UserManager.cs:line 151
+Exception thrown: 4/20/2020 18:45:05
+Error Code: 01f5d888-7802-49e2-b838-7deb4b2b0bfc

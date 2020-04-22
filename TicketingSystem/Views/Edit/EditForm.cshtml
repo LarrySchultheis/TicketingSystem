@@ -5,7 +5,7 @@
 }
 
 <!DOCTYPE html>
-<h2 class="display-4">Edit Form</h2>
+<h2 class="display-4">Edit Ticket</h2>
 <br />
 <br />
 <body>
@@ -157,20 +157,23 @@
 
 <script>
     function deleteEntry() {
-        	$.ajax({
-			type: "DELETE",
-			url: '@Url.Action("RemoveEntry", "Edit")',
-			data: { entryID: @Model.EntryId},
-            success: function () {
-                alert('This entry was successfully deleted')
-			},
-			error: function (e) {
-				alert('Error in ajax reqest')
-				console.log(e)
-			}
-		}).done(function (data) {
-			window.location.replace(data.newUrl)
-		})
+        if (confirm("Are you sure you want to delete this entry?")) {
+            $.ajax({
+			    type: "DELETE",
+			    url: '@Url.Action("RemoveEntry", "Edit")',
+			    data: { entryID: @Model.EntryId},
+                success: function () {
+                    alert('This entry was successfully deleted')
+			    },
+			    error: function (e) {
+				    alert('Error in ajax reqest')
+				    console.log(e)
+			    }
+		    }).done(function (data) {
+			    window.location.replace(data.newUrl)
+		    })
+        }
+
     }
 
     function updateFields() {
@@ -298,8 +301,18 @@
         var year = splitDate[0].substring(0, 4)
 
         endDate.value = year + "-" + splitDate[1] + "-" + splitDate[2]
-        if (endDate.value == "" || endDate.value < startDate.value) {
+        if (endDate.value == "") {
             alert('Please enter a valid end date')
+            return false
+        }
+
+        if (endDate.value < startDate.value) {
+            alert('Error, the end date cannot before the start date')
+            return false
+        }
+
+        if (endDate.value == startDate.value && endTime.value <= startTime.value) {
+            alert('Error, the end time cannot be before the start time')
             return false
         }
 

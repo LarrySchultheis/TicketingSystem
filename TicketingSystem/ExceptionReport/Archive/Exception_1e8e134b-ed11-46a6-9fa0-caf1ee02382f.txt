@@ -1,0 +1,5 @@
+System.Web.Http.HttpResponseException: Processing of the HTTP request resulted in an exception. Please see the HTTP response returned by the 'Response' property of this exception for details.
+   at TicketingSystem.Services.UserManager.ImportUsersFromAuth0() in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Services\UserManager.cs:line 167
+   at SampleMvcApp.Controllers.AccountController.ImportUsers() in D:\GitHub\GitKraken\TicketingSystem\TicketingSystem\Controllers\AccountController.cs:line 345
+Exception thrown: 4/20/2020 18:45:05
+Error Code: 1e8e134b-ed11-46a6-9fa0-caf1ee02382f

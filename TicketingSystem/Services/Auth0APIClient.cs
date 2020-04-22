@@ -31,6 +31,7 @@ namespace TicketingSystem.Services
                     InitAPIToken();
                 }
 
+                //request the user endpoint with the given ID
                 var client = new RestClient(baseUrl + "users/" + Auth0ID);
                 var req = new RestRequest(Method.GET);
                 req.AddHeader("content-type", "application/json");
@@ -38,6 +39,7 @@ namespace TicketingSystem.Services
                 var response = client.Execute(req);
                 var content = response.Content;
 
+                //deserialize content into UserData object 
                 UserData ud = JsonConvert.DeserializeObject<UserData>(content);
                 return ud;
             }
@@ -56,6 +58,7 @@ namespace TicketingSystem.Services
         {
             try
             {
+                //token granting endpoint 
                 var client = new RestClient("https://robertswarehousing.auth0.com/oauth/token");
                 var req = new RestRequest(Method.POST);
                 string tokenUrl = "grant_type=client_credentials&client_id=ZLjHZNvuAQ4Vjt59sdwkKBAya8GQejQx&client_secret=Gu6SJweNziCtnVo04e2nsVH6PkCB-vUCMBcYi5Ld-f_a-q04mGuzyNil4roJbTtP&audience=https://robertswarehousing.auth0.com/api/v2/";
@@ -63,6 +66,8 @@ namespace TicketingSystem.Services
                 req.AddParameter("application/x-www-form-urlencoded", tokenUrl, ParameterType.RequestBody);
 
                 string content = client.Execute(req).Content;
+
+                //set token grant time to now and deserialize into TokenData 
                 tokenGrantedAt = DateTime.Now;
                 tokenData = JsonConvert.DeserializeObject<TokenData>(content);
                 return true;
@@ -89,6 +94,7 @@ namespace TicketingSystem.Services
 
                 using (var db = new TicketingSystemDBContext())
                 {
+                    //get the Auth0Id from Auth0
                     UserData ud = GetUserData(Auth0ID);
 
                     var u = db.Users.Where(uid => uid.Email == ud.email).FirstOrDefault();
